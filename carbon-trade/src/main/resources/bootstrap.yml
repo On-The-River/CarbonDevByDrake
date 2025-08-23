@@ -1,0 +1,8 @@
+#Drake:此配置文件优先级大于application,优先加载,nacos依赖下列配置找到现有配置文件,如果将nacos依赖的信息放到其要寻找的文件中,那就构成循环依赖了.
+spring:
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: localhost:8848
+        
