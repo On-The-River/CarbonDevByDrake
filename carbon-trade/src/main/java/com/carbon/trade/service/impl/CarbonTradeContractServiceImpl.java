@@ -86,22 +86,27 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
 
     @Override
     public TradeContractPerformanceVo performance(Long tradeContractId) {
-        TradeContractPerformanceVo vo = new TradeContractPerformanceVo();
+
+
         CarbonTradeContract tradeContract = this.getById(tradeContractId);
         if (tradeContract == null){
             throw new CommonBizException("履约记录不存在");
         }
 
+        TradeContractPerformanceVo spawnedPfmVo = new TradeContractPerformanceVo();
+
+
         boolean update = this.lambdaUpdate().eq(CarbonTradeContract::getId, tradeContractId)
-                .set(CarbonTradeContract::getStatus, TradeStatusEnum.IN_TRADE.getStatus())
+                .set(CarbonTradeContract::getStatus, TradeStatusEnum.TRADED.getStatus())
                 .update();
         if (!update){
             throw new CommonBizException(ExpCodeEnum.OPERATE_FAIL_ERROR);
         }
 
         CarbonExchangeQueryVo exchange = assetsServiceApi.getExchangeInfoByDict(tradeContract.getDeliveryExchange()).getData();
-        vo.setTradeContractId(tradeContractId);
-        vo.setExchangeWebsite(exchange == null ? "" : exchange.getWebsite());
+        spawnedPfmVo.setTradeContractId(tradeContractId);
+        spawnedPfmVo.setExchangeWebsite(exchange == null ? "" : exchange.getWebsite());
+
 
         //长安链-上链
         try {
@@ -110,7 +115,7 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
             log.error("调用区块链异常！！");
             log.error(e.getMessage());
         }
-        return vo;
+        return spawnedPfmVo;
     }
 
 }

@@ -4,6 +4,8 @@ import com.carbon.domain.common.annotation.Dict;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import java.io.Serializable;
 
 import java.math.BigDecimal;
@@ -19,7 +21,7 @@ import java.util.Date;
  */
 @Data
 @ApiModel(value="CarbonTradeQuoteQueryVo对象", description="碳交易供需行情查询参数")
-//@Document(indexName = "carbon_trade_quote",shards = 1,replicas = 0)
+@Document(indexName = "carbon_trade_quote",shards = 1,replicas = 0)
 public class CarbonTradeQuoteQueryVo implements Serializable{
     private static final long serialVersionUID = 1L;
 

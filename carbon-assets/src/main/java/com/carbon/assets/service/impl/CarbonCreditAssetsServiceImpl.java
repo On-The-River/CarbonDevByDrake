@@ -133,7 +133,8 @@ public class CarbonCreditAssetsServiceImpl extends BaseServiceImpl<CarbonCreditA
         CarbonCreditAssets carbonCreditAssets = new CarbonCreditAssets();
         BeanUtil.copyProperties(param,carbonCreditAssets,"id","projectId");
         // 查询
-        CarbonMetaregistryQueryVo cm = carbonMetaregistryMapper.getCarbonMetaregistryById(param.getCarbonProjectId());
+        Long carbonProjectId = param.getCarbonProjectId();
+        CarbonMetaregistryQueryVo cm = carbonMetaregistryMapper.getCarbonMetaregistryById(carbonProjectId);
         log.info("this carbonMetaregistry.object : {}", JSONUtil.toJsonStr(cm));
         // 插入一个 CarbonMetaRegistryProject
         CarbonMetaregistryProject project = new CarbonMetaregistryProject();

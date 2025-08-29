@@ -4,7 +4,48 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f8d0eca-aac3-4b36-892a-9df5dd2a2c3d" name="Default Changelist" comment="" />
+    <list default="true" id="6f8d0eca-aac3-4b36-892a-9df5dd2a2c3d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/carbon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/carbon.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/carbon-assets.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/carbon-assets.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonProjectDocController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonProjectDocController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonCreditAssetsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonCreditAssetsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonMethodologyServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonMethodologyServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/SynMethodologyContentServiceimpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/SynMethodologyContentServiceimpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/test/java/com/carbon/assets/service/CarbonBlockChainServiceImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/test/java/com/carbon/assets/service/SearchJunit.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-auth/carbon-auth.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/carbon-auth.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/SmsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/SmsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/SmsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/SmsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-auth/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-chainmaker/carbon-chainmaker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-chainmaker/carbon-chainmaker.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-frame/carbon-common-model/carbon-common-model.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-frame/carbon-common-model/carbon-common-model.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-frame/carbon-common-model/src/main/java/com/carbon/domain/common/constant/SmsConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-frame/carbon-common-model/src/main/java/com/carbon/domain/common/constant/SmsConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-frame/carbon-common/carbon-common.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-frame/carbon-common/carbon-common.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-frame/carbon-common/src/main/java/com/carbon/common/enums/ApprovalCodeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-frame/carbon-common/src/main/java/com/carbon/common/enums/ApprovalCodeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-frame/carbon-common/src/main/java/com/carbon/common/feishu/FeiShuAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-frame/carbon-common/src/main/java/com/carbon/common/feishu/FeiShuAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-gate/carbon-gate.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-gate/carbon-gate.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-gate/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-gate/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-mq/carbon-mq.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-mq/carbon-mq.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/carbon-system.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/carbon-system.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/FeishuAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/FeishuAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/resources/aaa.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/carbon-trade.iml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/carbon-trade.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/common/enums/TradeStatusEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/common/enums/TradeStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradePriceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradePriceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradeQuoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradeQuoteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradeSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradeSearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/entity/CarbonTradeContract.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/entity/CarbonTradeContract.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/repository/EsCarbonTradeQuoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/repository/EsCarbonTradeQuoteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeContractServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeContractServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradePriceServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradePriceServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeQuoteServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeQuoteServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/vo/CarbonTradeQuoteQueryVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/vo/CarbonTradeQuoteQueryVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/resources/mapper/trade/CarbonTradePriceMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/resources/mapper/trade/CarbonTradePriceMapper.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -115,6 +156,13 @@
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit3 Test Class" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -629,6 +677,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.CarbonProjectContentServiceImplTest.testGetCarbonProjectContentPageList.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -641,19 +690,25 @@
     "Spring Boot.MqApplication.executor": "Run",
     "Spring Boot.SystemApplication.executor": "Run",
     "Spring Boot.TradeApplication.executor": "Run",
-    "git-widget-placeholder": "drake__modify__v1",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit3",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3": "junit.framework.TestCase",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/QST_Projs/Carbon/Developer/carbon02/carbon",
+    "last_opened_file_path": "D:/QST_Projs/Carbon/GeZeyu",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "run.configurations.included.in.services": "true",
-    "vue.rearranger.settings.migration": "true"
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.test.executor": "Run"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -667,6 +722,29 @@
   </component>
   <component name="RebelAgentSelection">
     <selection>jr</selection>
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="junit.framework.TestCase" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.carbon.assets.service.impl" />
+      <recent name="com.carbon.assets.mapper" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <myKeys>
+      <visibility group="Gradle 任务" flag="true" />
+      <visibility group="Grunt" flag="true" />
+      <visibility group="Gulp" flag="true" />
+      <visibility group="HTTP 请求" flag="true" />
+      <visibility group="Maven 目标" flag="true" />
+      <visibility group="Node.js" flag="true" />
+      <visibility group="npm" flag="true" />
+      <visibility group="yarn" flag="true" />
+      <visibility group="最近的项目" flag="true" />
+      <visibility group="运行配置" flag="true" />
+    </myKeys>
   </component>
   <component name="RunDashboard">
     <option name="configurationTypes">
@@ -688,7 +766,14 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.AssetsApplication">
+  <component name="RunManager" selected="应用程序.test">
+    <configuration name="test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test" />
+      <module name="carbon-common" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="AssetsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="carbon-assets" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.carbon.assets.AssetsApplication" />
@@ -746,7 +831,13 @@
       <item itemvalue="Spring Boot.MqApplication" />
       <item itemvalue="Spring Boot.SystemApplication" />
       <item itemvalue="Spring Boot.TradeApplication" />
+      <item itemvalue="应用程序.test" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="应用程序.test" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -772,6 +863,11 @@
       <workItem from="1755655078511" duration="29443000" />
       <workItem from="1755703625894" duration="22988000" />
       <workItem from="1755842727411" duration="14371000" />
+      <workItem from="1755913862630" duration="16500000" />
+      <workItem from="1756083064107" duration="32355000" />
+      <workItem from="1756173824335" duration="23736000" />
+      <workItem from="1756285704478" duration="27219000" />
+      <workItem from="1756433037023" duration="7720000" />
     </task>
     <servers />
   </component>

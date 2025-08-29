@@ -14,4 +14,6 @@ public interface EsCarbonTradeQuoteRepository extends ElasticsearchRepository<Ca
      */
     Page<CarbonTradeQuoteQueryVo> findByInstitutionName(String institutionName, Pageable page);
 
+
+//    Page<CarbonTradeQuoteQueryVo> searchByKeywords(String keywords, Pageable pageable);
 }

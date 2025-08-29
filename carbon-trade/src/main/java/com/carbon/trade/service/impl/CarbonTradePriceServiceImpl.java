@@ -13,6 +13,7 @@ import com.carbon.domain.system.vo.SysAccountModelVo;
 import com.carbon.domain.system.vo.SysTenantModelVo;
 import com.carbon.trade.common.enums.TradeRoleEnum;
 import com.carbon.trade.common.enums.TradeStatusEnum;
+import com.carbon.trade.entity.CarbonTradeContract;
 import com.carbon.trade.entity.CarbonTradePrice;
 import com.carbon.trade.entity.CarbonTradeQuote;
 import com.carbon.trade.mapper.CarbonTradePriceMapper;
@@ -107,19 +108,31 @@ public class CarbonTradePriceServiceImpl extends BaseServiceImpl<CarbonTradePric
 
     @Override
     public void intendedTransaction(IntendedTransactionParam param) {
-        CarbonTradePrice tradePrice = this.getById(param.getTradePriceId());
+        CarbonTradePrice tradePrice = getById(param.getTradePriceId());
         if (tradePrice == null){
             throw new CommonBizException("找不到询报价记录");
         }
 
-        //修改交易行情状态
-        CarbonTradeQuote tradeQuote = new CarbonTradeQuote();
-        tradeQuote.setId(tradePrice.getTradeQuoteId());
-        tradeQuote.setStatus(TradeStatusEnum.IN_TRADE.getStatus());
-        carbonTradeQuoteService.updateById(tradeQuote);
+        CarbonTradeQuote targetQuote = carbonTradeQuoteService.getById(tradePrice.getTradeQuoteId());
+        if(targetQuote == null){
+            throw new CommonBizException("找不到碳供需行情");
+        }
+        if(!TradeStatusEnum.INTENDED_TRADE.getStatus().equals(targetQuote.getStatus()))
+        {
+            throw new CommonBizException("碳供需行情状态错误,应为意向成交");
+        }
+
+        //on:修改交易行情状态
+        CarbonTradeQuote spawnedTradeQuote = new CarbonTradeQuote();
+        spawnedTradeQuote.setId(tradePrice.getTradeQuoteId());
+        spawnedTradeQuote.setStatus(TradeStatusEnum.INTENDED_TRADE.getStatus());
+        carbonTradeQuoteService.updateById(spawnedTradeQuote);
+
+        CarbonTradeContract spawnedContract = param.getTradeContract();
+        spawnedContract.setStatus(TradeStatusEnum.IN_TRADE.getStatus());
 
         //生成履约信息
-        carbonTradeContractService.addTradeContract(param.getTradeContract());
+        carbonTradeContractService.addTradeContract(spawnedContract);
     }
 
 }

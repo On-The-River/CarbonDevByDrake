@@ -1,5 +1,7 @@
 package com.carbon.auth.service;
 
+import java.io.IOException;
+
 public interface SmsService {
 
     /**
@@ -8,7 +10,7 @@ public interface SmsService {
      * @param templateCode 短信模板
      * @param content 发送内容
      */
-    void sendMsg(String phone, String templateCode, String content);
+    void sendMsg(String phone, String templateCode, String content) throws IOException;
 
     /**
      * 发送注册验证码

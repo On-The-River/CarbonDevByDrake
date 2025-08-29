@@ -24,12 +24,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class SmsServiceImpl implements SmsService {
+public class SmsServiceImpl implements SmsService{
 
     @Autowired
     private RedisService redisService;
@@ -48,31 +54,62 @@ public class SmsServiceImpl implements SmsService {
     private String accesskeySecret;
 
     @Override
-    public void sendMsg(String phone, String templateCode, String content) {
-        DefaultProfile profile = DefaultProfile.getProfile(REGION_ID, accesskeyId, accesskeySecret);
-        IAcsClient client = new DefaultAcsClient(profile);
-        CommonRequest request = new CommonRequest();
-        request.setSysMethod(MethodType.POST);
-        request.setSysDomain(SYS_DOMAIN);
-        request.setSysVersion(SYS_VERSION);
-        request.setSysAction(SYS_ACTION);
-        request.putQueryParameter("RegionId", REGION_ID);
-        request.putQueryParameter("PhoneNumbers", phone);
-        request.putQueryParameter("SignName", smsSignContent);
-        request.putQueryParameter("TemplateCode", templateCode);
-        request.putQueryParameter("TemplateParam", content);
-        try {
-            CommonResponse response = client.getCommonResponse(request);
-            log.info("调用发送短信返回结果，{}", JSONUtil.toJsonPrettyStr(response.getData()));
+    public void sendMsg(String phone, String templateCode, String content)  {
 
-            JSONObject resultJson= JSON.parseObject(response.getData());
-            if (!"OK".equals(resultJson.get("Message"))) {
-                throw new CommonBizException("发送失败");
+        String code="123546";
+
+        String url = String.format("https://push.spug.cc/send/%s?code=%s&targets=%s",
+                templateCode, code, phone);
+        BufferedReader in=null;
+
+        URL urlObj = null;
+        try {
+            urlObj = new URL(url);
+            HttpURLConnection requestConnection = (HttpURLConnection) urlObj.openConnection();
+            requestConnection.setRequestMethod("GET");
+
+            in = new BufferedReader(new InputStreamReader(requestConnection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-        } catch (ClientException e) {
-            e.printStackTrace();
-            throw new CommonBizException("发送失败");
+
+            in.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
+
+
+        ///----starter code----
+//        DefaultProfile profile = DefaultProfile.getProfile(REGION_ID, accesskeyId, accesskeySecret);
+//        IAcsClient client = new DefaultAcsClient(profile);
+//        CommonRequest request = new CommonRequest();
+//        request.setSysMethod(MethodType.POST);
+//        request.setSysDomain(SYS_DOMAIN);
+//        request.setSysVersion(SYS_VERSION);
+//        request.setSysAction(SYS_ACTION);
+//        request.putQueryParameter("RegionId", REGION_ID);
+//        request.putQueryParameter("PhoneNumbers", phone);
+//        request.putQueryParameter("SignName", smsSignContent);
+//        request.putQueryParameter("TemplateCode", templateCode);
+//        request.putQueryParameter("TemplateParam", content);
+//        try {
+//            CommonResponse response = client.getCommonResponse(request);
+//            log.info("调用发送短信返回结果，{}", JSONUtil.toJsonPrettyStr(response.getData()));
+//
+//            JSONObject resultJson= JSON.parseObject(response.getData());
+//            if (!"OK".equals(resultJson.get("Message"))) {
+//                throw new CommonBizException("发送失败");
+//            }
+//        } catch (ClientException e) {
+//            e.printStackTrace();
+//            throw new CommonBizException("发送失败");
+//        }
+        ///-END----starter code----
     }
 
     @Override
@@ -83,7 +120,7 @@ public class SmsServiceImpl implements SmsService {
         param.put("code", validCode);
 
         redisService.setEx(key, validCode, 60, TimeUnit.SECONDS);
-//        sendMsg(phone, SmsConstant.SMS_TEMPLATE_REGISTER, JSONUtil.toJsonStr(param));
+        sendMsg(phone, SmsConstant.SMS_TEMPLATE_REGISTER, JSONUtil.toJsonStr(param));
     }
 
     @Override

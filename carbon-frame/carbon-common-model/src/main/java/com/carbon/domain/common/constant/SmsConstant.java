@@ -12,5 +12,5 @@ public class SmsConstant  {
     /**
      * 注册发送短信验证码-模板
      */
-    public static final String SMS_TEMPLATE_REGISTER = "SMS_212060014";
+    public static final String SMS_TEMPLATE_REGISTER = "My5R7m0kGw8V2DgG";
 }

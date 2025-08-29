@@ -50,9 +50,9 @@ sa-token:
   is-log: false
 
 
-aliyun:
-  accesskey-id: aliyun-id
-  accesskey-secret: aliyun-secret
+aliyun: #0NTpGk!avLZ8}B9mRjwe(7ujFEfpN{XP
+  accesskey-id: LTAI5tCZzTQfBgAHHHNSJ8uM
+  accesskey-secret: imzVxSh6aqZFe4raBtBej9f8Dl1qM3
 
 sms:
   sign: 星辰信息

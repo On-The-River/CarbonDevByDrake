@@ -120,10 +120,10 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void register(RegisterParam param) {
 		//校验短信验证码
-//		smsService.checkValidateCode(param.getPhone(),param.getCode(),RedisKeyName.SMS_REGISTER_KEY);
-//		if (!param.getPassword().equals(param.getConfirmPassword())){
-//			throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_REGISTER_CONFIRM_PASSWORD_ERROR);
-//		}
+		smsService.checkValidateCode(param.getPhone(),param.getCode(),RedisKeyName.SMS_REGISTER_KEY);
+		if (!param.getPassword().equals(param.getConfirmPassword())){
+			throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_REGISTER_CONFIRM_PASSWORD_ERROR);
+		}
 		//添加账号
 		SysAccountParam accountParam = new SysAccountParam();
 		accountParam.setAccountName(param.getAccountName());

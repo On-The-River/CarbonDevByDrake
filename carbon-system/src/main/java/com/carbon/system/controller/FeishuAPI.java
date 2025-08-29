@@ -142,23 +142,23 @@ public class FeishuAPI {
         return ApiResult.ok(fileDate);
     }
 
-    @PostMapping("/event")
-    @ApiOperation(value = "审批监听事件", notes = "审批监听事件")
-    public ApiResult testUpdateFile(@RequestBody FeiShuEventParam1 param) {
-        log.info("审批监听事件:{}", JSONUtil.toJsonPrettyStr(param));
-        carbonApprovalService.approvalEventCallback(param);
-
-        return ApiResult.ok();
-    }
-
-
 //    @PostMapping("/event")
-//    @ApiOperation(value = "测试事件",notes = "测试事件")
-//    public FeiShuEventVo test(@RequestBody FeiShuEventParam1 param) {
-//        FeiShuEventVo vo = new FeiShuEventVo();
-//        vo.setChallenge(param.getChallenge());
-//        return vo;
+//    @ApiOperation(value = "审批监听事件", notes = "审批监听事件")
+//    public ApiResult testUpdateFile(@RequestBody FeiShuEventParam1 param) {
+//        log.info("审批监听事件:{}", JSONUtil.toJsonPrettyStr(param));
+//        carbonApprovalService.approvalEventCallback(param);
+//
+//        return ApiResult.ok();
 //    }
+
+
+    @PostMapping("/event")
+    @ApiOperation(value = "测试事件",notes = "测试事件")
+    public FeiShuEventVo test(@RequestBody FeiShuEventParam1 param) {
+        FeiShuEventVo vo = new FeiShuEventVo();
+        vo.setChallenge(param.getChallenge());
+        return vo;
+    }
     /**
      * 传入项目ID和项目名称，返回对应飞书文档
      *

@@ -7,11 +7,12 @@ package com.carbon.trade.common.enums;
  **/
 public enum TradeStatusEnum {
 
+    PRE_OFFER("0160000005","待询报价"),
     OFFER("0160000001","询报价"),
     INTENDED_TRADE("0160000002","意向成交"),
     IN_TRADE ("0160000003","交易履约"),
-    TRADED("0160000004","已交易"),
-    CANCEL_TRADE("0160000005","已取消易"),
+    TRADED("0160000004","已交易")
+//    CANCEL_TRADE("0160000005","已取消易"),
     ;
 
     private final String status;

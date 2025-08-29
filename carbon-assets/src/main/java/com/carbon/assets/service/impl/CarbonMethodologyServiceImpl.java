@@ -76,11 +76,11 @@ public class CarbonMethodologyServiceImpl extends BaseServiceImpl<CarbonMethodol
         save(carbonMethodology);
 
         //发送mq消息同步方法学内容
-//        if (param.getWordUrl()!=""&&param.getWordUrl()!=null)
-//        {
-//            Message<MethodologyUploadParam> msg= MessageBuilder.withPayload(param).build();
-//            mqTemplate.syncSend(RocketMqName.SYN_METHOD_CONTENT_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
-//        }
+        if (param.getWordUrl()!=""&&param.getWordUrl()!=null)
+        {
+            Message<MethodologyUploadParam> msg= MessageBuilder.withPayload(param).build();
+            mqTemplate.syncSend(RocketMqName.SYN_METHOD_CONTENT_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
+        }
     }
 
     @Override

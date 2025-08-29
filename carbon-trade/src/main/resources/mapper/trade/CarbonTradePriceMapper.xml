@@ -51,6 +51,9 @@
         left join sys_tenant st_seller on st_seller.id = ctp.seller_id
         <where>
             (ctp.buyer_id = #{param.tenantId} or ctp.seller_id = #{param.tenantId})
+            <if test="param.tradeRole == '0270000000' ">
+                and (buyer_id = #{tenantId} or seller_id = #{tenantId})
+            </if>
             <if test="param.tradeRole == '0270000001' ">
                 and ctp.buyer_id = #{param.tenantId}
             </if>

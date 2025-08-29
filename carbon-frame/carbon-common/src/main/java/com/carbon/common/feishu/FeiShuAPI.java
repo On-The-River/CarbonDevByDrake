@@ -54,9 +54,9 @@ import java.util.Map;
 @Slf4j
 public class FeiShuAPI {
 
-    private static String app_id="xxxxxx";  //填写自己飞书的app_id
+    private static String app_id="cli_a826d0701cb8100d";  //填写自己飞书的app_id
 
-    private static String app_secret="xxxxxx"; //填写自己飞书的app_secret
+    private static String app_secret="v7w02GXyirLViZn8djEscdgZIper1lHE"; //填写自己飞书的app_secret
     /**
      * 获取企业自建应用app_id与app_secret
      * @return
@@ -802,7 +802,7 @@ public class FeiShuAPI {
                 "{\"id\":\"widget16587490813080001\", \"type\":\"input\", \"value\":\""+account.getAccountProof()+"\"}]";
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
         param.put("approval_code", ApprovalCodeEnum.TRADE_ACCOUNT_APPROVAL.getCode());
-        param.put("open_id","xxxxxx");  //open_id可通过飞书接口获取 详情见飞书学习文档
+        param.put("open_id","ou_7ff37dc25e7e81326864c2a29d5468a8");  //open_id可通过飞书接口获取 详情见飞书学习文档
         param.put("form", form);
 
         String json=param.toString();

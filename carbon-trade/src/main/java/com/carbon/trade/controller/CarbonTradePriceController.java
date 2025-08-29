@@ -4,6 +4,7 @@ import com.carbon.trade.entity.CarbonTradeContract;
 import com.carbon.trade.param.IntendedTransactionParam;
 import com.carbon.trade.service.CarbonTradePriceService;
 import com.carbon.trade.param.CarbonTradePriceQueryParam;
+import com.carbon.trade.service.impl.CarbonTradeQuoteServiceImpl;
 import com.carbon.trade.vo.CarbonTradePriceQueryVo;
 import com.carbon.trade.entity.CarbonTradePrice;
 import com.carbon.trade.common.BaseController;
@@ -37,6 +38,8 @@ public class CarbonTradePriceController extends BaseController {
 
     @Autowired
     private CarbonTradePriceService carbonTradePriceService;
+    @Autowired
+    private CarbonTradeQuoteServiceImpl carbonTradeQuoteServiceImpl;
 
     /**
      * 意向成交
@@ -64,12 +67,30 @@ public class CarbonTradePriceController extends BaseController {
 
     /**
      * 碳交易询报价分页列表
+     * example:
+     * {
+     *   "tradeRole":"0270000000"
+     * }
      */
+
     @PostMapping("/getPageList")
     @ApiOperation(value = "碳交易询报价分页列表",notes = "碳交易询报价分页列表")
     public ApiResult<Paging<CarbonTradePriceQueryVo>> getCarbonTradePricePageList(@Valid @RequestBody(required = false) CarbonTradePriceQueryParam carbonTradePriceQueryParam) {
         Paging<CarbonTradePriceQueryVo> paging = carbonTradePriceService.getCarbonTradePricePageList(carbonTradePriceQueryParam);
         return ApiResult.ok(paging);
+    }
+
+    /**
+     * 当回应一个询报价时调用
+     * @author: Wang
+     * @Tip: equals update
+     *      call then refresh on database
+     * */
+    @PostMapping("/answer")
+    @ApiOperation(value = "回应询报价",notes = "回应一个询报价")
+    public ApiResult<Boolean> answerCarbonTradePrice(@RequestBody CarbonTradePrice carbonTradePrice){
+        carbonTradePriceService.addTradePrice(carbonTradePrice);
+        return ApiResult.ok(true);
     }
 
 }

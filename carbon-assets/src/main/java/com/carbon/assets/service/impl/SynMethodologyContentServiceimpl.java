@@ -32,11 +32,11 @@ public class SynMethodologyContentServiceimpl implements SynMethodologyContentSe
 //
 //        QueryWrapper<CarbonMethodology> wrapper = new QueryWrapper<>();
 //        wrapper.eq("method_code",methodCode);
-//
-//        CarbonMethodologyQueryVo carbonMethodology=carbonMethodologyMapper.getByCode(methodCode);
-//
 
-//
+//        CarbonMethodologyQueryVo carbonMethodology=carbonMethodologyMapper.getByCode(methodCode);
+
+
+
 //        String json="{\n" +
 //                "    \"doc\":{\n" +
 //                "        \"content\": \""+content+"\"\n" +
@@ -47,7 +47,7 @@ public class SynMethodologyContentServiceimpl implements SynMethodologyContentSe
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//
-//
+
+
     }
 }

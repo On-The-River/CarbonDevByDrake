@@ -61,6 +61,9 @@ public class CarbonProjectDocController extends BaseController {
         //根据上传文档类型，更改项目状态
         if(flag){
             CarbonProjectQueryVo carbonProjectById = carbonProjectService.getCarbonProjectById(carbonProjectDoc.getCarbonProjectId());
+
+
+
             carbonProjectById.setProjectStatus(status);
             CarbonProject carbonProject = new CarbonProject();
             BeanUtil.copyProperties(carbonProjectById,carbonProject);

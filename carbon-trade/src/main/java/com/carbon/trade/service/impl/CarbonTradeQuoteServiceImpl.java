@@ -97,38 +97,13 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
         });
 
 
-       /* com.carbon.trade.vo.MetaregistryDataVo map =  carbonTradeQuoteMapper.getCarbonMetaregistryByCarbonMetaregistryProjectId(projectId);
-        tradeQuote.setProjectType(map.getProjectScopeTypeCode());
-        tradeQuote.setProjectScope(map.getProjectScope());
-        tradeQuote.setProjectScopeCode(map.getProjectScopeCode());*/
-
-        tradeQuote.setPublisherId(getCurrentTenantId());
-        tradeQuote.setStatus(TradeStatusEnum.OFFER.getStatus());
-        tradeQuote.setId(null);
-        tradeQuote.setTradeQuantity(new BigDecimal(1000.0));
-        tradeQuote.setTradeRole("0270000002");
-        tradeQuote.setAssetType("0140000001");
-        tradeQuote.setAssetUnit("tCO2e");
-        tradeQuote.setAssetUnitPrice(new BigDecimal(90.0));
-        tradeQuote.setContactsEmail("222@qq.com");
-        tradeQuote.setProjectId(1117L);
-        tradeQuote.setProjectName("HEY HEY");
-        tradeQuote.setPublisherId(1L);
         this.save(tradeQuote);
-//        System.out.println("=================================");
-//        System.out.println();
-//        System.out.println("Exec2");
-//        System.out.println();
-//        System.out.println("=================================");
-//        System.out.println(tradeQuote);
 
-//        tradeQuote.se
-//        carbonTradeQuoteMapper.insert(tradeQuote);
+
         //发送Mq 消息
         Message<MqCarbonTradeQuote> message = MessageBuilder
                 .withPayload(BeanUtil.copyProperties(tradeQuote, MqCarbonTradeQuote.class)).build();
         mqTemplate.syncSend(RocketMqName.FS_TEST,message,3000,RocketDelayLevelConstant.SECOND10);
-//        mqTemplate.send(RocketMqName.FS_TEST,message);
     }
 
     @Override
@@ -147,58 +122,76 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
 
     @Override
     public void startTrading(StartTradingParam param) {
-        Long tenantId = getCurrentTenantId();
+        Long currentTenantId = getCurrentTenantId();
 
-        CarbonTradeQuote tradeQuote = this.getById(param.getTradeQuoteId());
-        if (tradeQuote == null){
+        //get the Quote will be trade.
+        String tradingQuoteId = param.getTradeQuoteId();
+        CarbonTradeQuote targetQuote = getById(tradingQuoteId);
+
+        if (targetQuote == null){
             throw new CommonBizException("交易行情不存在");
         }
-        if (tradeQuote.getPublisherId().equals(tenantId)){
+        if (targetQuote.getPublisherId().equals(currentTenantId)){
+            //the quote is belong to your Tenant.
             throw new CommonBizException("无法询报价自己发布的行情");
         }
+        if(!(TradeStatusEnum.OFFER.getStatus().equals(targetQuote.getStatus()) || TradeStatusEnum.PRE_OFFER.getStatus().equals(targetQuote.getStatus())))
+        {
+            throw new CommonBizException("询报价状态不正确!(仅能为状态为询报价的供需要求发起询报价)");
+        }
 
-        tradeQuote.setStatus(TradeStatusEnum.INTENDED_TRADE.getStatus());
-        updateById(tradeQuote);
+        //on: write targetQuote's status
+        if(TradeStatusEnum.PRE_OFFER.getStatus().equals(targetQuote.getStatus())){
+            targetQuote.setStatus(TradeStatusEnum.OFFER.getStatus());
+            updateById(targetQuote);
+        }
 
-        //生成询报价信息
-        CarbonTradePrice tradePrice = new CarbonTradePrice();
-        tradePrice.setTradeQuoteId(tradeQuote.getId());
-        if (TradeRoleEnum.SELLER.getStatus().equals(tradeQuote.getTradeRole())){
+
+        //生成询报价信息(spawn the price)
+        CarbonTradePrice spawnedPrice = new CarbonTradePrice();
+        //link the quote and price(1 to n)
+        spawnedPrice.setTradeQuoteId(targetQuote.getId());
+        if (TradeRoleEnum.SELLER.getStatus().equals(targetQuote.getTradeRole()))
+        {
             //发布行情为卖方,当前人为买方
-            tradePrice.setSellerId(tradeQuote.getPublisherId());
-            tradePrice.setSellerTradeQuantity(tradeQuote.getTradeQuantity());
-            tradePrice.setSellerUnitPrice(tradeQuote.getAssetUnitPrice());
-            tradePrice.setSellerDeliveryExchange(tradeQuote.getDeliveryExchange());
-            tradePrice.setSellerDeliveryMethod(tradeQuote.getDeliveryMethod());
-            tradePrice.setSellerDeliveryTime(tradeQuote.getDeliveryTime());
+            spawnedPrice.setSellerId(targetQuote.getPublisherId());
+            spawnedPrice.setSellerTradeQuantity(targetQuote.getTradeQuantity());
+            spawnedPrice.setSellerUnitPrice(targetQuote.getAssetUnitPrice());
+            spawnedPrice.setSellerDeliveryExchange(targetQuote.getDeliveryExchange());
+            spawnedPrice.setSellerDeliveryMethod(targetQuote.getDeliveryMethod());
+            spawnedPrice.setSellerDeliveryTime(targetQuote.getDeliveryTime());
 
-            tradePrice.setBuyerId(tenantId);
-            tradePrice.setProjectScope(param.getProjectScope());
-            tradePrice.setProjectScopeCode(param.getProjectScopeCode());
-            tradePrice.setBuyerTradeQuantity(param.getTradeQuantity());
-            tradePrice.setBuyerUnitPrice(param.getAssetUnitPrice());
-            tradePrice.setBuyerDeliveryExchange(param.getDeliveryExchange());
-            tradePrice.setBuyerDeliveryMethod(param.getDeliveryMethod());
-            tradePrice.setBuyerDeliveryTime(param.getDeliveryTime());
-        }else if (TradeRoleEnum.BUYER.getStatus().equals(tradeQuote.getTradeRole())){
+            spawnedPrice.setBuyerId(currentTenantId);
+            spawnedPrice.setProjectScope(param.getProjectScope());
+            spawnedPrice.setProjectScopeCode(param.getProjectScopeCode());
+            spawnedPrice.setBuyerTradeQuantity(param.getTradeQuantity());
+            spawnedPrice.setBuyerUnitPrice(param.getAssetUnitPrice());
+            spawnedPrice.setBuyerDeliveryExchange(param.getDeliveryExchange());
+            spawnedPrice.setBuyerDeliveryMethod(param.getDeliveryMethod());
+            spawnedPrice.setBuyerDeliveryTime(param.getDeliveryTime());
+        }
+        else if (TradeRoleEnum.BUYER.getStatus().equals(targetQuote.getTradeRole()))
+        {
             //发布行情为买方,当前人为卖
-            tradePrice.setSellerId(tenantId);
-            tradePrice.setSellerTradeQuantity(param.getTradeQuantity());
-            tradePrice.setSellerUnitPrice(param.getAssetUnitPrice());
-            tradePrice.setSellerDeliveryExchange(param.getDeliveryExchange());
-            tradePrice.setSellerDeliveryMethod(param.getDeliveryMethod());
-            tradePrice.setSellerDeliveryTime(param.getDeliveryTime());
+            spawnedPrice.setSellerId(currentTenantId);
+            spawnedPrice.setSellerTradeQuantity(param.getTradeQuantity());
+            spawnedPrice.setSellerUnitPrice(param.getAssetUnitPrice());
+            spawnedPrice.setSellerDeliveryExchange(param.getDeliveryExchange());
+            spawnedPrice.setSellerDeliveryMethod(param.getDeliveryMethod());
+            spawnedPrice.setSellerDeliveryTime(param.getDeliveryTime());
 
-            tradePrice.setBuyerId(tradeQuote.getPublisherId());
-            tradePrice.setBuyerTradeQuantity(tradeQuote.getTradeQuantity());
-            tradePrice.setBuyerUnitPrice(tradeQuote.getAssetUnitPrice());
-            tradePrice.setBuyerDeliveryExchange(tradeQuote.getDeliveryExchange());
-            tradePrice.setBuyerDeliveryMethod(tradeQuote.getDeliveryMethod());
-            tradePrice.setBuyerDeliveryTime(tradeQuote.getDeliveryTime());
-        }else {
+            spawnedPrice.setBuyerId(targetQuote.getPublisherId());
+            spawnedPrice.setBuyerTradeQuantity(targetQuote.getTradeQuantity());
+            spawnedPrice.setBuyerUnitPrice(targetQuote.getAssetUnitPrice());
+            spawnedPrice.setBuyerDeliveryExchange(targetQuote.getDeliveryExchange());
+            spawnedPrice.setBuyerDeliveryMethod(targetQuote.getDeliveryMethod());
+            spawnedPrice.setBuyerDeliveryTime(targetQuote.getDeliveryTime());
+        }
+        else
+        {
             throw new CommonBizException("交易行情，交易角色不匹配");
         }
-        carbonTradePriceService.addTradePrice(tradePrice);
+        carbonTradePriceService.addTradePrice(spawnedPrice);
     }
 
     @Override

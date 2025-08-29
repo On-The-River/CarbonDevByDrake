@@ -34,8 +34,8 @@ spring:
         server-addr: localhost:8848
   data:
     elasticsearch:
-      cluster-name: docker-cluster
-      cluster-nodes: localhost:9300
+      cluster-name: elasticsearch #docker-cluster
+      cluster-nodes: localhost:9200 #localhost:9300
       repositories:
         enabled: true
   #es

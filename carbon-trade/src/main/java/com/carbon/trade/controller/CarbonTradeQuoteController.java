@@ -81,6 +81,10 @@ public class CarbonTradeQuoteController extends BaseController {
 
     /**
      * 碳交易供需行情分页列表
+     * example:
+     * {
+     *     "tradeRole":"0270000000"
+     * }
      */
     @PostMapping("/getPageList")
     @ApiOperation(value = "供需行情分页列表",notes = "碳交易供需行情分页列表")
