@@ -231,6 +231,8 @@ import { endsWith } from "../../../../utils/utils";
 import sellOrder from "./sellOrder.vue";
 import orderResultVue from "../orderResult.vue";
 import SellDetail from "./sellDetail.vue";
+import {getAllDiction} from '@/config/dictHelper';
+
 export default {
   name: "companyPackage",
   components: {
@@ -305,10 +307,8 @@ export default {
       isProjectTypeDisable: false
     };
   },
-  mounted() {
-    //*Drake
-    
-  },
+  
+
   methods: {
     changeAssetType() {
       this.isProjectTypeDisable = isProjectTypeDisable(
@@ -561,8 +561,14 @@ export default {
   mounted() {
     this.getList(1);
     this.formatFieldDict(getProjectAreaDict(this.$store));
+
+    //*Drake 初始化资产类型列表
     let data = getAssetTypeDict(this.$store);
+    // log("============================");
+    // log(data);
+    // log("============================");
     this.assetStatusList = [];
+    // data=[{value:"0140000000",name:"全部"},{value:"0140000001",name:"碳信用"},{value:"0140000002",name:"碳配额"}];
     data.map(v => {
       let item = {
         value: "",
@@ -573,6 +579,7 @@ export default {
       this.assetStatusList.push(item);
     });
     this.assetStatusList[0].value = "";
+
     data = getProjectTypeDict(this.$store);
     this.projectList = [];
     data.map(v => {

@@ -683,18 +683,18 @@ export default {
         return;
       }
 
-      if (!this.detailData.assetType || this.detailData.assetType === "--") {
-        this.$message("请检选择资产类型");
-        return;
-      }
+      // if (!this.detailData.assetType || this.detailData.assetType === "--") {
+      //   this.$message("请检选择资产类型");
+      //   return;
+      // }
 
-      if (
-        !this.detailData.projectType ||
-        this.detailData.projectType === "--"
-      ) {
-        this.$message("请选择项目类型");
-        return;
-      }
+      // if (
+      //   !this.detailData.projectType ||
+      //   this.detailData.projectType === "--"
+      // ) {
+      //   this.$message("请选择项目类型");
+      //   return;
+      // }
 
       MessageBox.confirm("", "提示", {
         message: "提交意向成交前，请确保已与交易方达成一致。是否确认提交？",

@@ -460,8 +460,10 @@ export function getProductVerssionDict(store) {
 }
 function getDircByCode(store, key) {
   if (Object.keys(dircs).length == 0) {
+    getAllDiction(store);
     let dircsStr = localStorage.getItem("dircs");
     if (dircsStr) {
+      // return [{value:"0140000000",name:"没东西2"}];
       let res = JSON.parse(dircsStr);
       if (res && Array.isArray(res)) {
         res.map(e => {
@@ -482,5 +484,5 @@ function getDircByCode(store, key) {
   if (dircs && dircs[key]) {
     return dircs[key];
   }
-  return [];
+  return [{value:"0140000000",name:"没东西!"}];
 }

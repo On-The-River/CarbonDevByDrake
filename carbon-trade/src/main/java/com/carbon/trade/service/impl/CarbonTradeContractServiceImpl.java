@@ -14,15 +14,18 @@ import com.carbon.domain.system.api.SystemServiceApi;
 import com.carbon.trade.common.enums.TradeRoleEnum;
 import com.carbon.trade.common.enums.TradeStatusEnum;
 import com.carbon.trade.entity.CarbonTradeContract;
+import com.carbon.trade.entity.CarbonTradeQuote;
 import com.carbon.trade.mapper.CarbonTradeContractMapper;
 import com.carbon.trade.service.CarbonTradeContractService;
 import com.carbon.trade.param.CarbonTradeContractQueryParam;
+import com.carbon.trade.service.CarbonTradeQuoteService;
 import com.carbon.trade.vo.CarbonTradeContractQueryVo;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.common.api.Paging;
 import com.carbon.trade.vo.CarbonTradeQuoteQueryVo;
 import com.carbon.trade.vo.TradeContractPerformanceVo;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +48,9 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeContractMapper, CarbonTradeContract> implements CarbonTradeContractService {
 
+    @Autowired
+    private CarbonTradeQuoteService carbonTradeQuoteService;
+
     @Resource
     private CarbonTradeContractMapper carbonTradeContractMapper;
     @Autowired
@@ -52,6 +58,7 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
 
     @Autowired
     private ChainMakerServiceApi chainMakerServiceApi;
+
 
 
     @Override
@@ -93,6 +100,14 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
             throw new CommonBizException("履约记录不存在");
         }
 
+        CarbonTradeQuote targetQuote = carbonTradeQuoteService.getById(tradeContract.getTradeQuoteId());
+        if(targetQuote == null){
+            throw new CommonBizException("履约记录对应的交易行情不存在");
+        }
+        if(!TradeStatusEnum.IN_TRADE.getStatus().equals(tradeContract.getStatus())){
+            throw new CommonBizException("履约记录对应的交易行情状态不正确");
+        }
+
         TradeContractPerformanceVo spawnedPfmVo = new TradeContractPerformanceVo();
 
 
@@ -102,6 +117,10 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
         if (!update){
             throw new CommonBizException(ExpCodeEnum.OPERATE_FAIL_ERROR);
         }
+
+        targetQuote.setStatus(TradeStatusEnum.TRADED.getStatus());
+
+
 
         CarbonExchangeQueryVo exchange = assetsServiceApi.getExchangeInfoByDict(tradeContract.getDeliveryExchange()).getData();
         spawnedPfmVo.setTradeContractId(tradeContractId);

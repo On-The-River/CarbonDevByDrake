@@ -21,6 +21,12 @@ let carbonNewsManager = {
     //   name: 'exchangeManager',
     //   meta: { title: '交易所管理', icon: 'clipboard' }
     // },
+    {
+        path: '/trade/performance/',
+        component: () => import('@/views/carbonTrade/performance/index.vue'),
+        name: 'trade',
+        meta: { title: '碳履约', icon: 'clipboard' }
+    }
   ]
 };
 

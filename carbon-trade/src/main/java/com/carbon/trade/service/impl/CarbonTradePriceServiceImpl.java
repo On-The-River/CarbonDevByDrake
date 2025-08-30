@@ -117,9 +117,9 @@ public class CarbonTradePriceServiceImpl extends BaseServiceImpl<CarbonTradePric
         if(targetQuote == null){
             throw new CommonBizException("找不到碳供需行情");
         }
-        if(!TradeStatusEnum.INTENDED_TRADE.getStatus().equals(targetQuote.getStatus()))
+        if(!TradeStatusEnum.OFFER.getStatus().equals(targetQuote.getStatus()))
         {
-            throw new CommonBizException("碳供需行情状态错误,应为意向成交");
+            throw new CommonBizException("碳供需行情状态错误");
         }
 
         //on:修改交易行情状态

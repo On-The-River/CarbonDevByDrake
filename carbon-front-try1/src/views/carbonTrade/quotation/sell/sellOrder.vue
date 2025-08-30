@@ -29,9 +29,10 @@
           style="width: 100%; top: -5px; background-color: #f5f7fa"
           v-model="subForm.assetType"
           :options="assetTypeList"
-          @change="selectAssetType"
           disabled
+          @change="selectAssetType"
         >
+
         </el-cascader>
       </el-form-item>
       <el-form-item prop="assetTypeName">
@@ -122,7 +123,7 @@
 <script>
 import { startTrading } from "@/api/carbonAssetApi";
 import {
-  getDeliveryMethodDict,
+  getDiliveryMethodeDict,
   getExchangeDict,
   getAssetTypeDict,
   getProjectTypeDict,
@@ -130,6 +131,7 @@ import {
 } from "@/config/dictHelper";
 import { isProjectTypeDisable } from "@/libs/public";
 import { getAccontEnterpriseInfo } from "@/api/tenant";
+import { getAccoutEnterPriseInfo } from "@/api/tenant";
 
 export default {
   name: "companyPackage",
@@ -235,7 +237,9 @@ export default {
       return !value || value === "" || value === "--" || value === "/";
     },
     initParams() {
-      debugger;
+      // debugger;
+      console.log("initParams2");
+
       this.subForm.assetType = this.checkParam(this.subForm.assetType)
         ? "0140000000"
         : this.subForm.assetType;
@@ -276,7 +280,7 @@ export default {
         : this.subForm.deliveryExchange;
 
       if (this.form && this.form.publisherId) {
-        getAccountEnterpriseInfo(this.form.publisherId).then(res => {
+        getAccoutEnterPriseInfo(this.form.publisherId).then(res => {
           this.subForm.institutionName = res.tenantName;
         });
       }
@@ -291,7 +295,7 @@ export default {
           : this.subForm.assetUnitPrice;
 
       this.show = this.dialogFormVisible;
-      let data = getDeliveryMethodDict(this.$store);
+      let data = getDiliveryMethodeDict(this.$store);
       this.deliverMethodList = [];
       data.map(v => {
         let item = {
@@ -302,6 +306,7 @@ export default {
         item.label = v.name;
         this.deliverMethodList.push(item);
       });
+
       data = getExchangeDict(this.$store);
       this.exchangeList = [];
       data.map(v => {
@@ -313,8 +318,11 @@ export default {
         item.label = v.name;
         this.exchangeList.push(item);
       });
+
+      debugger;
       this.assetTypeList = [];
       data = getAssetTypeDict(this.$store);
+      // data = [{value:"0140000000",name:"没东西3"}];
       data.map(v => {
         let item = {
           value: "",
@@ -324,6 +332,10 @@ export default {
         item.label = v.name;
         this.assetTypeList.push(item);
       });
+      console.log("assetTypeList");
+      console.log(this.assetTypeList);
+      debugger;
+      
 
       this.projectTypeList = [];
       data = getProjectTypeDict(this.$store);
@@ -409,7 +421,7 @@ export default {
     }
   },
   created() {},
-  mounted() {}
+  mounted() {this.initParams();}
 };
 </script>
 <style lang="scss" scoped>

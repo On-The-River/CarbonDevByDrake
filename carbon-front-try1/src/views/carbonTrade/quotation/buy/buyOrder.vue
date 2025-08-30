@@ -297,9 +297,11 @@ export default {
         item.label = v.name;
         this.exchangeList.push(item);
       });
+
+
       this.assetTypeList = [];
       data = getAssetTypeDict(this.$store);
-
+      // data = [{value:"0140000000",name:"没东西3"}];
       data.map(v => {
         let item = {
           value: "",
@@ -309,6 +311,8 @@ export default {
         item.label = v.name;
         this.assetTypeList.push(item);
       });
+
+
       this.projectTypeList = [];
       data = getProjectTypeDict(this.$store);
       data.map(v => {
@@ -320,6 +324,8 @@ export default {
         item.label = v.name;
         this.projectTypeList.push(item);
       });
+
+
       this.projetcAreaList = [];
       data = getProjectAreaDict(this.$store);
       data.map(v => {
@@ -402,7 +408,7 @@ export default {
     }
   },
   created() {},
-  mounted() {}
+  mounted() {this.initParams();}
 };
 </script>
 

@@ -57,14 +57,8 @@
               <span class="tap-secon-line-hint-f ml10" style="text-align: left"
                 >账号</span
               >
-              <input
-                class="input-css"
-                v-model="baseInfo.accountName"
-                disabled
-              />
-              <span class="second-line-final-hint"
-                >系统自动生成，可用于登录</span
-              >
+              <input class="input-css" v-model="baseInfo.accountName" disabled />
+              <span class="second-line-final-hint">系统自动生成，可用于登录</span>
               <div class="div-holder" />
             </div>
             <div class="card-div">
@@ -116,7 +110,7 @@
                 background: '#F2F5F7',
                 border: '0px solid #DDDDDD',
                 color: '#242B35',
-                height: '64px'
+                height: '64px',
               }"
               :show-header="true"
               :row-style="{ height: '64px' }"
@@ -127,7 +121,7 @@
               row-key="id"
               :tree-props="{
                 children: 'accountInfoList',
-                hasChildren: 'hasChildren'
+                hasChildren: 'hasChildren',
               }"
             >
               <el-table-column
@@ -181,7 +175,9 @@
               >
                 <template slot-scope="scope">
                   <div slot="empty" class="name-wrapper">
-                    <span size="medium">{{ scope.row.loginTime || "--" }}</span>
+                    <span size="medium">{{
+                      scope.row.loginTime || "--"
+                    }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -229,9 +225,7 @@
                     style="margin-left: 10px"
                     class="list-red-text mgn-r-16"
                     :class="{ afterSubmitOffline: scope.row.is_disable }"
-                    @click="
-                      unboundWeChat(scope.row, scope.row.id, scope.$index)
-                    "
+                    @click="unboundWeChat(scope.row, scope.row.id, scope.$index)"
                     >解绑</a
                   >
                 </template>
@@ -507,9 +501,9 @@ import {
   getAccoutUpdateCode,
   getAccoutUpdateBaseInfo,
   getAccoutUpdateAvatar,
-  getUpLoadFileParams
+  getUpLoadFileParams,
 } from "@/api/tenant";
-import { openUrlInNewWindow } from "@/libs/OpenHelper";
+import { openUrlInNewWindow } from '@/libs/OpenHelper'
 import { putCarbonExchangeUnbind } from "@/api/carbonAssetApi";
 import { getTenantList } from "@/api/systemadmin";
 import { cursor } from "@/libs/element-table";
@@ -584,9 +578,9 @@ export default {
         createdTime: "--",
         tenantId: "--",
         accountRole: {
-          roleNames: ""
+          roleNames: "",
         },
-        avatar: ""
+        avatar: "",
       },
       padShow: false,
       emShow: false,
@@ -594,7 +588,7 @@ export default {
       dialogTip: false,
       carbonUploadDlg: false,
       btnText: "提交",
-      submitUploadText: "确认上传",
+      submitUploadText:"确认上传",
       //默认第一个选项卡
       activeName: "first",
       /* 修改密码 */
@@ -602,7 +596,7 @@ export default {
         id: 0,
         oldPassword: "",
         newPassword: "",
-        isCheckPass: ""
+        isCheckPass: "",
       },
       phoForm: {
         id: 0, //账户id
@@ -610,27 +604,27 @@ export default {
         email: "", // 	邮箱
         phone: "", //	手机号
         newPhone: "", //新手机号
-        checkCode: "" //验证码
+        checkCode: "", //验证码
       },
       emailForm: {
         email: "",
-        emailFormPassword: ""
+        emailFormPassword: "",
       },
       rulePhoForm: {
         //rules 的值
         newPhone: [{ validator: newPhone, trigger: "blur" }],
-        checkCode: [{ validator: checkCode, trigger: "blur" }]
+        checkCode: [{ validator: checkCode, trigger: "blur" }],
       },
       emailFormRules: {
         //rules 的值
         email: [{ validator: emailFormEmail, trigger: "blur" }],
-        emailFormPassword: [{ validator: emailFormPassword, trigger: "blur" }]
+        emailFormPassword: [{ validator: emailFormPassword, trigger: "blur" }],
       },
       addUserFromRules: {},
       rules: {
         oldPassword: [{ validator: oldPassword, trigger: "blur" }],
         newPassword: [{ validator: newPassword, trigger: "blur" }],
-        isCheckPass: [{ validator: isCheckPass, trigger: "blur" }]
+        isCheckPass: [{ validator: isCheckPass, trigger: "blur" }],
       },
       imageUrl: "",
       byTenantList: [], //碳交易所列表
@@ -661,11 +655,11 @@ export default {
         remarks: "", //	备注
         tenantId: 0, //	所属租户
         updatedId: 0, //	更新人ID
-        updatedTime: "" //	更新时间
+        updatedTime: "", //	更新时间
       },
       accountNameList: [], //账户列表
       exchangeList: [], //交易所列表
-      cardContainerList: [] //新交易所列表
+      cardContainerList: [], //新交易所列表
     };
   },
   mounted() {
@@ -689,9 +683,9 @@ export default {
       cursor(data);
     },
     cellStyle_one({ row, column, rowIndex, columnIndex }) {
-      if (row.is_disable) {
+      if(row.is_disable){
         return "padding-left:16px;cursor:pointer;";
-      } else {
+      }else{
         return "padding-left:16px;cursor:default;";
       }
     },
@@ -711,15 +705,15 @@ export default {
       if (!this.fileListurl) {
         return this.$message("请选择图片！");
       }
-      this.submitUploadText = "上传中";
-      this.$message("上传中，请稍后...");
+      this.submitUploadText="上传中";
+      this.$message("上传中，请稍后...")
       this.$refs.upload.submit();
     },
 
     upLoadParamTranFile(response, file, fileList) {
       if (response) {
         this.tranFileUrl = response.msg;
-        // let info = JSON.parse(Cookies.get("JavaInfo"));
+        // let info = JSON.parse(Cookies.get("JavaInfo")); 
         // let datas = {
         //   accountName: this.addUserFrom.accountName, //账户名
         //   carbonExchangeId: this.addUserFrom.carbonExchangeId[0], //	碳交易所ID
@@ -755,30 +749,26 @@ export default {
     getBaseInfo() {
       let info = JSON.parse(Cookies.get("JavaInfo"));
       getAccoutBaseInfo(parseInt(info.accountId))
-        .then(res => {
+        .then((res) => {
           this.baseInfo = res;
-          if (
-            !this.baseInfo.avatar ||
-            this.baseInfo.avatar == "" ||
-            this.baseInfo.avatar.match(/^[ ]*$/)
-          ) {
+          if (!this.baseInfo.avatar || this.baseInfo.avatar == "" || (this.baseInfo.avatar).match(/^[ ]*$/)) {
             this.baseInfo.avatar = "/static/img/icon_accoun_logo.e4db51e4.jpg";
           }
           this.baseInfo.email = res.email || "--";
           this.baseInfo.famName = res.username || "--";
         })
-        .catch(err => {});
+        .catch((err) => {});
     },
     getListByTenantInfo() {
       let data = {};
-      getListByTenant(data).then(res => {
+      getListByTenant(data).then((res) => {
         let resLen = res.length;
         for (var i = 0; i < resLen; i++) {
           let exchangeName = res[i]["exchangeName"];
           res[i]["is_disable"] = 1;
           if (res[i]["accountInfoList"]) {
             for (var j = 0; j < res[i]["accountInfoList"].length; j++) {
-              res[i]["accountInfoList"][j]["exchangeName"] = "账号" + (j + 1);
+              res[i]["accountInfoList"][j]["exchangeName"] = "账号"+(j+1);
               res[i]["accountInfoList"][j]["is_disable"] = 0;
             }
           }
@@ -794,7 +784,7 @@ export default {
 
           let item = {
             value: "",
-            label: ""
+            label: "",
           };
           item.value = carbonExchangeId;
           item.label = exchangeName;
@@ -805,7 +795,7 @@ export default {
               resData.push({
                 carbonExchangeId,
                 exchangeName,
-                ...res[i]["accountInfoList"][j]
+                ...res[i]["accountInfoList"][j],
               });
             }
           } else {
@@ -854,12 +844,12 @@ export default {
       let datas = {
         id: this.baseInfo.id,
         newPassword: md5(this.ruleForm.newPassword),
-        oldPassword: md5(this.ruleForm.oldPassword)
+        oldPassword: md5(this.ruleForm.oldPassword),
       };
-      putAccountUpdatePassword(datas).then(res => {
+      putAccountUpdatePassword(datas).then((res) => {
         this.$message({
           message: "修改成功",
-          type: "success"
+          type: "success",
         });
         this.padShow = !this.padShow;
       });
@@ -872,16 +862,16 @@ export default {
       let phoDatas = {
         id: this.baseInfo.id,
         phone: this.phoForm.newPhone,
-        code: this.phoForm.checkCode
+        code: this.phoForm.checkCode,
       };
       putAccountUpdatePhone(phoDatas)
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
             this.getBaseInfo();
           }
           this.editBaseInfo(3);
         })
-        .catch(err => {});
+        .catch((err) => {});
       // } else {
       //   return false;
       // }
@@ -891,14 +881,14 @@ export default {
       let datas = {
         email: this.emailForm.email,
         id: this.baseInfo.id,
-        password: md5(this.emailForm.emailFormPassword)
+        password: md5(this.emailForm.emailFormPassword),
       };
-      putAccountSend(datas).then(res => {
+      putAccountSend(datas).then((res) => {
         if (res.code == 200) {
           this.$message({
             showClose: true,
             message: res.msg,
-            type: "success"
+            type: "success",
           });
           this.getBaseInfo();
         }
@@ -908,14 +898,15 @@ export default {
 
     resetForm(ruleForm) {},
 
-    tranFilehandlePreview(file) {
-      let tranFileUrl = file.response.msg;
+
+    tranFilehandlePreview(file){
+      let tranFileUrl = file.response.msg
       openUrlInNewWindow(tranFileUrl);
     },
 
     handleTranChange(file, fileList) {
       this.tranFileList = [];
-      this.tranFileList.push(fileList[fileList.length - 1]);
+      this.tranFileList.push(fileList[fileList.length - 1])
     },
     removeFileList(file, fileList) {
       this.tranFileList = [];
@@ -934,10 +925,10 @@ export default {
       }
       this.$confirm(`确定解绑交易账户？`, "温馨提示", {
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
       })
         .then(() => {
-          putCarbonExchangeUnbind(id).then(res => {
+          putCarbonExchangeUnbind(id).then((res) => {
             if (res.code == 200) {
               this.$message(res.msg);
               this.getListByTenantInfo();
@@ -948,12 +939,12 @@ export default {
         .catch(() => {});
     },
     getTenantUserList() {
-      getTenantList().then(res => {
+      getTenantList().then((res) => {
         if (res) {
-          res.map(v => {
+          res.map((v) => {
             let item = {
               value: "",
-              label: ""
+              label: "",
             };
             item.value = v.id;
             item.label = v.contactsName;
@@ -984,21 +975,20 @@ export default {
       let info = JSON.parse(Cookies.get("JavaInfo"));
       let datas = {
         accountName: this.addUserFrom.accountName, //账户名
-        carbonExchangeId: Array.isArray(this.addUserFrom.carbonExchangeId)
-          ? this.addUserFrom.carbonExchangeId[0]
+        carbonExchangeId: Array.isArray(this.addUserFrom.carbonExchangeId) ? this.addUserFrom.carbonExchangeId[0]
           : this.addUserFrom.carbonExchangeId, //	碳交易所ID
         remarks: this.addUserFrom.remarks, //	备注
         tenantId: parseInt(info.accountId), //	所属租户
-        accountCredentials: this.tranFileUrl
+        accountCredentials: this.tranFileUrl,
       };
-      putAddExchangeAccount(datas).then(res => {
+      putAddExchangeAccount(datas).then((res) => {
         this.$message.success("操作成功");
         this.getListByTenantInfo();
         this.editBaseInfo(5);
       });
-    }
+    },
   },
-  created() {}
+  created() {},
 };
 </script>
 <style scoped lang="scss">
