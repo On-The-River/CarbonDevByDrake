@@ -84,31 +84,31 @@ export default {
   text-align: right;
 }
 
-/deep/ #tab-more {
+>>> #tab-more {
   width: calc(100% - 10px);
   text-align: right;
 }
 
-/deep/ .el-tabs__nav {
+>>> .el-tabs__nav {
   width: calc(100% - 200px);
 }
 
 .el-tabs {
   flex: 1;
 
-  /deep/ .el-tabs__item.is-active {
+  >>> .el-tabs__item.is-active {
     color: #26a872;
   }
 
-  /deep/ .el-tabs__item:hover {
+  >>> .el-tabs__item:hover {
     color: #26a872;
   }
 
-  /deep/ .el-tabs__active-bar.is-top {
+  >>> .el-tabs__active-bar.is-top {
     background: #0b1612;
   }
 
-  /deep/ .el-tabs__item {
+  >>> .el-tabs__item {
 
     font-weight: 400;
     color: #5E6C84;

@@ -1,291 +1,302 @@
-import request from "@/utils/request";
-import { resolve } from "core-js/fn/promise";
-// import { info } from 'node-sass'
-import md5 from "js-md5";
-import { getToken } from "@/utils/auth";
+import request from '@/utils/request'
+import md5 from 'js-md5';
+import { getToken } from '@/utils/auth'
+
+const authURL = 'http://localhost:9001';
+
 /**
  * 注册
  * @param {*} data
- * @returns
+ * @returns {Promise}
  */
 export function register(data) {
-  data.password = md5(data.password);
-  data.confirmPassword = md5(data.confirmPassword);
+  data.password = md5.md5(data.password)
+  data.confirmPassword = md5.md5(data.confirmPassword)
   return request({
-    url: "/authCenter/auth/register",
-    method: "post",
+    baseURL: authURL,
+    url: '/authCenter/auth/register',
+    method: 'post',
     data
-  });
+  })
 }
 /**
  * 忘记密码
  * @param {*} data
- * @returns
+ * @returns {Promise}
  */
 export function putForgotPassword(data) {
-  data.confirmPassword = md5(data.confirmPassword);
-  data.password = md5(data.password);
+  data.confirmPassword = md5.md5(data.confirmPassword)
+  data.password = md5.md5(data.password)
   return request({
-    url: "/authCenter/auth/forgotPassword",
-    method: "post",
+    baseURL: authURL,
+    url: '/authCenter/auth/forgotPassword',
+    method: 'post',
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     data
-  });
+  })
 }
 
 /**
  * 登录
- * @param {*} data
- * @returns
+ * @returns {Promise}
+ * @param info
  */
 export function login(info) {
-  var data = {
-    accountName: info.account,
-    password: info.pwd
+  const data = {
+    "accountName": info.account,
+    "password": info.pwd,
+    "captcha": "123456"
+
   };
   return request({
-    url: "/authCenter/auth/login",
-    method: "post",
+    baseURL: authURL,
+    url: '/authCenter/auth/login',
+    method: 'post',
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     data
-  });
+  })
 }
 
 /**
  * 验证账户是否存在
- * @param {*} data
- * @returns
- * {accountName}
+ * @returns {Promise}
+ * @param {string} param
  */
 export function getAuthCenterAuthVerify(param) {
   return request({
-    url: "/authCenter/auth/verify/" + param,
-    method: "GET"
-  });
+    baseURL: authURL,
+    url: '/authCenter/auth/verify/' + param,
+    method: 'GET',
+  })
 }
 
 export function getInfo(token) {
   return request({
-    url: "/admin/getAdminInfoByToken",
-    method: "get",
+    url: '/admin/getAdminInfoByToken',
+    method: 'get',
     token: token
-  });
+  })
 }
 
 /**
  * 退出登录
- * @param {*} data
- * @returns
- * {accountName}
+ * @returns {Promise}
  */
 export function logout() {
-  let token = getToken();
+  let token = getToken()
   return request({
-    url: "/authCenter/auth/logout",
-    method: "GET",
+    baseURL: authURL,
+    url: '/authCenter/auth/logout',
+    method: 'GET',
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      token: token
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'token': token
     }
-  });
+  })
 }
 
 /**
- * 会员管理 列表
- * @param pram
+ @returns {Promise}
  */
 export function userListApi(params) {
   return request({
     url: `/admin/user/list`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 修改
- * @param pram
+ * @returns {Promise}
+ * @param params
+ * @param data
  */
 export function userUpdateApi(params, data) {
   return request({
     url: `/admin/user/update`,
-    method: "post",
+    method: 'post',
     params,
     data
-  });
+  })
 }
 
 /**
  * 会员管理 详情
- * @param pram
+ * @returns {Promise}
+ * @param params
  */
 export function userInfoApi(params) {
   return request({
     url: `/admin/user/info`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 账户详情
- * @param pram
+ * @returns {Promise}
+ * @param params
  */
 export function infobyconditionApi(params) {
   return request({
     url: `/admin/user/infobycondition`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 账户详情top数据
- * @param pram
+ * @returns {Promise}
+ * @param params
  */
 export function topdetailApi(params) {
   return request({
     url: `/admin/user/topdetail`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 批量设置分组
- * @param pram
+ * @returns {Promise}
+ * @param params
  */
 export function groupPiApi(params) {
   return request({
     url: `/admin/user/group`,
-    method: "post",
+    method: 'post',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 批量设置标签
- * @param pram
+ * @param params
  */
 export function tagPiApi(params) {
   return request({
     url: `/admin/user/tag`,
-    method: "post",
+    method: 'post',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 积分余额
- * @param pram
+ * @param params
  */
 export function foundsApi(params) {
   return request({
     url: `/admin/user/operate/founds`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员管理 删除
- * @param pram
+ * @param params
  */
 export function userDeleteApi(params) {
   return request({
     url: `/admin/user/delete`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员等级 列表
- * @param pram
+ * @param params
  */
 export function levelListApi(params) {
   return request({
     url: `/admin/system/user/level/list`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员等级 新增
- * @param pram
+ * @param data
  */
 export function levelSaveApi(data) {
   return request({
     url: `/admin/system/user/level/save`,
-    method: "post",
+    method: 'post',
     data
-  });
+  })
 }
 
 /**
  * 会员等级 编辑
- * @param pram
+ * @param params
+ * @param data
  */
 export function levelUpdateApi(params, data) {
   return request({
     url: `/admin/system/user/level/update`,
-    method: "post",
+    method: 'post',
     params,
     data
-  });
+  })
 }
 
 /**
  * 会员等级 详情
- * @param pram
+ * @param params
  */
 export function levelInfoApi(params) {
   return request({
     url: `/admin/system/user/level/info`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员等级 删除
- * @param pram
+ * @param params
  */
 export function levelDeleteApi(params) {
   return request({
     url: `/admin/system/user/level/delete`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员等级 是否显示
- * @param pram
+ * @param params
  */
 export function levelUseApi(params) {
   return request({
     url: `/admin/system/user/level/use`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
  * 会员标签 列表
- * @param pram
+ * @param params
  */
 export function tagListApi(params) {
   return request({
     url: `/admin/user/tag/list`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
@@ -295,9 +306,9 @@ export function tagListApi(params) {
 export function tagSaveApi(data) {
   return request({
     url: `/admin/user/tag/save`,
-    method: "post",
+    method: 'post',
     data
-  });
+  })
 }
 
 /**
@@ -307,10 +318,10 @@ export function tagSaveApi(data) {
 export function tagUpdateApi(params, data) {
   return request({
     url: `/admin/user/tag/update`,
-    method: "post",
+    method: 'post',
     params,
     data
-  });
+  })
 }
 
 /**
@@ -320,9 +331,9 @@ export function tagUpdateApi(params, data) {
 export function tagInfoApi(params) {
   return request({
     url: `/admin/user/tag/info`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
@@ -332,9 +343,9 @@ export function tagInfoApi(params) {
 export function tagDeleteApi(params) {
   return request({
     url: `/admin/user/tag/delete`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
@@ -344,9 +355,9 @@ export function tagDeleteApi(params) {
 export function groupListApi(params) {
   return request({
     url: `/admin/user/group/list`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
@@ -356,9 +367,9 @@ export function groupListApi(params) {
 export function groupSaveApi(data) {
   return request({
     url: `/admin/user/group/save`,
-    method: "post",
+    method: 'post',
     data
-  });
+  })
 }
 
 /**
@@ -368,10 +379,10 @@ export function groupSaveApi(data) {
 export function groupUpdateApi(params, data) {
   return request({
     url: `/admin/user/group/update`,
-    method: "post",
+    method: 'post',
     params,
     data
-  });
+  })
 }
 
 /**
@@ -381,9 +392,9 @@ export function groupUpdateApi(params, data) {
 export function groupInfoApi(params) {
   return request({
     url: `/admin/user/group/info`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
@@ -393,9 +404,9 @@ export function groupInfoApi(params) {
 export function groupDeleteApi(params) {
   return request({
     url: `/admin/user/group/delete`,
-    method: "get",
+    method: 'get',
     params
-  });
+  })
 }
 
 /**
@@ -404,8 +415,8 @@ export function groupDeleteApi(params) {
 export function getLoginPicApi() {
   return request({
     url: `/admin/getLoginPic`,
-    method: "get"
-  });
+    method: 'get'
+  })
 }
 
 /**
@@ -414,8 +425,8 @@ export function getLoginPicApi() {
 export function captchaApi() {
   return request({
     url: `/admin/validate/code/get`,
-    method: "get"
-  });
+    method: 'get'
+  })
 }
 
 /**
@@ -424,32 +435,34 @@ export function captchaApi() {
 export function updateSpreadApi(data) {
   return request({
     url: `/admin/user/update/spread`,
-    method: "post",
+    method: 'post',
     data
-  });
+  })
 }
 
 /**
  * 获取短信验证码
- * @param {*} data
- * @returns
+ * @returns {Promise}
+ * @param phone
  */
 export function regCode(phone) {
   return request({
+    baseURL: authURL,
     url: `/authCenter/auth/register/code/` + phone,
-    method: "GET",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }
-  });
+    method: 'GET',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
 }
 /**
  * 忘记密码 短信验证码
- * @param {*} data
- * @returns
+ * @returns {Promise}
+ * @param phone
  */
 export function regForgotPasswordCode(phone) {
   return request({
+    baseURL: authURL,
     url: `/authCenter/auth/forgotPassword/code/` + phone,
-    method: "GET",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }
-  });
+    method: 'GET',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
 }

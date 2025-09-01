@@ -70,7 +70,7 @@ export function delCredit(id) {
 /**
  * 20220819 使用getCarbonMetaregistryPageList 接口
  * 碳减排项目列表
- * @returns 
+ * @returns
  */
 export function getCarbonProjectPageList(data) {
         return request({
@@ -82,7 +82,7 @@ export function getCarbonProjectPageList(data) {
 /**
  * 20221009 状态为非待审核状态 项目分页列表
  * 上传文档的碳减排项目列表
- * @returns 
+ * @returns
  */
 export function getCarbonProjectNoWaitExaminePageList(data) {
         return request({
@@ -92,9 +92,9 @@ export function getCarbonProjectNoWaitExaminePageList(data) {
         })
 }
 /**
- * 20220819 
+ * 20220819
  * 碳减排项目列表
- * @returns 
+ * @returns
  */
 export function getCarbonMetaregistryPageList(data) {
         return request({
@@ -104,7 +104,7 @@ export function getCarbonMetaregistryPageList(data) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-06-06 10:03:48
  * 功能: 碳数据报送列表
  */
@@ -116,7 +116,7 @@ export function getCarbonProjectReportList(data) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-06-24 16:15:02
  * 功能: 碳配额列表
  */
@@ -129,7 +129,7 @@ export function loadCarbonQuotaPageList(data) {
 }
 /**
  * 申请碳减排项目
- * @returns 
+ * @returns
  */
 export function addCarbonProject(data) {
         return request({
@@ -141,7 +141,7 @@ export function addCarbonProject(data) {
 
 /**
  * 查看碳减排项目
- * @returns 
+ * @returns
  */
 export function readCarbonProject(id) {
         return request({
@@ -171,7 +171,7 @@ export function getUpLoadFileParams() {
 
 /**
  * 删除碳减排项目
- * @returns 
+ * @returns
  */
 export function deleteCarbonProject(id) {
         return request({
@@ -182,7 +182,7 @@ export function deleteCarbonProject(id) {
 }
 /**
 * 编辑碳减排项目
-* @returns 
+* @returns
 */
 export function editCarbonProject(data) {
         return request({
@@ -196,8 +196,8 @@ export function editCarbonProject(data) {
 /*********************数据报送***************/
 /**
  * 获取碳数据源列表
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function loadSourceDataList(data) {
         return request({
@@ -207,7 +207,7 @@ export function loadSourceDataList(data) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-06-24 16:12:33
  * 功能: 添加碳配额
  */
@@ -220,7 +220,7 @@ export function addCarbonQuota(data) {
 }
 /**
  * 添加碳数据
- * @returns 
+ * @returns
  */
 export function addSourceData(data) {
         return request({
@@ -232,7 +232,7 @@ export function addSourceData(data) {
 
 /**
  * 查看碳源数据
- * @returns 
+ * @returns
  */
 export function readSourceData(id) {
         return request({
@@ -245,7 +245,7 @@ export function readSourceData(id) {
 
 /**
  * 删除碳减源数据
- * @returns 
+ * @returns
  */
 export function deleteSourceData(id) {
         return request({
@@ -256,7 +256,7 @@ export function deleteSourceData(id) {
 }
 /**
 * 修改碳源数据
-* @returns 
+* @returns
 */
 export function editSourceData(data) {
         return request({
@@ -268,8 +268,8 @@ export function editSourceData(data) {
 
 /**
  * 数据源报送
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function submittedSourceData(id) {
         return request({
@@ -279,7 +279,7 @@ export function submittedSourceData(id) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-05-25 11:10:45
  * 功能: 碳数据报送接口
  */
@@ -293,8 +293,8 @@ export function reportProject(data) {
 /*********************中和资产***************/
 /**
  * 上传业主资料
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function uploadOwnerFile(data) {
         return request({
@@ -304,7 +304,7 @@ export function uploadOwnerFile(data) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-05-25 11:22:20
  * 功能: 获取项目碳数据报送列表
  */
@@ -316,7 +316,7 @@ export function getProjectReport(id) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-05-25 11:58:35
  * 功能: 修改碳数据报送列表
  */
@@ -330,8 +330,8 @@ export function changeProjectReport(data) {
 /*********************中和资产***************/
 /**
  * 获取中和资产列表
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function loadCarbonAssetsList(data) {
         return request({
@@ -342,7 +342,7 @@ export function loadCarbonAssetsList(data) {
 }
 /**
  * 添加中和资产数据
- * @returns 
+ * @returns
  */
 export function addCarbonAssetsData(data) {
         return request({
@@ -354,7 +354,7 @@ export function addCarbonAssetsData(data) {
 
 /**
  * 查看中和资产数据
- * @returns 
+ * @returns
  */
 export function readCarbonAssetsData(id) {
         return request({
@@ -367,7 +367,7 @@ export function readCarbonAssetsData(id) {
 
 /**
  * 删除中和资产源数据
- * @returns 
+ * @returns
  */
 export function deleteCarbonAssetsData(id) {
         return request({
@@ -378,7 +378,7 @@ export function deleteCarbonAssetsData(id) {
 }
 /**
 * 修改中和资产数据
-* @returns 
+* @returns
 */
 export function editCarbonAssetsData(data) {
         return request({
@@ -392,8 +392,8 @@ export function editCarbonAssetsData(data) {
 /*********************方法学***************/
 /**
  * 获取方法学列表
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function loadMethodList(data) {
         return request({
@@ -407,12 +407,13 @@ export function loadMethodList(data) {
 /*********************方法学全文检索***************/
 /**
  * 获取方法学列表
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function getEscarbonMethodologyByKeyword(data) {
         return request({
-                url: '/assets/EscarbonMethodology/getByKeyword',
+                // url: '/assets/EscarbonMethodology/getByKeyword',
+                url:'/assets/carbonMethodology/getPageList',
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data,
@@ -420,7 +421,7 @@ export function getEscarbonMethodologyByKeyword(data) {
 }
 /**
 * 添加方法学
-* @returns 
+* @returns
 */
 export function addMethod(data) {
         return request({
@@ -432,7 +433,7 @@ export function addMethod(data) {
 /**
  * 20221018 16:50
 * 添加方法学
-* @returns 
+* @returns
 */
 export function addCarbonMethodology(data) {
         return request({
@@ -444,7 +445,7 @@ export function addCarbonMethodology(data) {
 /**
  * 20221018 16:50
 * 修改方法学
-* @returns 
+* @returns
 */
 export function updateCarbonMethodology(data) {
         return request({
@@ -456,7 +457,7 @@ export function updateCarbonMethodology(data) {
 /**
  * 20221024 18:50
 * 同步方法学内容
-* @returns 
+* @returns
 */
 export function synContentCarbonMethodology(data) {
         return request({
@@ -468,7 +469,7 @@ export function synContentCarbonMethodology(data) {
 
 /**
  * 查看方法学
- * @returns 
+ * @returns
  */
 export function readMethod(id) {
         return request({
@@ -481,7 +482,7 @@ export function readMethod(id) {
 
 /**
  * 删除方法学
- * @returns 
+ * @returns
  */
 export function deleteMethod(id) {
         return request({
@@ -492,7 +493,7 @@ export function deleteMethod(id) {
 }
 /**
 * 修改方法学
-* @returns 
+* @returns
 */
 export function editMethod(data) {
         return request({
@@ -506,8 +507,8 @@ export function editMethod(data) {
 /*********************交易所***************/
 /**
 * 获取交易所列表
-* @param {*} data 
-* @returns 
+* @param {*} data
+* @returns
 */
 export function loadCarbonExchangeList(data) {
         return request({
@@ -556,7 +557,7 @@ export function carbonAssetDetail(id) {
         })
 }
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-06-21 09:02:24
  * 功能: 添加碳信用
  */
@@ -577,7 +578,7 @@ export function changeCredit(data) {
                 data
         })
 }
-// 
+//
 export function changeQuota(data) {
         return request({
                 url: '/assets/carbonQuotaAssets/update',
@@ -596,10 +597,10 @@ export function addcarbonAssetMarket(data) {
         })
 }
 /**
-* 
+*
 * 交易账户-交易账户解绑
-* @param {}  
-* @returns 
+* @param {}
+* @returns
 */
 export function putCarbonExchangeUnbind(id) {
         return request({
@@ -740,12 +741,12 @@ export function performance(id) {
 }
 
 /**
- * 作者: 
+ * 作者:
  * 时间: 2022-08-10
  * 功能: 获取项目仓库
  * 获取CarbonMetaregistry分页列表
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function getCarbonMetaregistryList(data) {
         return request({
@@ -757,8 +758,8 @@ export function getCarbonMetaregistryList(data) {
 }
 /**
  * 添加CarbonMetaregistry对象
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function addCarbonMetaregistry(data) {
         return request({
@@ -771,7 +772,7 @@ export function addCarbonMetaregistry(data) {
 
 /**
  * 删除CarbonMetaregistry对象
- * @returns 
+ * @returns
  */
 export function deleteCarbonMetaregistry(id) {
         return request({
@@ -782,8 +783,8 @@ export function deleteCarbonMetaregistry(id) {
 }
 /**
  * 获取CarbonMetaregistry对象详情
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function getCarbonMetaregistryInfo(id) {
         return request({
@@ -794,8 +795,8 @@ export function getCarbonMetaregistryInfo(id) {
 }
 /**
  * 修改CarbonMetaregistry对象
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function updateCarbonMetaregistry(data) {
         return request({
@@ -807,12 +808,14 @@ export function updateCarbonMetaregistry(data) {
 }
 /**
  * 项目文档全文检测列表
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function getEscarbonMetaregistryList(data) {
         return request({
-                url: '/assets/EscarbonMetaregistry/getByKeyword',
+                //*Drake
+                // url: '/assets/EscarbonMetaregistry/getByKeyword',
+                url: '/assets/carbonMetaregistry/getPageList',
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data,

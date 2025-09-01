@@ -98,7 +98,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 判断是否登录,如果已经登录直接返回
 		loginInfo = getLoginInfoByRedis(account.getId());
-		if (null != loginInfo){
+		if (null != loginInfo) {
 			return loginInfo;
 		}
 

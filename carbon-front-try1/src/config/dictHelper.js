@@ -457,6 +457,7 @@ export function getCarFuelDict(store) {
  */
 export function getProductVerssionDict(store) {
   return getDircByCode(store, ProductVersion);
+  // return [{value:'',name:'全部'},{value:'1',name:'基础版'},{value:'2',name:'专业版'},{value:'3',name:'企业版'}];
 }
 function getDircByCode(store, key) {
   if (Object.keys(dircs).length == 0) {

@@ -146,250 +146,235 @@
 <script>
 // 引入项目工具/接口
 import { validUsername } from "@/utils/validate";
-import { captchaApi, login } from "@/api/user"; // 登录/验证码接口
+import {captchaApi, getLoginPicApi, login} from "@/api/user"; // 登录/验证码接口
 import { getWXCodeByUrl, loginByWxCode } from "@/libs/wechat"; // 微信登录工具
 import { getToken, setToken } from "@/utils/auth"; // Token存储工具
 import Cookies from "js-cookie";
-import { log } from 'console';
+import { MessageBox } from "element-ui";
+import LoginLogo from '../../assets/imgs/login_logo.png'
+import CaptchaImg from '../../assets/imgs/no.png'
+import LoginLeftPic from  '../../assets/imgs/login_left_pic.png'
+import LoginCompanyIcon from  '../../assets/imgs/icon_login_company.png'
+import SvgIcon from "@/components/FormGenerator/components/SvgIcon/index.vue";
 
 export default {
   name: "Login",
+  components: {SvgIcon},
   data() {
-    // 用户名校验规则
     const validateUsername = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error("请输入用户名"));
-      } else if (!validUsername(value)) {
-        callback(new Error("用户名格式错误（仅支持字母/数字）"));
+      if (!validUsername(value)) {
+        callback(new Error('请输入正确的用户名'));
       } else {
         callback();
       }
-    };
-    // 密码校验规则
+    }
     const validatePassword = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error("请输入密码"));
-      } else if (value.length < 6 || value.length > 12) {
-        callback(new Error("密码位数为6-12位"));
+      if (value.length < 6 || value.length > 12) {
+        callback(new Error('密码为6-12位'));
       } else {
         callback();
       }
-    };
-    // 验证码校验规则
-    const validateCode = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error("请输入验证码"));
-      } else if (value.length !== 4) {
-        // 假设验证码为4位
-        callback(new Error("验证码为4位字符"));
-      } else {
-        callback();
-      }
-    };
-
+    }
     return {
-      // 图片资源（替换为项目实际路径）
-      loginLogo: require("@/assets/imgs/login_logo.png"),
-      captchImg: require("@/assets/imgs/no.png"), // 验证码默认图（无 captcha 图时临时用 logo 占位）
-      loginLeftPic: require("@/assets/imgs/login_left_pic.png"),
-      loginCompanyIcon: require("@/assets/imgs/icon_login_company.png"),
-
-      // 响应式相关
+      loginLogo: LoginLogo,
+      captchaImg: CaptchaImg,
+      loginLeftPic: LoginLeftPic,
+      loginCompanyIcon: LoginCompanyIcon,
+      swiperList: [],
       fullWidth: document.body.clientWidth,
-      timer: null, // 防抖定时器
-
-      // 表单数据
+      swiperOption: {
+        pagination: {
+          el: ".pagination",
+        },
+        autoplay: {
+          enabled: true,
+          disableOnInteraction: false,
+          delay: 3000
+        }
+      },
       loginForm: {
-        account: Cookies.get("rememberAccount") || "", // 记住用户名（从Cookie读取）
-        pwd: "",
-        code: "",
-        wxCode: "",
-        rememberMe: !!Cookies.get("rememberAccount") // 记住我状态
+        account: '',
+        pwd: '',
+        key: '',
+        code: '',
+        wxCode: '',
+        rememberMe: false
       },
-
-      // 表单校验规则
       loginRules: {
-        account: [
-          { required: true, trigger: "blur", validator: validateUsername }
-        ],
-        pwd: [{ required: true, trigger: "blur", validator: validatePassword }],
-        code: [{ required: true, trigger: "blur", validator: validateCode }]
+        account: [{ required: true, trigger: 'blur' }],
+        pwd: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        code: [{ required: true, trigger: 'blur', message: '请输入正确的验证码' }]
       },
-
-      // 其他状态
-      passwordType: "password", // 密码输入框类型
-      loading: false, // 登录按钮加载状态
-      redirect: this.$route.query.redirect || "/", // 登录后跳转地址
-      otherQuery: this.getOtherQuery(this.$route.query) // 其他路由参数
+      passwordType: "password",
+      capsTooltip: false,
+      loading: false,
+      showDialog: false,
+      redirect: undefined,
+      otherQuery: {},
+      keydownHandler: null
     };
   },
   watch: {
-    // 监听屏幕宽度变化（防抖处理）
     fullWidth(val) {
       if (!this.timer) {
+        this.screenWidth = val;
         this.timer = true;
-        setTimeout(() => {
-          this.timer = false;
-        }, 300);
+        const that = this;
+        setTimeout(function () {
+          that.timer = false;
+        }, 400)
       }
     },
-    // 监听路由变化（更新跳转地址）
-    $route(route) {
-      this.redirect = route.query.redirect || "/";
-      this.otherQuery = this.getOtherQuery(route.query);
+    $route: {
+      handle: function (route) {
+        const query = route.query;
+        if (query) {
+          this.redirect = query.redirect;
+          this.otherQuery = query.otherQuery;
+        }
+      },
+      immediate: true
     }
   },
   created() {
-    // 1. 监听回车键登录（仅当前页面生效）
     const _this = this;
-    document.addEventListener("keydown", function(e) {
-      if (_this.$route.path === "/login" && e.keyCode === 13) {
-        _this.handleLogin();
+    this.keydownHandler = function (event) {
+      if (_this.$route && _this.$route.path && _this.$route.path.indexOf("login") !== -1) {
+        const key = event.key;
+        if (key === "13" || key === 'Enter') {
+          _this.handleLogin();
+        }
       }
-    });
-    // 2. 监听窗口 resize 事件
-    window.addEventListener("resize", this.handleResize);
-    // 3. 初始化验证码
-    this.getCaptcha();
-    // 4. 微信环境自动登录（按需启用）
-    // this.agentWeiXinLogin()
+    };
+    document.onkeydown = this.keydownHandler;
+    window.addEventListener("resize", this.handleResize)
   },
   mounted() {
-    // 自动聚焦输入框（优先聚焦空字段）
-    if (!this.loginForm.account) {
-      this.$nextTick(() => {
-        this.$refs.account.focus();
-      });
-    } else if (!this.loginForm.pwd) {
-      this.$nextTick(() => {
-        this.$refs.pwd.focus();
-      });
+    if (this.loginForm.account === '') {
+      this.$refs.account.focus();
+    } else if (this.loginForm.pwd === '') {
+      this.$refs.pwd.focus();
     }
   },
+  beforeUnmount() {
+    if (this.keydownHandler) {
+      document.onkeydown = null;
+    }
+    window.removeEventListener('resize', this.handleResize);
+  },
+  destroyed() {},
   beforeDestroy() {
-    // 移除事件监听（避免内存泄漏）
-    document.removeEventListener("keydown", this.handleEnterLogin);
-    window.removeEventListener("resize", this.handleResize);
+    this.beforeUnmount();
   },
   methods: {
-    // 处理屏幕 resize
+    handleChecked() {
+      this.rememberMe = !this.rememberMe;
+    },
+    clickReg() {
+      let routeData = this.$route.resolve({ path: 'register' });
+      window.open(routeData.href, '_blank');
+    },
+    clickForgetPassword() {
+      let routeData = this.$route.resolve({ path: 'forgetPassWord' });
+      window.open(routeData.href, '_blank');
+    },
+    agentWeiXinLogin() {
+      /*const _isWechat = this.$wechat.isWeixin();
+      if (_isWechat) {
+        let code = this.$route?.query?.code;
+        let state = this.$route?.query?.state;
+        let wxAuthPath = location.origin + '/login';
+        if (code === null) {
+          getWXCodeByUrl(wxAuthPath, 'step1');
+        }
+        if (state === 'step1') {
+          loginByWxCode(code).then(res => {
+            sessionStorage.setItem('token', res.token);
+            this.$router.push({
+              path: this.redirect || '/',
+              query: this.otherQuery
+            });
+          }).catch(() => {
+            getWXCodeByUrl(wxAuthPath, 'step2');
+          });
+        } else if (state === 'step2') {
+          this.loginForm.wxCode = code;
+        }
+      }*/
+    },
+    onWechat() {
+      /*let url = this.$router.query.redirect ? this.$router.query.redirect : '/dashboard';
+      this.$wechat.onAuth(url, 'login');*/
+    },
     handleResize() {
       this.fullWidth = document.body.clientWidth;
     },
-    // 密码显示/隐藏切换
+    getInfo() {
+      getLoginPicApi().then(res => {
+        this.swiperList = res.banner;
+        this.loginLogo = res.logo;
+        Cookies.set('MerInfo', JSON.stringify(res));
+      })
+    },
+    clickCapslock(e) {
+      const { key } = e;
+      this.capsTooltip = key && key.length === 1 && key >= 'A' && key <= 'Z';
+    },
     showPwd() {
-      this.passwordType =
-        this.passwordType === "password" ? "text" : "password";
-      // 切换后重新聚焦
+      if (this.passwordType === 'password') {
+        this.passwordType = '';
+      } else {
+        this.passwordType = 'password';
+      }
       this.$nextTick(() => {
         this.$refs.pwd.focus();
-      });
+      })
     },
-    // 记住我状态变更（存储用户名到Cookie）
-    handleChecked() {
-      if (this.loginForm.rememberMe) {
-        // 记住：存储用户名到Cookie（有效期7天）
-        Cookies.set("rememberAccount", this.loginForm.account, { expires: 7 });
-      } else {
-        // 不记住：删除Cookie
-        Cookies.remove("rememberAccount");
-      }
-    },
-    // 获取验证码
-    getCaptcha() {
-      captchaApi()
-        .then(res => {
-          // 假设接口返回 { data: '验证码图片Base64或URL', key: '验证码标识' }
-          this.captchImg = res.data;
-          this.loginForm.key = res.key; // 存储验证码标识（用于后端校验）
-        })
-        .catch(err => {
-          ElMessageBox.alert("验证码获取失败，请重试", "提示", {
-            type: "error"
-          });
-        });
-    },
-    // 跳转注册页（新窗口打开）
-    toRegister() {
-      const routeData = this.$router.resolve({ path: "/reg" });
-      window.open(routeData.href, "_blank");
-    },
-    // 跳转忘记密码页（新窗口打开）
-    toForgetPwd() {
-      const routeData = this.$router.resolve({ path: "/forgetPassword" });
-      window.open(routeData.href, "_blank");
-    },
-    // 提取路由中除redirect外的其他参数
-    getOtherQuery(query) {
-      const otherQuery = {};
-      Object.keys(query).forEach(key => {
-        if (key !== "redirect") {
-          otherQuery[key] = query[key];
-        }
-      });
-      return otherQuery;
-    },
-    // 微信公众号登录（按需启用）
-    agentWeiXinLogin() {
-      const isWechat = this.$wechat && this.$wechat.isWeixin(); // 需确保$wechat挂载到Vue原型
-      if (!isWechat) return;
-
-      const code = this.$route.query.code;
-      const state = this.$route.query.state;
-      const wxAuthPath = `${location.origin}/login`; // 微信授权回调地址
-
-      // 1. 无code：跳转微信授权页获取code
-      if (!code) {
-        getWXCodeByUrl(wxAuthPath, "step1"); // 调用微信授权工具
-        return;
-      }
-
-      // 2. 有code且state=step1：尝试微信自动登录
-      if (state === "step1") {
-        loginByWxCode(code)
-          .then(res => {
-            setToken(res.token); // 存储Token
-            this.$router.push({ path: this.redirect, query: this.otherQuery });
-          })
-          .catch(() => {
-            // 登录失败：重新获取code用于账号绑定
-            getWXCodeByUrl(wxAuthPath, "step2");
-          });
-      } else if (state === "step2") {
-        // 存储微信code用于后续绑定
-        this.loginForm.wxCode = code;
-      }
-    },
-    // 核心登录逻辑
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          // 调用登录接口
-          login(this.loginForm)
-            .then(res => {
-              setToken(res.token); // 存储Token到Cookie/LocalStorage
-              // 跳转首页或目标页面
-              log(this.redirect);
-              this.$router.push({
-                path: this.redirect,
-                query: this.otherQuery
-              });
-            })
-            .catch(err => {
-              this.loading = false;
-              // 登录失败提示（如用户名密码错误、验证码错误）
-              ElMessageBox.alert(err.message || "登录失败，请重试", "提示", {
-                type: "error"
-              });
-              // 失败后刷新验证码
-              this.getCaptcha();
-            });
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            console.log("login succeed");
+            this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
+            if (this.loginForm.rememberMe) {
+              localStorage.setItem('login-form', JSON.stringify(this.loginForm));
+            }
+            this.loading = false;
+          }).catch((error) => {
+            console.log("login failed");
+            this.loading = false;
+            if (error && error.status === 40006) {
+              this.$router.push({ path: '/loginErrSwiper' });
+            } else if (error && error.status === 40005) {
+              this.$router.push({ path: '/loginErrSwiper' });
+            } else {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
+            }
+          })
+        } else {
+          return false;
         }
+      })
+    },
+    getCaptcha() {
+      captchaApi().then(data => {
+        this.captchaImg = data.code;
+        this.loginForm.key = data.key;
+      }).catch(message => {
+        this.$message.info(message);
       });
+    },
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur === 'redirect') {
+          acc[cur] = query[cur];
+        }
+        return acc;
+      }, {});
     }
   }
-};
+}
 </script>
 
 <style scoped>

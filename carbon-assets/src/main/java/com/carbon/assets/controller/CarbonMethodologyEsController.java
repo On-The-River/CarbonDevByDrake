@@ -47,7 +47,7 @@ public class CarbonMethodologyEsController extends BaseController {
     @ApiOperation(value = "方法学全文检索列表",notes = "方法学全文检索列表")
     public ApiResult<Map> findByKeyword(@Valid @RequestBody(required = false) CarbonMethodologyQueryParam carbonMethodologyQueryParam)
     {
-        if(carbonMethodologyQueryParam.getSearchKey()!=""||carbonMethodologyQueryParam.getSearchKey()!=null)
+        if(!carbonMethodologyQueryParam.getSearchKey().isEmpty() && carbonMethodologyQueryParam.getSearchKey()!=null)
         {
             String content=carbonMethodologyQueryParam.getSearchKey();
             String name=carbonMethodologyQueryParam.getSearchKey();

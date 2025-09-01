@@ -56,7 +56,7 @@
     // height: 40px;
     // vertical-align: middle;
     // margin-right: 12px;
-       width: 230px; 
+       width: 230px;
        height: 70px
   }
   .sidebarLogoFade-enter,

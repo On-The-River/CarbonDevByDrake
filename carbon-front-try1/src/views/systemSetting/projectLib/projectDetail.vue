@@ -6,7 +6,7 @@
           <span class="header">项目详情</span
           ><span class="asset-title">{{ assetDetail["projectName"] }}</span>
           <el-divider></el-divider>
-          <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
+          <img src="../../../assets/icon/icon_plant.png" alt="" class="icon" />
           <span class="asset-little-title">基本信息</span>
           <div class="basic-div">
             <div class="item-div">
@@ -78,7 +78,7 @@
           </div>
           <br />
           <br />
-          <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
+          <img src="../../../assets/icon/icon_plant.png" alt="" class="icon" />
           <span class="asset-little-title">项目信息</span
           ><span class="detail" @click="toDetail" v-if="Url"
             >查看详情<i class="el-icon-d-arrow-right"></i
@@ -93,7 +93,7 @@
           </div>
           <br />
           <br />
-          <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
+          <img src="../../../assets/icon/icon_plant.png" alt="" class="icon" />
           <span class="asset-little-title">业主信息</span
           ><span class="detail" @click="toDetail" v-if="Url"
             >查看详情<i class="el-icon-d-arrow-right"></i
@@ -124,7 +124,7 @@
           </div>
           <br />
           <br />
-          <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
+          <img src="../../../assets/icon/icon_plant.png" alt="" class="icon" />
           <span class="asset-little-title">材料信息</span>
           <div class="fileDiv" style="">
             <div class="item-div">
@@ -158,13 +158,11 @@
 </template>
 
 <script>
-import { readCarbonProject } from "@/api/carbonAssetApi";
-import { openUrlInNewWindow } from "@/libs/OpenHelper";
-import { getExchangeDict } from "@/config/dictHelper";
-import { getDiliveryMethodeDict } from "@/config/dictHelper";
-import { getProjectLibDetail } from "@/api/systemSetting";
-import * as credit from "@/api/carbonAssetApi";
-import { log } from "util";
+import { openUrlInNewWindow } from "../../../libs/OpenHelper";
+import { getExchangeDict } from "../../../config/dictHelper";
+import { getDeliveryMethodeDict } from "../../../config/dictHelper";
+import { getProjectLibDetail } from "../../../api/systemSetting";
+
 export default {
   name: "",
   data() {
@@ -248,7 +246,7 @@ export default {
       }
     },
     format(val) {
-      if (val == "") {
+      if (val === "") {
         return "--";
       }
       if (!val) {
@@ -270,17 +268,17 @@ export default {
     loadDetail() {
       let id = this.$route.query;
       console.log(id);
-      var refId = id.refId;
-      var typeCode = id.typeCode;
+      const refId = id.refId;
+      const typeCode = id.typeCode;
       console.log(id);
       getProjectLibDetail(refId, typeCode).then(
         (res) => {
           this.assetDetail = res;
-          for (var i in this.assetDetail) {
+          for (const i in this.assetDetail) {
             this.assetDetail[i] = this.assetDetail[i]
               ? this.assetDetail[i]
               : "--";
-            if (this.assetDetail[i] == " ") {
+            if (this.assetDetail[i] === " ") {
               this.assetDetail[i] = "--";
             }
           }
@@ -303,7 +301,7 @@ export default {
   mounted() {
     this.loadDetail();
     this.exchangeList = getExchangeDict(this.$store);
-    this.tradeMethods = getDiliveryMethodeDict(this.$store);
+    this.tradeMethods = getDeliveryMethodeDict(this.$store);
   },
 };
 </script>

@@ -3,30 +3,43 @@
     <div class="divBox">
       <div class="content-container">
         <div class="cardBody">
-          <span class="header">碳配额详情</span><span class="asset-title">{{ assetDetail["projectName"] }}</span>
+          <span class="header">碳配额详情</span
+          ><span class="asset-title">{{ assetDetail["projectName"] }}</span>
           <el-divider></el-divider>
           <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
           <span class="asset-little-title">基本信息</span>
           <div class="basic-div" style="height: 90px">
             <div class="item-div">
-              <span class="item-title">签发日期</span> <br /><span class="item-content">{{ assetDetail["issuingDate"]
-              }}</span>
+              <span class="item-title">签发日期</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["issuingDate"] }}</span
+              >
             </div>
             <div class="item-div">
               <span class="item-title">签发凭证</span>
-              <br /><span class="item-content" style="color: #126fff; cursor: pointer">{{
-              assetDetail["issuingCertificates"] }}</span>
+              <br /><span
+                class="item-content"
+                style="color: #126fff; cursor: pointer"
+                >{{ assetDetail["issuingCertificates"] }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">有效期</span> <br /><span class="item-content">{{ assetDetail["expiryDate"]
-              }}</span>
+              <span class="item-title">有效期</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["expiryDate"] }}</span
+              >
             </div>
           </div>
           <br />
           <br />
           <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
-          <span class="asset-little-title">资产信息</span><span class="detail" @click="toDetail" v-if="assetDetail['projectIntroduction']">查看详情<i
-              class="el-icon-d-arrow-right"></i></span>
+          <span class="asset-little-title">资产信息</span
+          ><span
+            class="detail"
+            @click="toDetail"
+            v-if="assetDetail['projectIntroduction']"
+            >查看详情<i class="el-icon-d-arrow-right"></i
+          ></span>
           <div class="basic-div" style="padding: 20px 16px 20px 16px">
             <p class="paragraph">
               {{ assetDetail["projectIntroduction"] | format }}
@@ -35,116 +48,214 @@
           <br />
           <br />
           <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
-          <span class="asset-little-title">持仓信息</span><span class="detail" @click="toDetail">查看详情<i
-              class="el-icon-d-arrow-right"></i></span>
+          <span class="asset-little-title">持仓信息</span
+          ><span class="detail" @click="toDetail"
+            >查看详情<i class="el-icon-d-arrow-right"></i
+          ></span>
           <div class="basic-div" style="height: 174px">
             <div class="item-div">
-              <span class="item-title">资产状态</span> <br /><span class="item-content">{{ assetDetail["assetsStatusName"]}}</span>
+              <span class="item-title">资产状态</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["assetsStatusName"] }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">持仓总量(tCO2e)</span> <br /><span class="item-content">{{ setNumber(assetDetail["total"])}}</span>
-              
+              <span class="item-title">持仓总量(tCO2e)</span> <br /><span
+                class="item-content"
+                >{{ setNumber(assetDetail["total"]) }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">资产估值(¥)</span> <br /><span class="item-content">{{ setNumber(assetDetail["valuation"])}}</span>
+              <span class="item-title">资产估值(¥)</span> <br /><span
+                class="item-content"
+                >{{ setNumber(assetDetail["valuation"]) }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">可用数量(tCO2e)</span> <br /><span class="item-content">{{ setNumber(assetDetail["availableAmount"]) }}</span>
+              <span class="item-title">可用数量(tCO2e)</span> <br /><span
+                class="item-content"
+                >{{ setNumber(assetDetail["availableAmount"]) }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">锁定数量(tCO2e)</span> <br /><span class="item-content">{{ setNumber(assetDetail["lockedAmount"]) }}</span>
+              <span class="item-title">锁定数量(tCO2e)</span> <br /><span
+                class="item-content"
+                >{{ setNumber(assetDetail["lockedAmount"]) }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">冻结数量(tCO2e)</span> <br /><span class="item-content">{{setNumber(assetDetail["frozenAmount"]) }}</span>
+              <span class="item-title">冻结数量(tCO2e)</span> <br /><span
+                class="item-content"
+                >{{ setNumber(assetDetail["frozenAmount"]) }}</span
+              >
             </div>
           </div>
           <br />
           <br />
           <img src="@/assets/icon/icon_plant.png" alt="" class="icon" />
-          <span class="asset-little-title">交易信息</span><span class="detail" @click="toAccount">查看详情<i
-              class="el-icon-d-arrow-right"></i></span>
+          <span class="asset-little-title">交易信息</span
+          ><span class="detail" @click="toAccount"
+            >查看详情<i class="el-icon-d-arrow-right"></i
+          ></span>
           <div class="basic-div" style="height: 174px">
             <div class="item-div">
-              <span class="item-title">交易状态</span> <br /><span class="item-content">{{
-              assetDetail["transactionStatusName"] }}</span>
+              <span class="item-title">交易状态</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["transactionStatusName"] }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">交割场所</span> <br /><span class="item-content">{{ assetDetail["carbonExchangeId"]
-              }}</span>
+              <span class="item-title">交割场所</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["carbonExchangeId"] }}</span
+              >
             </div>
             <div class="item-div">
               <span class="item-title">购入凭证</span>
-              <br /><span class="item-content" style="color: #126fff; cursor: pointer" @click="toBuyFile">{{
-              assetDetail["buyCertificateFileName"] | file }}</span>
+              <br /><span
+                class="item-content"
+                style="color: #126fff; cursor: pointer"
+                @click="toBuyFile"
+                >{{ assetDetail["buyCertificateFileName"] | file }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">购入单价(¥)</span> <br /><span class="item-content">{{ assetDetail["buyUnitPrice"]
-              }}</span>
+              <span class="item-title">购入单价(¥)</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["buyUnitPrice"] }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">购入总价(¥)</span> <br /><span class="item-content">{{ assetDetail["buyTotalPrice"]
-              }}</span>
+              <span class="item-title">购入总价(¥)</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["buyTotalPrice"] }}</span
+              >
             </div>
             <div class="item-div">
-              <span class="item-title">购入日期</span> <br /><span class="item-content">{{ assetDetail["buyDate"] }}</span>
+              <span class="item-title">购入日期</span> <br /><span
+                class="item-content"
+                >{{ assetDetail["buyDate"] }}</span
+              >
             </div>
           </div>
           <br />
           <br />
           <div class="basic-div" style="height: 89px; background-color: white">
-            <button style="width: 96px; float: right" class="light-green-btn" @click="insideTransaction">
+            <button
+              style="width: 96px; float: right"
+              class="light-green-btn"
+              @click="insideTransaction"
+            >
               场内交易
             </button>
-            <button style="width: 96px; float: right; margin-right: 20px" class="light-green-btn"
-              @click="ousideTransaction">
+            <button
+              style="width: 96px; float: right; margin-right: 20px"
+              class="light-green-btn"
+              @click="ousideTransaction"
+            >
               场外报价
             </button>
-            <button style="width: 96px; float: right; margin-right: 20px" class="normal-white-btn" @click="goback">
+            <button
+              style="width: 96px; float: right; margin-right: 20px"
+              class="normal-white-btn"
+              @click="goback"
+            >
               返回
             </button>
           </div>
 
           <!-- 场外交易按钮弹出页面 -->
-          <el-dialog :title="title" :visible.sync="dialogFormVisible" width="720px">
-            <el-form label-position="left" label-width="130px" :model="form" :rules="rules">
+          <el-dialog
+            :title="title"
+            :visible.sync="dialogFormVisible"
+            width="720px"
+          >
+            <el-form
+              label-position="left"
+              label-width="130px"
+              :model="form"
+              :rules="rules"
+            >
               <el-form-item label="出售数量(tCO2e)" prop="tradeQuantity">
-                <el-input v-model="form.tradeQuantity" size="medium" style="width: 268px; top: -5px"></el-input>
+                <el-input
+                  v-model="form.tradeQuantity"
+                  size="medium"
+                  style="width: 268px; top: -5px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="出售单价(￥)" prop="negotiatedPrice">
-                <el-input v-model="form.negotiatedPrice" size="medium" style="width: 268px; top: -5px"></el-input>
+                <el-input
+                  v-model="form.negotiatedPrice"
+                  size="medium"
+                  style="width: 268px; top: -5px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="出售截止时间" prop="expirationDate">
-                <el-date-picker type="date" placeholder="选择日期" size="medium" v-model="form.expirationDate"
-                  style="width: 268px; top: -5px"></el-date-picker>
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  size="medium"
+                  v-model="form.expirationDate"
+                  style="width: 268px; top: -5px"
+                ></el-date-picker>
               </el-form-item>
               <el-form-item label="期望交割时间" prop="deliveryTime">
-                <el-date-picker type="date" placeholder="选择日期" size="medium" v-model="form.deliveryTime"
-                  style="width: 268px; top: -5px"></el-date-picker>
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  size="medium"
+                  v-model="form.deliveryTime"
+                  style="width: 268px; top: -5px"
+                ></el-date-picker>
               </el-form-item>
               <el-form-item label="期望交割方式" prop="deliveryMethod">
-                <el-select v-model="form.deliveryMethod" placeholder="协议转入、竞价交易、定价交易" size="medium"
-                  style="width: 536px; top: -5px">
-                  <el-option v-for="(item, index) in tradeMethods" :key="index" :label="item.name" :value="item.value">
+                <el-select
+                  v-model="form.deliveryMethod"
+                  placeholder="协议转入、竞价交易、定价交易"
+                  size="medium"
+                  style="width: 536px; top: -5px"
+                >
+                  <el-option
+                    v-for="(item, index) in tradeMethods"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.value"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="期望交割场所" prop="deliveryExchange">
-                <el-select v-model="form.deliveryExchange" placeholder="全国碳排放权交易中心、北京环境交易所、上海环境能源交易所" size="medium"
-                  style="width: 536px; top: -5px">
-                  <el-option v-for="(item, index) in exchangeList" :key="index" :label="item.name" :value="item.value">
+                <el-select
+                  v-model="form.deliveryExchange"
+                  placeholder="全国碳排放权交易中心、北京环境交易所、上海环境能源交易所"
+                  size="medium"
+                  style="width: 536px; top: -5px"
+                >
+                  <el-option
+                    v-for="(item, index) in exchangeList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.value"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="submit" class="light-green-btn">确 定</el-button>
+              <el-button type="primary" @click="submit" class="light-green-btn"
+                >确 定</el-button
+              >
             </div>
           </el-dialog>
           <el-dialog title="报价成功" :visible.sync="showQuotation" width="30%">
             <span>是否进入供需行情，参与碳交易？</span>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="showQuotation = false" class="normal-white-btn">取 消</el-button>
-              <el-button @click="toQuotation" class="light-green-btn">确 定</el-button>
+              <el-button @click="showQuotation = false" class="normal-white-btn"
+                >取 消</el-button
+              >
+              <el-button @click="toQuotation" class="light-green-btn"
+                >确 定</el-button
+              >
             </span>
           </el-dialog>
         </div>
@@ -157,9 +268,9 @@
 import { carbonQuotaDetail } from "@/api/carbonAssetApi";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import { getExchangeDict } from "@/config/dictHelper";
-import { getDiliveryMethodeDict } from "@/config/dictHelper";
+import { getDeliveryMethodeDict } from "@/config/dictHelper";
 import * as credit from "@/api/carbonAssetApi";
-import { setLargeNumber } from "@/libs/public"
+import { setLargeNumber } from "@/libs/public";
 export default {
   name: "",
   data() {
@@ -223,7 +334,7 @@ export default {
         //     message: "请选择交割场所",
         //     trigger: "change",
         //   },
-        // ],
+        // ],;
       },
       title: "",
     };
@@ -231,7 +342,7 @@ export default {
   mounted() {
     this.loadDetail();
     this.exchangeList = getExchangeDict(this.$store);
-    this.tradeMethods = getDiliveryMethodeDict(this.$store);
+    this.tradeMethods = getDeliveryMethodeDict(this.$store);
   },
   filters: {
     file(value) {
@@ -247,11 +358,11 @@ export default {
     },
   },
   methods: {
-    setNumber(str){
-      return setLargeNumber(str)
+    setNumber(str) {
+      return setLargeNumber(str);
     },
     toDetail() {
-      this.$router.push("/account/wallet")
+      this.$router.push("/account/wallet");
     },
     // 上架成功跳转
     toQuotation() {
@@ -262,7 +373,7 @@ export default {
         openUrlInNewWindow(this.assetDetail["buyCertificate"]);
       }
     },
-    toAccount(){
+    toAccount() {
       openUrlInNewWindow(this.assetDetail["carbonExchangeWebsite"]);
     },
     loadDetail() {
@@ -309,7 +420,7 @@ export default {
       this.form.assetType = this.assetDetail["transactionStatus"];
       this.form.institutionName = this.assetDetail["projectName"];
       let title = this.assetDetail["agencyName"];
-      this.title = "场外报价：" + title
+      this.title = "场外报价：" + title;
       this.form.deliveryMethod = "0190000000";
       this.form.deliveryExchange = "0170000000";
     },
@@ -338,7 +449,7 @@ export default {
               this.dialogFormVisible = false;
               this.loadDetail();
             },
-            (err) => { }
+            (err) => {}
           );
         },
         (err) => {

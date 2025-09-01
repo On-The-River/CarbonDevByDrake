@@ -4,7 +4,7 @@
       <!-- <img class="head-icon" src="@/assets/imgs/icon_accoun_logo.jpg" /> -->
       <img v-if="baseInfo.avatar" class="head-icon" :src="baseInfo.avatar" />
       <span class="baseInfo">基本信息</span>
-      <div class="div-holder" />
+      <div class="div-holder"></div>
       <button class="light-green-btn btn-modify-psw" @click="editBaseInfo(1)">
         修改密码
       </button>
@@ -713,7 +713,7 @@ export default {
     upLoadParamTranFile(response, file, fileList) {
       if (response) {
         this.tranFileUrl = response.msg;
-        // let info = JSON.parse(Cookies.get("JavaInfo")); 
+        // let info = JSON.parse(Cookies.get("JavaInfo"));
         // let datas = {
         //   accountName: this.addUserFrom.accountName, //账户名
         //   carbonExchangeId: this.addUserFrom.carbonExchangeId[0], //	碳交易所ID
@@ -751,7 +751,7 @@ export default {
       getAccoutBaseInfo(parseInt(info.accountId))
         .then((res) => {
           this.baseInfo = res;
-          if (!this.baseInfo.avatar || this.baseInfo.avatar == "" || (this.baseInfo.avatar).match(/^[ ]*$/)) {
+          if (!this.baseInfo.avatar || this.baseInfo.avatar === "" || (this.baseInfo.avatar).match(/^[ ]*$/)) {
             this.baseInfo.avatar = "/static/img/icon_accoun_logo.e4db51e4.jpg";
           }
           this.baseInfo.email = res.email || "--";
@@ -1335,7 +1335,7 @@ export default {
   }
   ::v-deep .el-tabs__item {
     font-size: 16px;
-    font-family: PingFangSC-Regular, PingFang SC;
+    font-family: PingFangSC-Regular, PingFang SC, serif;
     font-weight: 400;
     color: #5e6c84;
   }

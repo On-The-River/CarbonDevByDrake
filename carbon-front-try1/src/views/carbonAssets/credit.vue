@@ -1,11 +1,12 @@
 <template>
   <div class="carbon-credit-page">
-    <!-- 面包屑导航 -->
-    <el-breadcrumb separator="/" style="margin: 10px 20px;">
+    <!-- 面包屑 -->
+    <el-breadcrumb separator="/" style="margin: 10px 20px">
       <el-breadcrumb-item>首页</el-breadcrumb-item>
       <el-breadcrumb-item>碳信用</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 我的碳信用资产概览区域 -->
+
+    <!-- 资产概览 -->
     <el-card class="asset-overview-card">
       <div slot="header">
         <i class="el-icon-menu"></i>
@@ -16,12 +17,13 @@
         锁定数量 {{ locked }}(tCO2e) | 冻结数量 {{ frozen }}(tCO2e)
       </div>
       <div class="operation-btns">
-        <el-button type="success">上传</el-button>
-        <el-button type="primary" style="margin-left: 10px;">我想买</el-button>
+        <el-button type="success" plain @click="onUpload">上传</el-button>
+        <el-button type="primary" @click="onBuyClick">我想买</el-button>
       </div>
     </el-card>
-    <!-- 查询筛选区域 -->
-    <el-card class="search-filter-card" style="margin-top: 20px;">
+
+    <!-- 查询筛选 -->
+    <el-card class="search-filter-card" style="margin-top: 20px">
       <el-form :inline="true" :model="searchForm" class="search-form">
         <el-form-item label="核证标准">
           <el-select
@@ -33,8 +35,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="领域">
@@ -44,8 +45,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="交易状态">
@@ -55,8 +55,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="资产状态">
@@ -66,19 +65,18 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="签发日期">
           <el-date-picker
-            v-model="searchForm.issuingDate"
+            v-model="dateRange"
             type="daterange"
             range-separator="至"
             start-placeholder="选择开始时间"
             end-placeholder="选择结束时间"
-          >
-          </el-date-picker>
+            @change="handleDateChange"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="按项目搜索">
           <el-input
@@ -101,21 +99,22 @@
       </el-form>
     </el-card>
     <!-- 表格数据区域 -->
-    <el-card class="table-card" style="margin-top: 20px;">
+    <el-card class="table-card" style="margin-top: 20px">
       <el-table
         :data="list"
         border
-        style="width: 100%;"
+        style="width: 100%"
         :header-cell-style="{ background: '#f2f5f7' }"
-        :row-key="row => row.id"
+        :row-key="(row) => row.id"
         @selection-change="handleSelectionChange"
         :render-header="renderCheckHeader"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column label="序号" align="center" width="60">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
+          <template v-slot:default="scope">
+            {{ (current - 1) * pageSize + scope.$index + 1 }}
           </template>
+          <!-- 自定义的import里面的名字作为标签 -->
         </el-table-column>
         <el-table-column prop="projectName" label="项目名称"> </el-table-column>
         <el-table-column prop="certificationCriteriaName" label="核证标准">
@@ -129,7 +128,7 @@
         </el-table-column>
         <el-table-column prop="issuingDate" label="签发日期"> </el-table-column>
         <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <el-button type="text" @click="viewDetail(scope.row)"
               >查看</el-button
             >
@@ -143,7 +142,7 @@
             <el-button
               type="text"
               @click="onClickDelete(scope.row)"
-              style="color: red;"
+              style="color: red"
               >删除</el-button
             >
           </template>
@@ -158,7 +157,7 @@
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-        style="padding: 15px; text-align: right;"
+        style="padding: 15px; text-align: right"
       >
       </el-pagination>
     </el-card>
@@ -166,89 +165,115 @@
 </template>
 
 <script>
+// 确保接口方法正确引入
+import { loadCarbonCreditPageList } from "../../api/carbonAssetApi";
+import { delCredit } from "../../api/carbonAssetApi";
+// 引用场外上架的页面~~~~~
 import {
-  getCityDict,
-  getCreditData,
-  searchKeyword
-} from "@/api/carbonAssetApi";
-import {
-  CertificationCriteria,
-  ProjectArea,
-  AssetTradeStatus,
-  AssetStatus,
-  getAllDict
-} from "@/config/dictHelper";
+  getCertificationCriteriaDict,
+  getProjectAreaDict,
+  getAssetTradeStatusDict,
+  getAssetStatusDict,
+} from "../../config/dictHelper";
 
 export default {
   name: "CarbonCredit",
+  components: {
+    // 引用场外上架的页面
+    // OuterShelve: () => import("../outerShelve.vue"),
+    // import里面的名字
+  },
   data() {
     return {
-      // 分页相关
       list: [],
       total: 0,
       current: 1,
       pageSize: 10,
-      pageCount: 0,
-      // 查询条件
+      dateRange: [],
       searchForm: {
         certificationCriteria: "",
         industry: "",
         transactionStatus: "",
         assetsStatus: "",
-        issuingDate: [],
+        issuingDateStart: "",
+        issuingDateEnd: "",
         projectName: "",
-        methodName: ""
+        methodName: "",
       },
-      // 字典数据
       optionsStandard: [],
       optionsIndustry: [],
       optionsOnlines: [],
       optionsAssetStatus: [],
-      // 复选框相关
-      allchecked: false,
-      indeterminateFlag: false,
-      articals: [],
-      reRender: false,
-      // 资产概览数据
       totalHold: 200,
       available: 200,
       locked: 0,
-      frozen: 0
+      frozen: 0,
     };
   },
   methods: {
-    // 处理表格数据格式化
     formatTableData(list) {
-      return list.map(v => {
-        v.industryCodeName = v.industryCodeName ? v.industryCodeName : "--";
-        if (v.issuingDate) {
-          let time = v.issuingDate.split(" ");
-          v.issuingDate = time[0];
-        }
-        for (var i in v) {
-          v[i] = v[i] ? v[i] : "--";
-          if (v[i] === " ") {
-            v[i] = "--";
-          }
-        }
-        return v;
-      });
+      // 格式化表格数据
+      return list.map((item) => ({
+        ...item,
+        // 格式化日期
+        // 分别处理开始和结束时间
+        issuingDateStart: item.issuingDateStart
+          ? new Date(item.issuingDateStart).toLocaleDateString()
+          : "",
+        issuingDateEnd: item.issuingDateEnd
+          ? new Date(item.issuingDateEnd).toLocaleDateString()
+          : "",
+        // 处理状态显示
+        assetsStatusName: this.getStatusName(item.assetsStatus),
+        // 格式化资产估值，保留2位小数
+        assetValue: item.assetValue
+          ? Number(item.assetValue).toFixed(2)
+          : "0.00",
+      }));
+    },
+    getStatusName(status) {
+      const statusMap = {
+        1: "正常",
+        2: "锁定",
+        3: "冻结",
+        4: "已用完",
+      };
+      return statusMap[status] || "未知";
     },
     onEdit(row) {
-      // 编辑逻辑，可根据需求补充
-      console.log("编辑", row);
-    },
-    onClickPublish(row) {
-      // 发布逻辑，可根据需求补充
-      console.log("发布", row);
+      // 跳转到编辑页面
+      this.$router.push({
+        path: "/carbonAssets/method/editMethod",
+        query: {
+          id: row.id,
+          type: "edit",
+        },
+      });
     },
     onClickDelete(row) {
-      // 删除逻辑，可根据需求补充（建议增加确认提示）
-      console.log("删除", row);
-    },
-    onClickOffline(row) {
-      // 下线逻辑，可根据需求补充
-      console.log("下线", row);
+      this.$confirm("确认删除该碳资产记录吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          try {
+            // TODO: 调用删除API
+            const res = await delCredit(row.id);
+            if (res.code === 200) {
+              this.$message.success("删除成功");
+              this.getList(); // 刷新列表
+            } else {
+              this.$message.error(res.msg || "删除失败");
+            }
+          } catch (error) {
+            console.error("删除失败:", error);
+            this.$message.error("删除失败：" + (error.message || "未知错误"));
+          }
+        })
+        .catch(() => {
+          this.$message.info("已取消删除");
+        });
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -258,170 +283,114 @@ export default {
       this.current = val;
       this.getList();
     },
-    // 监听页面宽度变化，刷新表格（若有需要可结合 resize 事件完善）
-    handleResize() {
-      // 若有图表等需resize的组件，补充逻辑
-    },
-    // 场内交易
     insideTransaction(row) {
       this.$router.push({
-        path: "/trade/account/exchange",
-        query: { row } // 传递数据，可根据需求调整
+        path: "/systemSetting/exchangeManager",
+        query: { row },
       });
     },
-    update() {
-      const data = {
-        certificationCriteria: this.searchForm.certificationCriteria,
-        transactionStatus: this.searchForm.transactionStatus,
-        issuingDate:
-          this.searchForm.issuingDate && this.searchForm.issuingDate.length
-            ? this.searchForm.issuingDate[0]
-            : "",
-        issuingDateStart: "", // 原代码里未明确该字段逻辑，可根据实际接口调整
-        projectName: this.searchForm.projectName,
-        methodName: this.searchForm.methodName,
-        assetsStatus: this.searchForm.assetsStatus,
-        projectScopeCode: this.searchForm.industry,
-        issuingDateEnd:
-          this.searchForm.issuingDate && this.searchForm.issuingDate.length
-            ? this.searchForm.issuingDate[1]
-            : ""
-      };
-      loadCarbonCreditPageList(data)
-        .then(res => {
-          this.list = this.formatTableData(res.data.records);
-          this.total = Number(res.data.total);
-          this.current = Number(res.data.current);
-          this.pageCount = Math.ceil(this.total / this.pageSize);
-        })
-        .catch(error => {
-          console.error("请求失败", error);
-        });
-    },
-    getList() {
-      const data = {
-        asc: true,
-        current: this.current,
-        size: this.pageSize
-      };
-      loadCarbonCreditPageList(data)
-        .then(res => {
-          if (res.data.records) {
-            this.list = this.formatTableData(res.data.records);
-          }
-          this.total = Number(res.data.total);
-          this.current = Number(res.data.current);
-          this.pageCount = Math.ceil(this.total / this.pageSize);
-        })
-        .catch(error => {
-          console.error("请求失败", error);
-        });
-    },
-    // checkbox 相关
-    signCheckChange() {
-      let allCheckedFlag = true;
-      let allReset = true;
-      this.articals.forEach(item => {
-        if (item.checked === true) {
-          allReset = false;
+    async getList() {
+      try {
+        const data = {
+          asc: true,
+          current: this.current,
+          size: this.pageSize,
+          ...this.searchForm,
+        };
+        console.log("请求参数", data);
+
+        const res = await loadCarbonCreditPageList(data);
+        console.log("接口返回", res);
+
+        if (res.code === 200) {
+          this.list = this.formatTableData(res.data? res.data.records : []);
+          this.total = res.data? res.data.total : 0;
         } else {
-          allCheckedFlag = false;
+          this.$message.error(res.msg || "获取列表失败");
         }
-      });
-      if (allCheckedFlag || allReset) {
-        this.indeterminateFlag = false;
-        this.allchecked = allCheckedFlag;
-      } else {
-        this.indeterminateFlag = true;
+      } catch (error) {
+        console.error("请求失败", error);
+        this.$message.error("获取列表失败：" + (error.message || "未知错误"));
       }
-      this.reRender = !this.reRender;
     },
-    // render-header 方法
-    renderCheckHeader(h, { column, $index }) {
-      return h("span", {}, [
-        h("el-checkbox", {
-          props: {
-            checked: this.allchecked,
-            indeterminate: this.indeterminateFlag
-          },
-          on: {
-            change: this.signCheckChange
-          }
-        })
-      ]);
-    },
-    // 格式化验证标准字典
-    formatCertification(data) {
-      data.forEach(v => {
-        let CertificationItem = {
-          label: v.name === "全部" ? v.name : v.name,
-          value: v.name !== "全部" ? v.value : ""
-        };
-        this.optionsStandard.push(CertificationItem);
-      });
-    },
-    // 格式化行业类型字典
-    formatIndustry(data) {
-      data.forEach(v => {
-        let CertificationItem = {
-          label: v.name === "全部" ? v.name : v.name,
-          value: v.name !== "全部" ? v.value : ""
-        };
-        this.optionsIndustry.push(CertificationItem);
-      });
-    },
-    // 格式化状态类型字典
-    formatStatus(data) {
-      data.forEach(v => {
-        let CertificationItem = {
-          label: v.name === "全部" ? v.name : v.name,
-          value: v.name !== "全部" ? v.value : ""
-        };
-        this.optionsOnlines.push(CertificationItem);
-      });
-    },
-    // 格式化状态类型字典
-    formatAssetStatus(data) {
-      data.forEach(v => {
-        let CertificationItem = {
-          label: v.name === "全部" ? v.name : v.name,
-          value: v.name !== "全部" ? v.value : ""
-        };
-        this.optionsAssetStatus.push(CertificationItem);
-      });
-    },
-    // 查看详情
     viewDetail(row) {
-      console.log("查看详情", row);
+      // 跳转到碳资产详情页面
+      this.$router.push({
+        path: "/carbonAssets/assetDetail",
+        query: { id: row.id },
+      });
     },
-    // 场外上架
     outerShelve(row) {
-      console.log("场外上架", row);
+      // 跳转到场外上架页面,与详情页中的场外报价功能相同
+      // this.$router.push({
+      //   path: "/carbonAssets/assetDetail",
+      //   query: {
+      //     id: row.id,
+      //     action: "shelve", // 标记是从场外上架按钮进入
+      //   },
+      // });
     },
-    // 处理多选
-    handleSelectionChange(val) {
-      this.articals = val;
-      this.signCheckChange();
-    }
-  },
-  created() {
-    // this.handleChangeVisitType();
+    onBuyClick() {
+      // 跳转到交易页面
+      this.$router.push({
+        path: "/carbonTrade/quotation/buyAssets",
+      });
+    },
+    onUpload() {
+      // 跳转到上传页面
+      this.$router.push({
+        path: "/carbonAssets/carbonUpload",
+      });
+    },
+    formatCertification(data) {
+      if (!Array.isArray(data)) return;
+      this.optionsStandard = data.map((v) => ({
+        label: v.name === "全部" ? v.name : v.name,
+        value: v.name !== "全部" ? v.value : "",
+      }));
+    },
+    formatIndustry(data) {
+      if (!Array.isArray(data)) return;
+      this.optionsIndustry = data.map((v) => ({
+        label: v.name === "全部" ? v.name : v.name,
+        value: v.name !== "全部" ? v.value : "",
+      }));
+    },
+    formatStatus(data) {
+      if (!Array.isArray(data)) return;
+      this.optionsOnlines = data.map((v) => ({
+        label: v.name === "全部" ? v.name : v.name,
+        value: v.name !== "全部" ? v.value : "",
+      }));
+    },
+    formatAssetStatus(data) {
+      if (!Array.isArray(data)) return;
+      this.optionsAssetStatus = data.map((v) => ({
+        label: v.name === "全部" ? v.name : v.name,
+        value: v.name !== "全部" ? v.value : "",
+      }));
+    },
+    handleDateChange(value) {
+      if (value && value.length === 2) {
+        this.searchForm.issuingDateStart = value[0];
+        this.searchForm.issuingDateEnd = value[1];
+      } else {
+        this.searchForm.issuingDateStart = "";
+        this.searchForm.issuingDateEnd = "";
+      }
+    },
   },
   mounted() {
+    console.log("credit mounted");
     this.getList();
-    this.exchangeList = getExchangeDict(this.$store);
-    this.tradeMethods = getDeliveryMethodDict(this.$store);
-    let Certification = getCertificationCriteriaDict(this.$store);
-    this.formatCertification(Certification);
-    let projectArea = getProjectAreaDict(this.$store);
-    this.formatIndustry(projectArea);
-    let assetTradeStatus = getAssetTradeStatusDict(this.$store);
-    this.formatStatus(assetTradeStatus);
-    let assetStatus = getAssetStatusDict(this.$store);
-    this.formatAssetStatus(assetStatus);
-  }
+    this.formatCertification(getCertificationCriteriaDict(this.$store));
+    this.formatIndustry(getProjectAreaDict(this.$store));
+    this.formatStatus(getAssetTradeStatusDict(this.$store));
+    this.formatAssetStatus(getAssetStatusDict(this.$store));
+  },
 };
 </script>
+
 <style lang="scss" scoped>
 .root {
   background: #f2f5f7;
@@ -446,30 +415,30 @@ export default {
   width: 100%;
 }
 
-::v-deep(.el-cascader .el-input .el-input__inner),
-::v-deep(.el-cascader .el-input.is-focus .el-input__inner) {
+:deep(.el-cascader .el-input .el-input__inner),
+:deep(.el-cascader .el-input.is-focus .el-input__inner) {
   border-color: transparent;
 }
 
-::v-deep(.el-date-picker.has-sidebar.has-time) {
+:deep(.el-date-picker.has-sidebar.has-time) {
   background: #0a5857d6;
   color: #fff;
   border: 1px solid #22f4d6;
 }
 
-::v-deep(.el-date-picker__header-label) {
+:deep(.el-date-picker__header-label) {
   color: #ffffff;
 }
 
 .acea-row {
-  ::v-deep(.el-avatar--small) {
+  :deep(.el-avatar--small) {
     width: 22px;
     height: 22px;
   }
 }
 
 .checkTime {
-  ::v-deep(.el-radio__input) {
+  :deep(.el-radio__input) {
     display: none;
   }
 }
@@ -479,7 +448,7 @@ export default {
 }
 
 .dashboard-console-visit {
-  ::v-deep(.el-card__header) {
+  :deep(.el-card__header) {
     padding: 14px 20px !important;
   }
 

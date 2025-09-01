@@ -113,7 +113,7 @@
           background: '#F2F5F7',
           border: '0px solid #DDDDDD',
           color: '#424B35',
-          height: '64px'
+          height: '64px',
         }"
         show-header
         :data="list"
@@ -340,7 +340,7 @@ import {
   getExchangeDict,
   getDeliveryMethodeDict,
   getAssetStatusDict,
-  AssetStatus
+  AssetStatus,
 } from "@/config/dictHelper";
 import carbonUploadVue from "./carbonUpload.vue";
 import { setListNo } from "@/libs/public";
@@ -359,7 +359,7 @@ export default {
             time.getTime() <
             new Date().setTime(new Date().getTime() - 3600 * 1000 * 24)
           );
-        }
+        },
       },
       indeterminateFlag: false, // 表头复选框状态
       reRender: true, // 重新渲染列表使用
@@ -382,7 +382,7 @@ export default {
         total: 0,
         availableAmount: 0,
         lockedAmount: 0,
-        frozenAmount: 0
+        frozenAmount: 0,
       },
       form: {
         id: 0,
@@ -397,13 +397,13 @@ export default {
         status: "",
         projectId: null,
         assetType: "0140000002", // 资产类型
-        institutionName: ""
+        institutionName: "",
       },
       // 校验规则
       rules: {
         tradeQuantity: [
-          { required: true, message: "请输入出售数量", trigger: "blur" }
-        ]
+          { required: true, message: "请输入出售数量", trigger: "blur" },
+        ],
         // negotiatedPrice: [
         //   { required: true, message: "请输入出售单价", trigger: "blur" }
         // ],
@@ -436,26 +436,26 @@ export default {
         //     message: "请选择交割场所",
         //     trigger: "change"
         //   }
-        // ]
+        // ];
       },
       title: "",
       pageSize: 10,
       optionsStandard: [
         {
           value: "",
-          label: ""
-        }
+          label: "",
+        },
       ],
       optionsOnlines: [
         {
           value: "",
-          label: ""
-        }
+          label: "",
+        },
       ],
       value: "",
       selectedAssetStatus: "", // 选中的资产状态
       selectDate: "",
-      selectEndDate: ""
+      selectEndDate: "",
     };
   },
   mounted() {
@@ -511,9 +511,9 @@ export default {
     },
     // 格式化状态类型字典
     formatAssetStatus(data) {
-      data.map(v => {
+      data.map((v) => {
         let CertificationItem = {
-          label: ""
+          label: "",
         };
         if (v.name === "全部") {
           CertificationItem.label = v.name;
@@ -530,7 +530,7 @@ export default {
     toDetail(id) {
       this.$router.push({
         path: "/assets/quato/quataDetail",
-        query: { id: id }
+        query: { id: id },
       });
     },
     onClickSearch() {
@@ -538,10 +538,10 @@ export default {
         AssetStatus: this.selectedAssetStatus[0],
         expiryDataStart: this.selectDate,
         expiryDataEnd: this.selectEndDate,
-        agencyName: this.searchKeyword
+        agencyName: this.searchKeyword,
       };
       quota.loadCarbonQuotaPageList(data).then(
-        res => {
+        (res) => {
           // 将接口返回的记录数据赋值给 list
           this.list = res.data.records;
           // 处理总条数、当前页码、总页数
@@ -550,7 +550,7 @@ export default {
           this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
 
           // 遍历表格数据做格式化处理
-          this.list.map(v => {
+          this.list.map((v) => {
             // 切割日期时间，只保留日期部分
             let time = v.expiryDate.split(" ");
             v.expiryDate = time[0];
@@ -564,7 +564,7 @@ export default {
             }
           });
         },
-        err => {
+        (err) => {
           // 接口报错时提示（注意：通常查询失败用 error，成功用 success 可能语义不对，可根据实际场景调整）
           this.$message.success("查询失败");
         }
@@ -591,7 +591,7 @@ export default {
       this.form.assetType = row.transactionStatus;
       this.form.institutionName = row.agencyName;
       this.sellCarbonTotal = row.availableAmount;
-      // this.form.projectType = row.fieldChildCode; // 注释的字段赋值（可根据需求启用）
+      // this.form.projectType = row.fieldChildCode; // 注释的字段赋值（可根据需求启用）;
     },
 
     // 每页条数改变逻辑：更新 pageSize 并重新获取列表
@@ -611,7 +611,7 @@ export default {
       if (column.label !== "操作") {
         this.toDetail(row.id);
       }
-      // openUrlInNewWindow(row.sourceFileUrl) // 注释的打开新窗口逻辑（可根据需求启用）
+      // openUrlInNewWindow(row.sourceFileUrl) // 注释的打开新窗口逻辑（可根据需求启用）;
     },
 
     // 监听页面宽度变化：触发图表自适应（需保证 infoList 和 visitChart 存在）
@@ -624,17 +624,17 @@ export default {
         asc: true,
         current: page,
         size: this.pageSize,
-        sortField: ""
+        sortField: "",
         // "status": 0,
-        // "type": 0
+        // "type": 0;
       };
 
       // 调用接口获取碳配额分页数据
       quota
         .loadCarbonQuotaPageList(data)
-        .then(res => {
+        .then((res) => {
           // 遍历数据，根据资产状态码映射状态名称
-          res.data.records.forEach(function(e) {
+          res.data.records.forEach(function (e) {
             if (e.assetsStatus === "0130000004") {
               e.assetsStatusName = "待审核";
             } else if (e.assetsStatus === "0130000001") {
@@ -655,7 +655,7 @@ export default {
           this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
 
           // 遍历表格数据做格式化处理
-          this.list.map(v => {
+          this.list.map((v) => {
             // 切割日期，仅保留日期部分（去掉时间）
             if (v.expiryDate) {
               let time = v.expiryDate.split(" ");
@@ -672,7 +672,7 @@ export default {
             // v.transactionStatusName = this.switchTradeStatus(v.transactionStatus);
           });
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     update() {
       // 构造查询参数：资产状态、日期范围、关键词
@@ -680,13 +680,13 @@ export default {
         assetsStatus: this.selectedAssetStatus[0],
         expiryDateStart: this.selectDate,
         expiryDateEnd: this.selectEndDate,
-        agencyName: this.searchKeyword
+        agencyName: this.searchKeyword,
       };
 
       // 调用接口加载碳配额分页数据
       quota
         .loadCarbonQuotaPageList(data)
-        .then(res => {
+        .then((res) => {
           // 更新表格数据及分页信息
           this.list = res.data.records;
           this.total = Number(res.data.total);
@@ -694,7 +694,7 @@ export default {
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
 
           // 遍历数据做格式化处理
-          this.list.map(v => {
+          this.list.map((v) => {
             v.checked = false; // 重置复选框状态
             v.type = v.type ? v.type : "--"; // 空值处理
             // 切割日期，仅保留日期部分（去掉时间）
@@ -708,14 +708,14 @@ export default {
             }
           });
         })
-        .catch(error => {}); // 捕获异常（可补充具体逻辑）
+        .catch((error) => {}); // 捕获异常（可补充具体逻辑）;
     },
     // 提交表单按钮：修改碳信用状态、校验及接口调用
     submit(formName) {
       // 构造修改碳信用状态的参数
       const data = {
         id: this.form.id,
-        transactionStatus: "0160000001"
+        transactionStatus: "0160000001",
       };
 
       // 校验：出售数量不能超过可用量
@@ -729,24 +729,24 @@ export default {
         this.form.assetType = "0140000002";
         // 调用接口：添加碳资产到市场
         quota.addcarbonAssetMarket(this.form).then(
-          res => {
+          (res) => {
             // 调用接口：变更配额
             quota.changeQuota(data).then(
-              res => {
+              (res) => {
                 this.$message.success("操作成功");
                 this.showTip(); // 需确保 showTip 方法已定义
                 this.dialogFormVisible = false; // 关闭弹窗
-                this.getList(1); // 重新获取列表数据
+                this.getList(1); // 重新获取列表数据;
               },
-              err => {} // 捕获变更配额的异常（可补充逻辑）
+              (err) => {} // 捕获变更配额的异常（可补充逻辑）
             );
           },
-          err => {
-            this.$message.warning("操作失败"); // 添加碳资产到市场失败提示
+          (err) => {
+            this.$message.warning("操作失败"); // 添加碳资产到市场失败提示;
           }
         );
       } else {
-        this.$message.warning("必填项不能为空"); // 出售数量未填提示
+        this.$message.warning("必填项不能为空"); // 出售数量未填提示;
       }
     },
 
@@ -758,13 +758,13 @@ export default {
     // 获取顶部统计数据（带节流控制）
     getTopData() {
       if (this.flag === 1) {
-        return; // 标记为 1 时跳过，避免重复请求
+        return; // 标记为 1 时跳过，避免重复请求;
       }
       this.flag = 1; // 设置标记
       // 调用接口：获取配额数据
-      quota.getQuotaData().then(res => {
+      quota.getQuotaData().then((res) => {
         this.topData = res.data; // 赋值顶部统计数据
-        this.flag = 0; // 重置标记，允许下次请求
+        this.flag = 0; // 重置标记，允许下次请求;
       });
     },
     // 复选框选中状态变更：处理全选、半选逻辑
@@ -773,23 +773,23 @@ export default {
       let allReset = true;
 
       // 遍历数据，判断是否全选/全不选
-      this.articals.forEach(item => {
+      this.articals.forEach((item) => {
         if (item.checked === true) {
-          allReset = false; // 存在选中项，不是“全不选”
+          allReset = false; // 存在选中项，不是“全不选”;
         } else {
-          allCheckedFlag = false; // 存在未选中项，不是“全选”
+          allCheckedFlag = false; // 存在未选中项，不是“全选”;
         }
       });
 
       // 更新全选标记和半选状态
       if (allCheckedFlag || allReset) {
         this.indeterminateFlag = false; // 非半选
-        this.allchecked = allCheckedFlag; // 全选/全不选
+        this.allchecked = allCheckedFlag; // 全选/全不选;
       } else {
-        this.indeterminateFlag = true; // 半选状态
+        this.indeterminateFlag = true; // 半选状态;
       }
 
-      this.reRender = !this.reRender; // 触发重新渲染（用于强制更新视图）
+      this.reRender = !this.reRender; // 触发重新渲染（用于强制更新视图）;
     },
 
     // 场内交易：跳转到交易账户页面
@@ -802,12 +802,12 @@ export default {
       this.indeterminateFlag = false; // 关闭半选状态
       if (val) {
         // 全选：遍历设置 checked = true
-        this.list.forEach(item => {
+        this.list.forEach((item) => {
           item.checked = true;
         });
       } else {
         // 取消全选：遍历设置 checked = false
-        this.list.forEach(item => {
+        this.list.forEach((item) => {
           item.checked = false;
         });
       }
@@ -828,21 +828,23 @@ export default {
         h("el-checkbox", {
           props: {
             checked: this.allchecked, // 全选状态绑定
-            indeterminate: this.indeterminateFlag // 半选状态绑定
+            indeterminate: this.indeterminateFlag, // 半选状态绑定;
           },
           on: {
-            change: this.updateAllSelected // 全选事件绑定
-          }
-        })
+            change: this.updateAllSelected, // 全选事件绑定;
+          },
+        }),
       ]);
     },
 
     // 导出功能（当前仅提示，需补充实际逻辑）
     onClickExport() {
       this.$message.success("功能即将推出，敬请期待！");
-    }
+    },
   },
-  created() {}
+  created() {
+    this.getTopData();
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -870,32 +872,32 @@ export default {
 }
 
 // 覆盖 el-cascader 输入框样式
-::v-deep(.el-cascader .el-input .el-input__inner),
-::v-deep(.el-cascader .el-input.is-focus .el-input__inner) {
+:deep(.el-cascader .el-input .el-input__inner),
+:deep(.el-cascader .el-input.is-focus .el-input__inner) {
   border-color: transparent;
 }
 
 // 覆盖带时间选择的 el-date-picker 样式
-::v-deep(.el-date-picker.has-sidebar.has-time) {
+:deep(.el-date-picker.has-sidebar.has-time) {
   background: #0a5857d6;
   color: #fff;
   border: 1px solid #22f4d6;
 }
 
 // 覆盖 el-date-picker 表头标签样式
-::v-deep(.el-date-picker__header-label) {
+:deep(.el-date-picker__header-label) {
   color: #ffffff;
 }
 
 .acea-row {
-  ::v-deep(.el-avatar--small) {
+  :deep(.el-avatar--small) {
     width: 22px;
     height: 22px;
   }
 }
 
 .checkline {
-  ::v-deep(.el-radio__input) {
+  :deep(.el-radio__input) {
     display: none;
   }
 }
@@ -905,7 +907,7 @@ export default {
 }
 
 .dashboard-console-visit {
-  ::v-deep(.el-card__header) {
+  :deep(.el-card__header) {
     padding: 14px 20px !important;
   }
 }

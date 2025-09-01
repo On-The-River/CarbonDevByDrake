@@ -181,6 +181,7 @@
           :page-count="pageCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+
         >
         </el-pagination>
       </div>
@@ -193,9 +194,10 @@
       @changeDialogFormVisible="changeOrderDialogFormVisible"
       @successSubmit="showOrderResult"
     />
-    <buydetail-vue
-      :form="form"
+    <!--:form="form"-->
+    <buydetail-vu
       :title="title"
+      :form="form"
       :dialogFormVisible="detailDialogFormVisible"
       @changeDialogFormVisible="changeDetailDialogFormVisible"
       @successSubmit="closeDetail"
@@ -225,10 +227,10 @@ import { endsWith } from "../../../../utils/utils";
 import { isProjectTypeDisable } from "@/libs/public";
 import BuyOrder from "./buyOrder.vue";
 import orderResultVue from "../orderResult.vue";
-import buydetailVue from "./buyDetail.vue";
+import buydetailVu from "./buyDetail.vue";
 export default {
   name: "companyPackage",
-  components: { selectDropDownBox, BuyOrder, orderResultVue, buydetailVue },
+  components: { selectDropDownBox, BuyOrder, orderResultVue, buydetailVu },
   data() {
     return {
       indeterminateFlag: false, //表头复选框状态
@@ -429,7 +431,8 @@ export default {
     clickDetail(row) {
       // this.title = "采购单-" + row.institutionName;
       this.title = "采购单";
-      this.form = { ...row };
+      this.form = {...row };
+      // console.log("======!+!+!+!+!+!+!+!+!++!++!+!+!+!+!+!+!+!++!+");
       // this.form = this.cloneObj(row);
       this.detailDialogFormVisible = true;
       this.orderDialogFormVisible = false;
@@ -708,7 +711,7 @@ export default {
 // }
 
 // .dashboard-console-visit {
-//   /deep/ .el-card__header {
+//   >>> .el-card__header {
 //     padding: 14px 20px !important;
 //   }
 //   ul {

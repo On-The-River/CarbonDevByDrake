@@ -152,27 +152,27 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
         // carbonProject.setTenantId(1L);
         save(carbonProject);
 
-        ProjectApproval approval = ProjectApproval.builder()
-                .projectId(carbonProject.getId())
-                .legalPersonName(handleNull(carbonProject.getLegalPersonName()))
-                .legalPersonPhone(handleNull(carbonProject.getLegalPersonPhone()))
-                .ownerName(handleNull(carbonProject.getOwnerName()))
-                .projectName(handleNull(carbonProject.getProjectName()))
-                .carbonMethodology(handleNull(carbonProject.getCarbonMethodology()))
-                .country(handleNull(carbonProject.getCountry()))
-                .province(handleNull(carbonProject.getProvince()))
-                .city(handleNull(carbonProject.getCity()))
-                .address(handleNull(carbonProject.getAddress()))
-                .developAgencies(handleNull(carbonProject.getAssetsDevelopAgency()))
-                .principalName(handleNull(carbonProject.getPrincipalName()))
-                .principalPhone(handleNull(carbonProject.getPrincipalPhone()))
-                .projectIntroduction(handleNull(carbonProject.getProjectIntroduction()))
-                .build();
-        Message<ProjectApproval> msg= MessageBuilder.withPayload(approval).build();
-        mqTemplate.syncSend(RocketMqName.ProjectApproval_MSG,msg,500000, RocketDelayLevelConstant.SECOND5);
-
-        Message<CarbonProjectAddParam> msg2= MessageBuilder.withPayload(param).build();
-        mqTemplate.syncSend(RocketMqName.ProjectAdd_MSG,msg2,500000, RocketDelayLevelConstant.SECOND1);
+//        ProjectApproval approval = ProjectApproval.builder()
+//                .projectId(carbonProject.getId())
+//                .legalPersonName(handleNull(carbonProject.getLegalPersonName()))
+//                .legalPersonPhone(handleNull(carbonProject.getLegalPersonPhone()))
+//                .ownerName(handleNull(carbonProject.getOwnerName()))
+//                .projectName(handleNull(carbonProject.getProjectName()))
+//                .carbonMethodology(handleNull(carbonProject.getCarbonMethodology()))
+//                .country(handleNull(carbonProject.getCountry()))
+//                .province(handleNull(carbonProject.getProvince()))
+//                .city(handleNull(carbonProject.getCity()))
+//                .address(handleNull(carbonProject.getAddress()))
+//                .developAgencies(handleNull(carbonProject.getAssetsDevelopAgency()))
+//                .principalName(handleNull(carbonProject.getPrincipalName()))
+//                .principalPhone(handleNull(carbonProject.getPrincipalPhone()))
+//                .projectIntroduction(handleNull(carbonProject.getProjectIntroduction()))
+//                .build();
+//        Message<ProjectApproval> msg= MessageBuilder.withPayload(approval).build();
+//        mqTemplate.syncSend(RocketMqName.ProjectApproval_MSG,msg,500000, RocketDelayLevelConstant.SECOND5);
+//
+//        Message<CarbonProjectAddParam> msg2= MessageBuilder.withPayload(param).build();
+//        mqTemplate.syncSend(RocketMqName.ProjectAdd_MSG,msg2,500000, RocketDelayLevelConstant.SECOND1);
         return getCarbonProjectById(carbonProject.getId());
     }
 

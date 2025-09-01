@@ -165,7 +165,7 @@ let carbonAssetDevelopment = {
       component: () => import("@/views/carbonAssets/apply/projectListView"),
       name: "carbonAccountingDev",
       meta: { title: "碳减排核", icon: "" }
-    }
+    },
 
     /***CCER项目*/
     // {
@@ -194,36 +194,36 @@ let carbonAssetDevelopment = {
     // },
 
     /**方法学 */
-    // {
-    //   path: "methodology",
-    //   component: () => import("@/views/carbonAssets/method/index"),
-    //   name: "carbonMethodology",
-    //   meta: { title: "方法学管理", icon: "" }
-    // },
-    // {
-    //   path: "/carbonMethodology/add/",
-    //   component: () => import("@/views/carbonAssets/method/methodDetail"),
-    //   name: "methodDetail",
-    //   meta: { title: "添加方法学详情页", icon: "" }
-    // },
-    // {
-    //   path: '/carbonMethodology/add',
-    //   component: () => import('@/views/carbonAssets/method/addMethod'),
-    //   name: 'addNewProject',
-    //   meta: { title: '申请方法学', icon: '' }
-    // },
-    // {
-    //   path: "/carbonMethodology/readMethod",
-    //   component: () => import("@/views/carbonAssets/method/readMethod"),
-    //   name: "readProject",
-    //   meta: { title: "查看方法学", icon: "" }
-    // },
-    // {
-    //   path: "/carbonMethodology/editMethod",
-    //   component: () => import("@/views/carbonAssets/method/editMethod"),
-    //   name: "editProject",
-    //   meta: { title: "编辑方法学", icon: "" }
-    // }
+    {
+      path: "methodology",
+      component: () => import("@/views/carbonAssets/method/index"),
+      name: "carbonMethodology",
+      meta: { title: "方法学管理", icon: "" }
+    },
+    {
+      path: "/carbonMethodology/add/",
+      component: () => import("@/views/carbonAssets/method/methodDetail"),
+      name: "methodDetail",
+      meta: { title: "添加方法学详情页", icon: "" }
+    },
+    {
+      path: '/carbonMethodology/add',
+      component: () => import('@/views/carbonAssets/method/addMethod'),
+      name: 'addNewProject',
+      meta: { title: '申请方法学', icon: '' }
+    },
+    {
+      path: "/carbonMethodology/readMethod",
+      component: () => import("@/views/carbonAssets/method/readMethod"),
+      name: "readProject",
+      meta: { title: "查看方法学", icon: "" }
+    },
+    {
+      path: "/carbonMethodology/editMethod",
+      component: () => import("@/views/carbonAssets/method/editMethod"),
+      name: "editProject",
+      meta: { title: "编辑方法学", icon: "" }
+    }
   ]
 };
 

@@ -142,7 +142,7 @@ export default {
       this.subTitle = this.title;
     },
     form() {
-      this.subForm = { ...this.form };
+      // this.subForm = { ...this.form };
       // this.initParams();
     },
     dialogFormVisible() {
@@ -183,7 +183,12 @@ export default {
   created() {},
   mounted() {
     this.subTitle = this.title;
-    this.subForm = this.form;
+    console.log("FORM");
+    console.log(this.form);
+    if(this.subForm){
+      console.log("SubFORM not null");
+    }
+    // this.subForm = ;
     this.initParams();
     this.show = this.dialogFormVisible;
     let data = getDiliveryMethodeDict(this.$store);
