@@ -74,7 +74,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public LoginInfoVo byLoginName(LoginParam loginParam) {
-
 		log.info("loginParam = " + loginParam);
 		String accountName = StrUtil.trimToEmpty(loginParam.getAccountName());
 		String password = loginParam.getPassword();
@@ -84,7 +83,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new CommonBizException(ExpCodeEnum.SYSTEM_SECURITY_USER_NULL);
 		}
 
-		if (StrUtil.isNotEmpty(password) && !account.getPassword().equals(DigestUtils.md5Hex(password))) {
+		if (StrUtil.isNotEmpty(password) && !account.getPassword().equals(password)) {
 			throw new CommonBizException(ExpCodeEnum.SYSTEM_SECURITY_USER_PASSWORD_ERROR);
 		}
 		if (AccountConstant.ACCOUNT_STATUS_DISABLE.equals(account.getAccountStatus())) {

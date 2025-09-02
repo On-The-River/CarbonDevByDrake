@@ -250,16 +250,12 @@ export const constantRoutes = [
     name: "coperation"
   },
   // 碳配额相关页面
-  {
-    path: "/quota",
-    name: "Quota",
-    component: () => import("@/views/carbonAssets/quota.vue")
-  },
-  {
-    path: "/quotaDetail",
-    name: "QuotaDetail",
-    component: () => import("@/views/carbonAssets/quotaDetail.vue")
-  },
+  // {
+  //   path: "/quota",
+  //   name: "Quota",
+  //   component: () => import("@/views/carbonAssets/quota.vue")
+  // },
+
   // 碳信用页面
   {
     path: "/credit",

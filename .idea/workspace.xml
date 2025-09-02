@@ -6,48 +6,87 @@
   <component name="ChangeListManager">
     <list default="true" id="6f8d0eca-aac3-4b36-892a-9df5dd2a2c3d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8695e0ce-f974-421a-bc1e-7442759cd547.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8695e0ce-f974-421a-bc1e-7442759cd547.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMetaregistryEsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMetaregistryEsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMethodologyEsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMethodologyEsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonProjectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/CarbonMetaregistryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/CarbonMetaregistryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonMetaregistryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/service/impl/CarbonMetaregistryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/config/CorsConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/GreenApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/GreenApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/article.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/article.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/carbonAssetApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/carbonAssetApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/categoryApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/categoryApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/configApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/configApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/configTabApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/configTabApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/crmCarbonCredit.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/crmCarbonCredit.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/distribution.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/distribution.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/feishuApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/feishuApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/financial.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/financial.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/homeApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/homeApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/logistics.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/logistics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/marketing.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/marketing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/operationApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/operationApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/order.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/role.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/role.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/roleApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/roleApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/sms.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/sms.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/storePoint.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/storePoint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/system.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/system.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/systemConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/systemConfig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/systemFormConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/systemFormConfig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/systemGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/systemGroup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/systemGroupData.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/systemGroupData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/systemSetting.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/systemSetting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/systemadmin.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/systemadmin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/tenant.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/tenant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/tradeApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/tradeApi.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/config/dictHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/config/dictHelper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/Item.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/Item.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/Link.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/Link.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/Logo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/Logo.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/router/modules/carbonAssetDevelopment.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/router/modules/carbonAssetDevelopment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/wxApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/wxApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/assets/icon/bg-icon-01.png" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/assets/icon/bg-icon-01.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/Sidebar/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/router/modules/carbonAssetManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/router/modules/carbonAssetManager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/store/modules/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/store/modules/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/carbonUpload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/carbonUpload.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/credit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/credit.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectAdd.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectDevHome.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectDevHome.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectEdit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectEdit.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectSchedule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectSchedule.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectFile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectFile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/method/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/method/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/quota.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/quota.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/quotaDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/quotaDetail.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyDetail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyQuote.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyQuote.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buyAssets.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buyAssets.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/quota.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/quota.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/capitalStat.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/capitalStat.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/commomUsageGrid.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/commomUsageGrid.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/companyPackage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/companyPackage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/greenDegree.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/greenDegree.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/knowleageList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/knowleageList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsContaiert.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsContaiert.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/noticeList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/noticeList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/operationData.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/operationData.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/projectStatistical.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/projectStatistical.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/questionList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/questionList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/tradeInfo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/tradeInfo.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/userChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/userChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/visitChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/visitChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/login/forgetPassWord.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/login/forgetPassWord.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/login/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/login/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/maintain/enterprise/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/maintain/enterprise/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/maintain/user/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/maintain/user/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/accountManager/accountManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/accountManager/accountManager.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/administratorAuthority/adminList/edit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/administratorAuthority/adminList/edit.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/administratorAuthority/adminList/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/administratorAuthority/adminList/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/dictionaryManagement/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/dictionaryManagement/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/exchangeManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/exchangeManager.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/logistics/shippingTemplates/creatTemplates.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/logistics/shippingTemplates/creatTemplates.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/menuManager/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/menuManager/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/methodManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/methodManager.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/newsManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/newsManager.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectFileManager/projectFile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectFileManager/projectFile.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectLib/projectDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectLib/projectDetail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectLib/projectLib.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectLib/projectLib.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/systemStore/order/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/systemStore/order/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/tenantMgtManager/tenantMgtManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/tenantMgtManager/tenantMgtManager.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/SysMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/SysMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/SysAccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/SysAccountServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeContractServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeContractServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -704,7 +743,7 @@
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/QST_Projs/Carbon/CarbonDevByDrake/carbon-front-try1/src/layout/components/Sidebar",
+    "last_opened_file_path": "D:/QST_Projs/Carbon/CarbonDevByDrake/carbon-front-try1/src/views",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -736,6 +775,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-system\src\main\java\com\carbon\system\config" />
       <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-front-try1\src\layout\components\Sidebar" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
@@ -748,6 +788,10 @@
     <key name="CreateTestDialog.RecentsKey">
       <recent name="com.carbon.assets.service.impl" />
       <recent name="com.carbon.assets.mapper" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.carbon.trade.config" />
+      <recent name="com.carbon.assets.config" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -814,13 +858,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <module name="carbon-gate" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.carbon.gate.GateApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MqApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="carbon-mq" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.carbon.mq.MqApplication" />
@@ -846,7 +883,6 @@
       <item itemvalue="Spring Boot.AssetsApplication" />
       <item itemvalue="Spring Boot.AuthApplication" />
       <item itemvalue="Spring Boot.ChainMakerApplication" />
-      <item itemvalue="Spring Boot.GateApplication" />
       <item itemvalue="Spring Boot.MqApplication" />
       <item itemvalue="Spring Boot.SystemApplication" />
       <item itemvalue="Spring Boot.TradeApplication" />
@@ -889,7 +925,7 @@
       <workItem from="1756433037023" duration="7720000" />
       <workItem from="1756457264160" duration="26771000" />
       <workItem from="1756626017545" duration="10339000" />
-      <workItem from="1756688694192" duration="6482000" />
+      <workItem from="1756688694192" duration="41497000" />
     </task>
     <servers />
   </component>
@@ -958,41 +994,6 @@
           <url>file://$PROJECT_DIR$/carbon-chainmaker/src/main/java/com/carbon/chainmaker/config/ChainSDKConfig.java</url>
           <line>78</line>
           <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java</url>
-          <line>87</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java</url>
-          <line>90</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java</url>
-          <line>83</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-auth/src/main/java/com/carbon/auth/service/impl/LoginServiceImpl.java</url>
-          <line>93</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeContractServiceImpl.java</url>
-          <line>97</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMethodologyEsController.java</url>
-          <line>58</line>
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMethodologyEsController.java</url>
-          <line>63</line>
-          <option name="timeStamp" value="53" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

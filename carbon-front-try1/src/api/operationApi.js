@@ -1,7 +1,7 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 /**
  * 运营数据
- * @param pram
+ * @param params
  */
  export function getOperationData(params) {
     return request({

@@ -1,494 +1,268 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      :visible.sync="show"
-      :before-close="clickClose"
-      width="720px"
-    >
-      <!-- 碳信用表单（inline 布局） -->
+    <el-dialog :title="title" :visible.sync="show" :before-close="clickClose" width="720px">
+      <!-- 碳信用界面 -->
       <el-form v-if="isCredit" :model="form" inline="true">
-        <!-- 项目名称 -->
         <el-form-item>
           <!-- <span class="required-text">*</span> -->
-          <span class="label">
-            项目名称<span style="color: red;">*</span>
-          </span>
-          <el-input
-            v-model="form.projectName"
-            disabled
-            size="medium"
-            style="width: 420px"
-          />
+          <span class="label">项目名称<span style="color: red;">*</span></span>
+          <el-input v-model="form.projectName" disabled size="medium" style="width: 420px" />
+        </el-form-item>
+        <el-button @click="pickProject" style="width: 100px; text-align: center" type="primary">选择项目</el-button>
+        <el-form-item>
+          <span class="label">采用方法学</span>
+          <el-input v-model="form.carbonMethodologyName" size="medium" style="width: 180px" disabled />
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">类型</span>
+          <el-input v-model="form.projectScopeType" size="medium" style="width: 180px" disabled />
+        </el-form-item>
+        <el-form-item>
+          <span class="label">持仓总量(tCO2e)<span style="color: red;">*</span></span>
+          <el-input v-model="form.total" autocomplete="off" size="medium" style="width: 180px" />
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">交易单价(¥)</span>
+          <el-input v-model="form.buyUnitPrice" autocomplete="off" size="medium" style="width: 180px" />
+        </el-form-item>
+        <el-form-item>
+          <span class="label">交易总价(¥)</span>
+          <el-input v-model="form.buyTotalPrice" autocomplete="off" size="medium" style="width: 180px" />
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">核证机构</span>
+          <el-input v-model="form.projectVerifierCodeName" style="width: 180px" size="medium" disabled />
+        </el-form-item>
+        <el-form-item>
+          <span class="label">签发日期</span>
+          <el-date-picker type="date" v-model="form.issuingDate" autocomplete="off" size="medium" style="width: 180px"
+            disabled />
+        </el-form-item>
+        <el-form-item>
+          <span class="label" style="margin-left: 40px">交易日期</span>
+          <el-date-picker type="date" v-model="form.buyDate" autocomplete="off" size="medium" style="width: 180px" />
+        </el-form-item>
+        <el-form-item>
+          <span class="label">交易所</span>
+          <el-select v-model="form.carbonExchangeId" placeholder="请选择" style="width: 180px" size="medium">
+            <el-option v-for="(item, index) in exchangeList" :key="index" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <br />
+        <el-form-item>
+          <span class="label" style="width: 305px">持仓凭证<span style="color: red;">*</span></span>
+          <el-upload class="upload-demo" ref="upload1" :action="upLoadParam.url" :file-list="issueFileList" :limit="2"
+            :auto-upload="true" :on-success="creditSuccess1" style="width: 180px"
+            :headers="{ token: upLoadParam.token }" :on-change="handleIssueChange" :on-preview="creditHandleFile">
+            <el-button type="primary">上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">交易凭证</span>
+          <el-upload class="upload-demo" ref="upload2" :action="upLoadParam.url" :file-list="tranFileList"
+            :auto-upload="false" :limit="2" style="width: 180px" :on-success="creditSuccess2"
+            :headers="{ token: upLoadParam.token }" :on-change="handleTranChange" :on-preview="creditHandleFile">
+            <el-button type="primary">上传</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
-    </el-dialog>
-
-    <!-- 选择项目按钮 -->
-    <el-form-item>
-      <el-button
-        @click="pickProject"
-        style="width: 100px; text-align: center"
-        type="primary"
-      >
-        选择项目
-      </el-button>
-    </el-form-item>
-
-    <!-- 采用方法学 -->
-    <el-form-item>
-      <span class="label">采用方法学</span>
-      <el-input
-        v-model="form.carbonMethodologyName"
-        size="medium"
-        style="width: 180px"
-        disabled
-      />
-    </el-form-item>
-
-    <!-- 类型（左侧间距 40px） -->
-    <el-form-item style="margin-left: 40px">
-      <span class="label">类型</span>
-      <el-input
-        v-model="form.projectScopeType"
-        size="medium"
-        style="width: 180px"
-        disabled
-      />
-    </el-form-item>
-
-    <!-- 产生量(CO2e) -->
-    <el-form-item>
-      <span class="label">
-        产生量(CO2e)<span style="color: red;">*</span>
-      </span>
-      <el-input
-        v-model="form.total"
-        autocomplete="off"
-        size="medium"
-        style="width: 180px"
-      />
-    </el-form-item>
-
-    <!-- 交易单价(￥)（左侧间距 40px） -->
-    <el-form-item style="margin-left: 40px">
-      <span class="label">交易单价(￥)</span>
-      <el-input
-        v-model="form.buyUnitPrice"
-        autocomplete="off"
-        size="medium"
-        style="width: 180px"
-      />
-    </el-form-item>
-
-    <!-- 交易总价(￥) -->
-    <el-form-item>
-      <span class="label">交易总价(￥)</span>
-      <el-input
-        v-model="form.buyTotalPrice"
-        autocomplete="off"
-        size="medium"
-        style="width: 180px"
-      />
-    </el-form-item>
-
-    <!-- 验证码/批次（左侧间距 40px） -->
-    <el-form-item style="margin-left: 40px">
-      <span class="label">验证码/批次</span>
-      <el-input
-        v-model="form.projectVerifyCodeName"
-        style="width: 180px"
-        size="medium"
-        disabled
-      />
-    </el-form-item>
-    <!-- 签发日期 -->
-    <el-form-item>
-      <span class="label">签发日期</span>
-      <el-date-picker
-        type="date"
-        v-model="form.issuingDate"
-        autocomplete="off"
-        size="medium"
-        style="width: 180px"
-        disabled
-      />
-    </el-form-item>
-
-    <!-- 交易日期（左侧间距 40px） -->
-    <el-form-item>
-      <span class="label" style="margin-left: 40px">交易日期</span>
-      <el-date-picker
-        type="date"
-        v-model="form.buyDate"
-        autocomplete="off"
-        size="medium"
-        style="width: 180px"
-      />
-    </el-form-item>
-
-    <!-- 交易所（下拉选择） -->
-    <el-form-item>
-      <span class="label">交易所</span>
-      <el-select
-        v-model="form.carbonExchangeId"
-        placeholder="请选择"
-        style="width: 180px"
-        size="medium"
-      >
-        <el-option
-          v-for="(item, index) in exchangeList"
-          :key="index"
-          :label="item.name"
-          :value="item.id"
-        />
-      </el-select>
-    </el-form-item>
-
-    <br />
-
-    <!-- 存证文件（文件上传） -->
-    <el-form-item>
-      <span class="label" style="width: 205px">
-        存证文件<span style="color: red;">*</span>
-      </span>
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        :action="uploadParam.url"
-        :file-list="issueFileList"
-        :limit="2"
-        :auto-upload="true"
-        :on-success="creditSuccess1"
-        style="width: 180px"
-        :headers="{ token: uploadParam.token }"
-        :on-change="handleIssueChange"
-        :on-preview="creditHandleFile"
-      >
-        <el-button type="primary">上传</el-button>
-      </el-upload>
-    </el-form-item>
-    <!-- 交易凭证上传（左侧间距 40px） -->
-    <el-form-item style="margin-left: 40px">
-      <span class="label">交易凭证</span>
-      <el-upload
-        class="upload-demo"
-        ref="upload2"
-        :action="uploadParam.url"
-        :file-list="tradeFileList"
-        :auto-upload="false"
-        :limit="2"
-        style="width: 180px"
-        :on-success="creditSuccess2"
-        :headers="{ token: uploadParam.token }"
-        :on-change="handleTradeChange"
-        :on-preview="creditHandleFile"
-      >
-        <el-button type="primary">上传</el-button>
-      </el-upload>
-    </el-form-item>
-
-    <!-- 碳配票表单（inline 布局，条件渲染） -->
-    <el-form v-if="isCredit" :model="form" inline="true">
-      <!-- 名称（一般持有机构） -->
-      <el-form-item>
-        <span class="label" style="width: 100px">
-          名称（一般持有机构）<span style="color: red;">*</span>
-        </span>
-        <el-autocomplete
-          v-model="quoteForm.agencyName"
-          size="medium"
-          style="width: 430px"
-          :fetch-suggestions="querySearchAgencyName"
-          placeholder="请输入内容"
-          @select="handleSelect"
-        />
-      </el-form-item>
-
-      <!-- 持有总量(tCO2e) -->
-      <el-form-item>
-        <span class="label">
-          持有总量(tCO2e)<span style="color: red;">*</span>
-        </span>
-        <el-input
-          v-model="quoteForm.total"
-          size="medium"
-          style="width: 180px"
-          type="number"
-          @input="setFormValidation"
-        />
-      </el-form-item>
-
-      <!-- 购入单价(￥)（左侧间距 40px） -->
-      <el-form-item style="margin-left: 40px">
-        <span class="label">购入单价(￥)</span>
-        <el-input
-          v-model="quoteForm.buyUnitPrice"
-          size="medium"
-          style="width: 180px"
-        />
-      </el-form-item>
-      <!-- 冻结数量(tCO2e)（左侧间距 40px） -->
-      <el-form-item style="margin-left: 40px">
-        <span class="label">
-          冻结数量(tCO2e)<span style="color: red;">*</span>
-        </span>
-        <el-input
-          v-model="quoteForm.frozenAmount"
-          autocomplete="off"
-          size="medium"
-          style="width: 180px"
-        />
-      </el-form-item>
-
-      <!-- 资产估值(￥) -->
-      <el-form-item>
-        <span class="label">资产估值(￥)</span>
-        <el-input
-          v-model="quoteForm.valuation"
-          autocomplete="off"
-          size="medium"
-          style="width: 180px"
-        />
-      </el-form-item>
-
-      <!-- 资产状态（下拉选择） -->
-      <el-form-item label="资产状态">
-        <el-select
-          v-model="quoteForm.assetsStatus"
-          placeholder="请选择"
-          style="width: 180px"
-          size="medium"
-        >
-          <el-option
-            v-for="item in optionsStandard"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-
-      <!-- 有效期（日期选择，左侧间距 40px） -->
-      <el-form-item style="margin-left: 40px">
-        <span class="label">有效期</span>
-        <el-date-picker
-          type="date"
-          v-model="quoteForm.expiryDate"
-          autocomplete="off"
-          size="medium"
-          style="width: 180px"
-        />
-      </el-form-item>
-
-      <!-- 签发日期（日期选择） -->
-      <el-form-item>
-        <span class="label"> 签发日期<span style="color: red;">*</span> </span>
-        <el-date-picker
-          type="date"
-          v-model="quoteForm.issuingDate"
-          autocomplete="off"
-          size="medium"
-          style="width: 180px"
-        />
-      </el-form-item>
-      <!-- 签发机构（左侧间距 40px） -->
-      <el-form-item style="margin-left: 40px">
-        <span class="label"> 签发机构<span style="color: red;">*</span> </span>
-        <el-select
-          v-model="quoteForm.issuingAgency"
-          placeholder="请选择"
-          style="width: 180px"
-          size="medium"
-        >
-          <el-option
-            v-for="item in issueInstitution"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-
-      <br />
-
-      <!-- 存证凭证上传（左侧间距 40px） -->
-      <el-form-item style="margin-left: 40px">
-        <span class="label"> 存证凭证<span style="color: red;">*</span> </span>
-        <el-upload
-          class="upload-demo"
-          ref="upload3"
-          :action="uploadParam.url"
-          :file-list="buyFileList"
-          :auto-upload="true"
-          :limit="2"
-          :on-success="quoteSuccess"
-          style="width: 180px"
-          :headers="{ token: uploadParam.token }"
-          :on-change="handleBuyChange"
-          :on-preview="creditHandleFile"
-        >
-          <el-button type="primary">上传</el-button>
-        </el-upload>
-      </el-form-item>
-
-      <!-- 项目描述（多行输入） -->
-      <el-form-item label="项目描述">
-        <el-input
-          v-model="quoteForm.valuation"
-          autocomplete="off"
-          type="textarea"
-          size="medium"
-          :rows="5"
-          style="width: 430px"
-        />
-      </el-form-item>
-
-      <!-- 弹窗底部按钮 -->
+      <!-- 碳配额界面 -->
+      <el-form v-if="!isCredit" :model="form" inline="true">
+        <el-form-item>
+          <span class="label" style="width: 163px">名称(一级持有机构)<span style="color: red;">*</span></span>
+          <el-autocomplete v-model="quotaForm.agencyName" size="medium" style="width: 494px"
+            :fetch-suggestions="querySearchAsync" placeholder="请输入内容" @select="handleSelect"></el-autocomplete>
+        </el-form-item>
+        <el-form-item>
+          <span class="label">持仓总量(tCO2e)<span style="color: red;">*</span></span>
+          <el-input v-model="quotaForm.total" size="medium" style="width: 180px" type="number"
+            @input="setFormValuation" />
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">购入单价(¥)</span>
+          <el-input v-model="quotaForm.buyUnitPrice" size="medium" style="width: 180px" />
+        </el-form-item>
+        <el-form-item>
+          <span class="label">购入总价(￥)</span>
+          <el-input v-model="quotaForm.buyTotalPrice" autocomplete="off" size="medium" style="width: 180px"></el-input>
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">购入日期</span>
+          <el-date-picker type="date" v-model="quotaForm.buyDate" autocomplete="off" size="medium" style="width: 180px">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <span class="label">交易所</span>
+          <el-select v-model="quotaForm.carbonExchangeId" placeholder="请选择" style="width: 180px" size="medium">
+            <el-option v-for="(item, index) in exchangeList" :key="index" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">可用数量(tCO2e)<span style="color: red;">*</span></span>
+          <el-input v-model="quotaForm.availableAmount" autocomplete="off" size="medium" style="width: 180px">
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <span class="label">锁定数量(tCO2e)<span style="color: red;">*</span></span>
+          <el-input v-model="quotaForm.lockedAmount" autocomplete="off" size="medium" style="width: 180px"></el-input>
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">冻结数量(tCO2e)<span style="color: red;">*</span></span>
+          <el-input v-model="quotaForm.frozenAmount" autocomplete="off" size="medium" style="width: 180px"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <span class="label">资产估值(￥)</span>
+          <el-input v-model="quotaForm.valuation" autocomplete="off" size="medium" style="width: 180px"
+            disabled></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="资产状态">
+  <el-select
+    v-model="quotaForm.assetsStatus"
+    placeholder="请选择"
+    style="width: 180px"
+    size="medium"
+  >
+    <el-option
+      v-for="item in optionsStandard"
+      :key="item.value"
+      :label="item.name"
+      :value="item.value"
+    >
+    </el-option>
+  </el-select>
+</el-form-item> -->
+        <el-form-item style="margin-left: 40px">
+          <span class="label">有效期</span>
+          <el-date-picker type="date" v-model="quotaForm.expiryDate" autocomplete="off" size="medium"
+            style="width: 180px">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <span class="label">签发日期<span style="color: red;">*</span></span>
+          <el-date-picker type="date" v-model="quotaForm.issuingDate" autocomplete="off" size="medium"
+            style="width: 180px">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item style="margin-left: 40px">
+          <span class="label">签发机构<span style="color: red;">*</span></span>
+          <el-select v-model="quotaForm.issuingAgency" placeholder="请选择" style="width: 180px" size="medium">
+            <el-option v-for="item in issueInstitution" :key="item.value" :label="item.name" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <br />
+        <el-form-item>
+          <span class="label">持仓凭证<span style="color: red;">*</span></span>
+          <el-upload class="upload-demo" ref="upload3" :action="upLoadParam.url" :file-list="buyfileList"
+            :auto-upload="true" :limit="2" :on-success="quotaSuccess" style="width: 180px"
+            :headers="{ token: upLoadParam.token }" :on-change="handleBuyChange" :on-preview="creditHandleFile">
+            <el-button type="primary">上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <!-- <el-form-item label="项目描述">
+  <el-input
+    v-model="quotaForm.valuation"
+    autocomplete="off"
+    type="textarea"
+    size="medium"
+    resize="none"
+    rows="3"
+    style="width: 495px"
+  ></el-input>
+</el-form-item> -->
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="clickClose">取 消</el-button>
-        <el-button type="primary" @click="clickSave">保 存</el-button>
-        <el-button type="primary" @click="submit" style="margin-right: 25px">
-          提交
-        </el-button>
+        <el-button type="primary" @click="clickSave">保存</el-button>
+        <el-button type="primary" @click="submit" style="margin-right: 25px">提交</el-button>
       </div>
-
-      <!-- 项目列表弹窗 -->
-      <el-dialog
-        title="项目列表"
-        :visible.sync="dialogTableVisible"
-        width="800px"
-      >
-        <el-input
-          v-model="searchProjectKeyword"
-          placeholder="输入项目名称"
-          clearable
-          size="medium"
-          style="width: 60%"
-          @clear="search"
-        />
-        <button
-          style="margin-left: 10px"
-          class="light-green-btn"
-          @click="search"
-        >
-          查询
-        </button>
-
-        <!-- 项目列表表格 -->
-        <el-table :data="projectList" style="width: 100%" stripe>
-          <el-table-column min-width="10%" />
-          <el-table-column
-            label="序号"
-            align="left"
-            prop="order"
-            min-width="80"
-          />
-          <el-table-column
-            show-overflow-tooltip="true"
-            align="left"
-            prop="projectName"
-            label="名称"
-            min-width="180"
-          />
-          <el-table-column
-            align="left"
-            prop="projectScope"
-            label="领域"
-            min-width="120"
-          />
-          <!-- 认证标准列 -->
-          <el-table-column
-            align="left"
-            prop="certifiedStandard"
-            label="认证标准"
-            min-width="80"
-          />
-
-          <!-- 操作列（选择项目） -->
-          <el-table-column label="操作" min-width="150" align="center">
-            <template slot-scope="scope">
-              <a class="list-blue-text" @click="pickProjectDone(scope.row)">
-                选择
-              </a>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <!-- 分页组件 -->
-        <div style="margin-top: 30px; margin-bottom: 10px" class="pageBox">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="current"
-            :page-sizes="pageSize"
-            :page-count="pageCount"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total"
-            style="margin: auto"
-          />
-        </div>
-      </el-dialog>
-    </el-form>
+    </el-dialog>
+    <el-dialog title="项目列表" :visible.sync="dialogTableVisible" width="800px">
+      <el-input v-model="searchProjectKeyword" placeholder="输入项目名称" clearable size="medium" style="width: 60%"
+        @clear="search" />
+      <button style="margin-left: 15px" class="light-green-btn" @click="search">
+        查询
+      </button>
+      <el-table :data="projectList" style="width: 100%" stripe>
+        <el-table-column min-width="10"></el-table-column>
+        <el-table-column label="序号" align="left" prop="order" min-width="80">
+        </el-table-column>
+        <el-table-column :show-overflow-tooltip="true" align="left" prop="projectName" label="名称" min-width="180" />
+        <el-table-column align="left" prop="projectScope" label="领域" min-width="120" />
+        <el-table-column align="left" prop="certifiedStandard" label="核证标准" min-width="80" />
+        <el-table-column label="操作" min-width="150" align="center">
+          <template slot-scope="scope">
+            <a class="list-blue-text" @click="pickProjectDone(scope.row)">选择</a>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top: 30px; margin-bottom: 10px" class="pageBox">
+        <el-pagination style="margin: auto" background @size-change="handleSizeChange"
+          @current-change="handleCurrentChange" :current-page="current" :page-size="pageSize" :page-count="pageCount"
+          layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
-  CarbonMetaRegistryPageList,
+  getCarbonMetaregistryPageList,
   loadMethodList,
   addCarbonCredit,
   addCarbonQuota,
   changeCredit,
   changeQuota,
-  getCarbonProjectPageList
+  getCarbonProjectPageList,
 } from "@/api/carbonAssetApi";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import {
   getCertificationInstitutionDict,
-  getIssuingInstitution,
-  getCarbonEnterprise
+  getIssueInstitution,
+  getCarbonEnterprise,
 } from "@/config/dictHelper";
-import { getFileUrlAndProjectParameters } from "@/api/format";
+import { getFeiShuUpLoadProjectParams } from "@/api/tenant";
 import { loadCarbonExchangeList } from "@/api/carbonAssetApi";
-
 export default {
   name: "carbonUpload",
   props: {
     dialogFormVisible: false,
     title: "",
     isCredit: true,
-    row: {},
+    row: 0,
     isEdit: false,
-    sellData: {
+    selData: {
       type: Array,
-      default: () => []
-    }
+      default: [],
+    },
   },
   data() {
     return {
-      status: null,
-      quotaSuccess: true,
-      searchProjecKeyword: "",
+      states: null,
+      quotaIsSuccess: true,
+      searchProjectKeyword: "",
       form: {
         industryCodeName: "",
         carbonMethodologyName: "",
-        issuingCertificateFileNames: "",
+        issuingCertificates: "",
+        issuingCertificatesFileName: "",
         certifiedAgency: "",
-        assetStatus: null,
+        assetsStatus: null,
         projectName: "",
-        assetStatus: "0100000004",
-        issuedDate: "", // 签发日期
+        assetsStatus: "0130000004",
+        issuingDate: "", //签发日期
         total: null,
         buyCertificate: null,
-        buyCertificateFileNames: "",
+        buyCertificateFileName: "",
         carbonExchangeId: null,
         buyUnitPrice: null,
         carbonProjectId: null,
         buyTotalPrice: null,
         issuingDate: null,
         buyDate: null,
-        projectVerifyCodeName: null // 验证码/批次
+        projectVerifierCodeName: null, //
       },
       issueInstitution: [],
       quotaForm: {
@@ -497,95 +271,88 @@ export default {
         total: null,
         buyUnitPrice: null,
         buyTotalPrice: null,
+        buyDate: null,
         carbonExchangeId: null,
         availableAmount: null,
         lockedAmount: null,
         frozenAmount: null,
         valuation: null,
-        assetStatus: "0160000004",
+        assetsStatus: "0130000004",
         expiryDate: null,
-        buyCertificateFileNames: "",
+        buyCertificateFileName: "",
         issuingDate: null,
         issuingAgency: null,
-        buyCertificate: null
+        buyCertificate: null,
       },
       dialogTableVisible: false,
       pageSize: 10,
-      optionsStandard: [], // 碳标准
+      optionsStandard: [], //核证标准
       methodList: [],
       current: 1,
       total: 0,
-      creditCreditailUrl: "",
-      creditTradeCreditailUrl: "",
-      quotaCreditailUrl: "",
-      isCredit: true,
+      creditCreditialUrl: "",
+      creditTradeCreditialUrl: "",
+      quotaCreditialUrl: "",
+      // isCredit: true,
       pageCount: 0,
-      havePickProject: false, // 是否禁用
+      havePickProject: false, //是否禁用
       fileList: [],
-      exchangeList: [], // 交易所列表
+      exchangeList: [], //交易所列表
       issueFileList: [],
-      tradeFileList: [],
+      tranFileList: [],
       buyFileList: [],
-      carbonEnterpriseList: [], // 全国碳市场控排企业
-      exchangeOptions: [],
+      carbonEnterpriseList: [], //全国碳市场控排企业
+      // exchangeOptions:[],
       issueUrl: "",
+      tranUrl: "",
       show: false,
       projectList: [],
-      uploadParam: {
+      upLoadParam: {
         url: null,
-        token: null
+        token: null,
       },
-      buyUrl: ""
+      buyUrl: "",
     };
   },
   methods: {
-    // 计算估值（示例：估值 = 事件值 * 50）
-    setFormValidation(event) {
+    setFormValuation(event) {
       this.quotaForm.valuation = event * 50;
     },
-
-    // 关闭弹窗（触发父组件事件 + 隐藏弹窗）
     clickClose() {
       this.$emit("changeVisible", false);
       this.show = false;
     },
-
-    // 转换下拉选项数据（示例：处理 value/label 格式）
     setSelData(data) {
       let list = data;
       let arr = [];
       for (let i = 0; i < list.length; i++) {
         let obj = {};
-        if (list[i].value === "00280000007") {
-          obj.label = list[i].value;
-          obj.value = list[i].name;
+        if (list[i]["value"] != "0620000000") {
+          obj["label"] = list[i]["value"];
+          obj["value"] = list[i]["name"];
+          arr.push(obj);
         }
-        arr.push(obj);
       }
       return arr;
     },
-
-    // 加载企业列表（模拟静态数据）
     loadAll() {
       // return this.carbonEnterpriseList;
       return [
         {
           value: "北京我爱我家地产有限公司",
-          label: "北京我爱我家地产有限公司"
+          label: "北京我爱我家地产有限公司",
         },
         {
           value: "上海我爱我家地产有限公司",
-          label: "上海我爱我家地产有限公司"
+          label: "上海我爱我家地产有限公司",
         },
         {
           value: "河南我爱我家地产有限公司",
-          label: "河南我爱我家地产有限公司"
-        }
+          label: "河南我爱我家地产有限公司",
+        },
       ];
     },
-
-    // 搜索联想方法（模拟异步搜索）
-    querySearchAgencyName(queryString, cb) {
+    querySearchAsync(queryString, cb) {
       var restaurants = this.states;
       var results = queryString
         ? restaurants.filter(this.createStateFilter(queryString))
@@ -596,86 +363,79 @@ export default {
         cb(results);
       }, 1000 * Math.random());
     },
-
-    // 搜索过滤函数（不区分大小写匹配）
     createStateFilter(queryString) {
-      return state => {
+      return (state) => {
         return (
           state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         );
       };
     },
-
-    // 签发文件上传变化（模拟文件读取）
     handleIssueChange(file, fileList) {
-      // 限制最多传 2 个文件
+      // 转换操作可以不放到这个函数里面，
       if (fileList && fileList.length >= 2) {
         fileList.shift();
       }
-
-      // 模拟文件读取（实际需结合 FileReader 处理）
+      // 因为这个函数会被多次触发，上传时触发，上传成功也触发
       let reader = new FileReader();
       this.issueFileList = fileList;
-      reader.readAsDataURL(file.raw); // 可替换为 event.raw
-      // 读取完成后赋值（示例）
+      reader.readAsDataURL(file.raw); // 这里也可以直接写参数event.raw
+      // 转换成功后的操作，reader.result即为转换后的DataURL ,
+      // 它不需要自己定义，你可以console.log(reader.result)看一下
       reader.onload = () => {
         this.issueUrl = reader.result;
       };
     },
-
-    // 交易文件上传变化（带结果校验）- 覆盖原重复方法
-    handleTradeChange(file, fileList) {
-      this.quotaSuccess = false;
+    handleTranChange(file, fileList) {
       if (fileList && fileList.length >= 2) {
         fileList.shift();
       }
 
-      // 模拟文件读取（实际需结合 FileReader 处理）
+      // 转换操作可以不放到这个函数里面，
+      // 因为这个函数会被多次触发，上传时触发，上传成功也触发
       let reader = new FileReader();
-      this.tradeFileList = fileList;
-      reader.readAsDataURL(file.raw);
+      this.tranFileList = fileList;
+      reader.readAsDataURL(file.raw); // 这里也可以直接写参数event.raw
+      // 转换成功后的操作，reader.result即为转换后的DataURL ,
+      // 它不需要自己定义，你可以console.log(reader.result)看一下
       reader.onload = () => {
-        this.tradeUrl = reader.result;
+        this.tranUrl = reader.result;
       };
     },
-
-    // 买入文件上传变化（带结果校验）
     handleBuyChange(file, fileList) {
-      this.quotaSuccess = false;
+      this.quotaIsSuccess = false;
       if (fileList && fileList.length >= 2) {
         fileList.shift();
       }
 
-      // 模拟文件读取（实际需结合 FileReader 处理）
+      // 转换操作可以不放到这个函数里面，
+      // 因为这个函数会被多次触发，上传时触发，上传成功也触发
       let reader = new FileReader();
       this.buyFileList = fileList;
-      reader.readAsDataURL(file.raw);
+      reader.readAsDataURL(file.raw); // 这里也可以直接写参数event.raw
+      // 转换成功后的操作，reader.result即为转换后的DataURL ,
+      // 它不需要自己定义，你可以console.log(reader.result)看一下
       reader.onload = () => {
         this.buyUrl = reader.result;
       };
     },
-
-    // 保存表单到 sessionStorage
+    /*
+    *@Description: 保存表单到sessionStorage
+    *@MethodAuthor: liuboting
+    *@Date: 2022-06-19 11:29:14
+    */
     clickSave() {
-      // 签发文件处理（示例）
-      if (this.issueFileList.length !== 0) {
-        // 初始化 form.url 避免报错
-        if (!this.form.url) this.form.url = [];
-        this.form.url.push({
-          name: this.issueFileList[0].name,
-          url: this.issueUrl
-        });
-      }
-      // 交易文件处理（示例）
-      if (this.tradeFileList.length !== 0) {
-        if (!this.form.url) this.form.url = [];
-        this.form.url.push({
-          name: this.tradeFileList[0].name,
-          url: this.tradeUrl
-        });
-      }
-
-      // 根据表单类型保存到 sessionStorage
+      // if (this.issueFileList.length != 0) {
+      //   this.form.url.push({
+      //     name: this.issueFileList[0].name,
+      //     url: this.issueUrl,
+      //   });
+      // }
+      // if (this.tranFileList.length != 0) {
+      //   this.form.url.push({
+      //     name: this.tranFileList[0].name,
+      //     url: this.issueUrl,
+      //   });
+      // }
       if (this.isCredit) {
         sessionStorage.setItem("carbonUpload", JSON.stringify(this.form));
         this.$message.success("保存成功");
@@ -686,13 +446,14 @@ export default {
         );
         this.$message.success("保存成功");
       }
-
-      // 关闭弹窗
-      this.$emit("changeVisible", false);
-      this.show = false;
+      // this.$emit("changeVisible", false);
+      // this.show = false;
     },
-
-    // 选择项目后赋值表单
+    /**
+    * 作者:
+    * 时间: 2022-06-17 10:45:36
+    * 功能: 选择方法学后执行的操作
+    */
     pickProjectDone(row) {
       this.form.projectName = row.projectName;
       this.form.carbonMethodologyName = row.methodologyName;
@@ -705,14 +466,15 @@ export default {
       this.havePickProject = true;
       this.form.projectVerifierCodeName = row.projectVerifierCodeName;
     },
-
-    // 分页当前页变化
     handleCurrentChange(val) {
       this.current = val;
       this.getProjectList(val);
     },
-
-    // 提交主方法（区分信用/配额提交）
+    /**
+    * 作者:
+    * 时间: 2022-06-21 09:03:56
+    * 功能: 提交碳信用项目
+    */
     submit() {
       if (this.isCredit) {
         this.submitCredit();
@@ -720,34 +482,29 @@ export default {
         this.submitQuota();
       }
     },
-
-    // 搜索方法（获取项目列表）
     search() {
       const data = {
-        assetStatus: "0100000004",
         current: this.current,
         size: this.pageSize,
+        async: true,
         projectName: this.searchProjectKeyword,
-        projectStatusCode: "0100000012"
+        projectStatusCode: "0100000013",
       };
-
-      getCarbonMetaRegistryPageList(data).then(res => {
-        this.projectList = res.data.records || [];
-        this.total = Number(res.data.total || 0);
-        this.current = Number(res.data.current || 1);
-        this.pageCount = Math.ceil(this.total / this.pageSize);
+      getCarbonMetaregistryPageList(data).then((res) => {
+        this.projectList = res.data.records;
+        this.total = Number(res.data.total);
+        this.current = Number(res.data.current);
+        this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
         this.projectList.map((v, i) => {
           v.order = i + 1;
-          for (var key in v) {
-            if (v[key] === "-") {
-              v[key] = "--";
+          for (var i in v) {
+            if (v[i] === "") {
+              v[i] = "--";
             }
           }
         });
       });
     },
-
-    // 文件预览方法（支持响应式 URL 或直接 URL）
     creditHandleFile(file) {
       console.log(file);
       if (file.response) {
@@ -757,133 +514,138 @@ export default {
         openUrlInNewWindow(file.url);
       }
     },
-
-    // 选择机构时赋值编码
     handleSelect(item) {
-      this.quoteForm.agencyCode = item.label;
-      this.quoteForm.agencyCode = item.label;
-    }
-  },
-
-  // 提交信用表单（新增/编辑逻辑）
-  submitCredit() {
-    console.log("submit 执行了");
-    // 清理空值
-    for (let i in this.form) {
-      if (this.form[i] === "--") {
-        this.form[i] = null;
+      this.quotaForm.agencyCode = item.label;
+    },
+    submitCredit() {
+      console.log("submit执行了");
+      for (let i in this.form) {
+        if (this.form[i] === "--") {
+          this.form[i] = "";
+        }
       }
-    }
-
-    // 编辑逻辑
-    if (this.isEdit) {
-      if (this.form.projectName && this.form.total && this.issueFileList[0]) {
-        this.form.assetStatus = "0100000004";
-        if (this.tradeFileList.length > 0 && this.$refs.tradeUpload) {
-          this.$refs.tradeUpload.submit();
+      if (!this.isEdit) {
+        if (this.form.projectName && this.form.total && this.issueFileList[0]) {
+          this.form.assetsStatus = "0130000004";
+          if (this.tranFileList.length > 0) {
+            this.$refs.upload2.submit();
+          } else {
+            addCarbonCredit(this.form)
+              .then((res) => {
+                this.$message.success("提交成功");
+                this.$emit("changeVisible", false);
+                this.show = false;
+                this.$emit("submit", true);
+              })
+              .catch((err) => {
+                this.$message.error(err);
+              });
+          }
         } else {
-          addCarbonCredit(this.form)
-            .then(res => {
-              this.$message.success("提交成功");
-              this.$emit("changeVisible", false);
-              this.show = false;
-              this.$emit("submit", true);
-            })
-            .catch(err => {
-              this.$message.error(err.message || "提交失败");
-            });
+          this.$message.warning("必填项不能为空");
         }
       } else {
-        this.$message.warning("必填项不能为空");
-      }
-    }
-    // 新增逻辑（原逻辑可能颠倒，保留原代码）
-    else {
-      var data = JSON.parse(JSON.stringify(this.form));
-      for (var i in data) {
-        if (data[i] === "--") {
-          data[i] = "";
+        var data = JSON.parse(JSON.stringify(this.form));
+        for (var i in data) {
+          if (data[i] === "--") {
+            data[i] = "";
+          }
         }
+        changeCredit(data)
+          .then((res) => {
+            this.$message.success("修改成功");
+            this.$emit("changeVisible", false);
+            this.show = false;
+            this.$emit("submit", true);
+          })
+          .catch((err) => {
+            this.$message.error(err);
+          });
       }
-      changeCredit(data)
-        .then(res => {
-          this.$message.success("修改成功");
+    },
+    creditSuccess1(res, file, fileList) {
+      this.form.issuingCertificates = res.msg;
+      this.form.issuingCertificatesFileName = file.name;
+      this.creditCreditialUrl = res.msg;
+      this.$message.success("上传成功");
+    },
+    creditSuccess2(res, file, fileList) {
+      this.form.buyCertificate = res.msg;
+      this.form.buyCertificateFileName = file.name;
+      addCarbonCredit(this.form)
+        .then((res) => {
+          this.$message.success("提交成功");
           this.$emit("changeVisible", false);
           this.show = false;
           this.$emit("submit", true);
         })
-        .catch(err => {
-          this.$message.error(err.message || "修改失败");
+        .catch((err) => {
+          this.$message.error(err);
         });
-    }
-  },
-
-  // 信用文件上传成功（签发凭证）
-  creditSuccess(res, file, fileList) {
-    this.form.issuingCertificate = res.msg;
-    this.form.issuingCertificateFileName = file.name;
-    this.creditCreditailUrl = res.msg;
-    this.$message.success("上传成功");
-  },
-
-  // 信用文件上传成功（交易凭证，提交信用表单）
-  creditSuccess2(res, file, fileList) {
-    this.form.buyCertificate = res.msg;
-    this.form.buyCertificateFileName = file.name;
-    addCarbonCredit(this.form)
-      .then(res => {
-        this.$message.success("提交成功");
-        this.$emit("changeVisible", false);
-        this.show = false;
-        this.$emit("submit", true);
-      })
-      .catch(err => {
-        this.$message.error(err.message || "提交失败");
-      });
-  },
-
-  // 配额文件上传成功（交易凭证）
-  quotaSuccess(res, file, fileList) {
-    this.quotaForm.buyCertificate = res.msg;
-    this.quotaForm.buyCertificateFileName = file.name;
-    this.$message.success("上传成功");
-  },
-
-  // 提交配额项目（校验 + 接口调用）
-  submitQuota() {
-    // 校验文件是否上传
-    if (!this.quotaForm.buyCertificate) {
-      this.$message.warning("请先上传文件，或等待文件上传成功再提交");
-      return;
-    }
-
-    // 编辑模式校验
-    if (this.isEdit) {
-      if (
-        this.quotaForm.agencyName &&
-        this.quotaForm.total &&
-        this.quotaForm.availableAmount !== undefined &&
-        this.quotaForm.lockedAmount !== undefined &&
-        this.quotaForm.frozenAmount !== undefined &&
-        this.quotaForm.issuingDate &&
-        this.quotaForm.issuingAgency &&
-        this.buyFileList[0]
-      ) {
-        // 总量校验
+    },
+    //碳配额上传成功
+    quotaSuccess(res, file, fileList) {
+      this.quotaForm.buyCertificate = res.msg;
+      this.quotaForm.buyCertificateFileName = file.name;
+      this.$message.success("上传成功");
+    },
+    /**
+    * 作者:
+    * 时间: 2022-06-21 11:29:37
+    * 功能: 提交碳配额项目
+    */
+    submitQuota() {
+      if (!this.quotaForm.buyCertificate) {
+        this.$message.warning("请先上传文件，或等待文件上传成功再提交");
+        return;
+      }
+      if (!this.isEdit) {
         if (
-          Number(this.quotaForm.total) !==
-          Number(this.quotaForm.availableAmount) +
+          this.quotaForm.agencyName &&
+          this.quotaForm.total &&
+          this.quotaForm.availableAmount &&
+          this.quotaForm.lockedAmount &&
+          this.quotaForm.frozenAmount &&
+          this.quotaForm.issuingDate &&
+          this.quotaForm.issuingAgency &&
+          this.buyFileList[0]
+        ) {
+          if (
+            Number(this.quotaForm.total) !=
+            Number(this.quotaForm.availableAmount) +
             Number(this.quotaForm.lockedAmount) +
             Number(this.quotaForm.frozenAmount)
-        ) {
-          return this.$message.warning(
-            "可用数量、锁定数量、冻结数量总和必须等于存在总量"
-          );
+          ) {
+            return this.$message.warning(
+              "可用数量、锁定数量、冻结数量总和必须等于持仓总量"
+            );
+          }
+          this.quotaForm.assetsStatus = "0130000004";
+          addCarbonQuota(this.quotaForm)
+            .then((res) => {
+              if (this.buyFileList.length > 0) {
+                this.$message.success("提交成功");
+                this.$emit("changeVisible", false);
+                this.show = false;
+                this.$emit("submit", true);
+              }
+            })
+            .catch((err) => {
+              this.$message.error(err);
+            });
+        } else {
+          this.$message.warning("必填项不能为空");
+          return;
         }
-
-        this.quotaForm.assetStatus = "0100000004";
-        addCarbonQuota(this.quotaForm)
-          .then(res => {
+      } else {
+        var data = JSON.parse(JSON.stringify(this.quotaForm));
+        for (var i in data) {
+          if (data[i] == "--") {
+            data[i] = "";
+          }
+        }
+        changeQuota(data)
+          .then((res) => {
             if (this.buyFileList.length > 0) {
               this.$message.success("提交成功");
               this.$emit("changeVisible", false);
@@ -891,170 +653,108 @@ export default {
               this.$emit("submit", true);
             }
           })
-          .catch(err => {
-            this.$message.error(err.message || "提交失败");
+          .catch((err) => {
+            this.$message.error(err);
           });
-      } else {
-        this.$message.warning("必填项不能为空");
-        return;
       }
-    }
-    // 新增模式处理
-    else {
-      var data = JSON.parse(JSON.stringify(this.quotaForm));
-      for (var i in data) {
-        if (data[i] === "--") {
-          data[i] = "";
-        }
-      }
-      // 修复 changeQuota 方法定义（原嵌套错误）
-      this.changeQuota(data);
-    }
-  },
-
-  // 修复：提取独立的 changeQuota 方法（原嵌套在 submitQuota 内）
-  changeQuota(data) {
-    return new Promise((resolve, reject) => {
-      // 模拟接口调用：实际需替换为真实接口
-      // addCarbonQuota(data).then(resolve).catch(reject)
-      setTimeout(() => {
-        if (this.buyFileList.length > 0) {
-          resolve({ code: 200, msg: "提交成功" });
-        } else {
-          reject(new Error("文件未上传"));
-        }
-      }, 500);
-    })
-      .then(res => {
-        if (this.buyFileList.length > 0) {
-          this.$message.success("提交成功");
-          this.$emit("changeVisible", false);
-          this.show = false;
-          this.$emit("submit", true);
-        }
-      })
-      .catch(err => {
-        this.$message.error(err.message || "提交失败");
-      });
-  },
-
-  // 获取项目列表（分页）
-  getProjectList(current) {
-    const data = {
-      current: current || this.current,
-      size: this.pageSize,
-      async: true,
-      projectName: this.searchProjectKeyword,
-      projectStatusCode: "0100000012"
-    };
-
-    // 模拟接口调用：实际替换为 getCarbonMetaRegistryPageList 真实逻辑
-    // getCarbonMetaRegistryPageList(data).then((res) => {
-    setTimeout(() => {
-      const mockRes = {
-        data: {
-          records: [], // 模拟空数据，实际需接口返回
-          total: 0,
-          current: 1
-        }
+    },
+    getProjectList(current) {
+      this.current = current;
+      const data = {
+        current: this.current,
+        size: this.pageSize,
+        async: true,
+        projectName: this.searchProjectKeyword,
+        projectStatusCode: "0100000013",
       };
-      this.projectList = mockRes.data.records;
-      this.total = Number(mockRes.data.total);
-      this.current = Number(mockRes.data.current);
-      this.pageCount = Math.ceil(this.total / this.pageSize);
-
-      // 空值转换
-      this.projectList.map((v, i) => {
-        v.order = i + 1;
-        for (var key in v) {
-          if (v[key] === "") {
-            v[key] = "--";
+      getCarbonMetaregistryPageList(data).then((res) => {
+        this.projectList = res.data.records;
+        this.total = Number(res.data.total);
+        this.current = Number(res.data.current);
+        this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
+        this.projectList.map((v, i) => {
+          v.order = i + 1;
+          for (var i in v) {
+            if (v[i] == "") {
+              v[i] = "--";
+            }
+            if (!v[i]) {
+              v[i] = "--";
+            }
           }
-        }
+        });
       });
-    }, 500);
-    // }).catch(err => {
-    //   console.error('获取项目列表失败:', err)
-    // });// });
-  },
-
-  // 每页条数变化处理
-  handleSizeChange(val) {
-    this.pageSize = val;
-    this.getProjectList();
-  },
-
-  // 打开项目选择弹窗（并加载列表）
-  pickProject() {
-    this.dialogTableVisible = true;
-    this.getProjectList();
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.getProjectList(1);
+    },
+    /**
+    * 作者:
+    * 时间: 2022-06-17 10:20:32
+    * 功能: 选择项目按钮
+    */
+    pickProject() {
+      this.dialogTableVisible = true;
+      this.getProjectList(1);
+    },
   },
   watch: {
-    // 弹窗显隐联动
-    dialogFormVisible(newVal) {
-      this.show = newVal;
+    dialogFormVisible() {
+      this.show = this.dialogFormVisible;
     },
-    // 编辑数据回显（文件列表恢复）
-    row(newRow) {
-      this.form = { ...newRow };
-      // 恢复签发文件
-      if (this.form.issuingCertificate) {
-        this.issueFileList = [
-          {
-            name: this.form.issuingCertificateFileName || "",
-            url: this.form.issuingCertificate
-          }
-        ];
+    row() {
+      this.form = this.row;
+      if (this.form.issuingCertificates) {
+        this.issueFileList = [];
+        this.issueFileList.push({
+          name: this.form.issuingCertificatesFileName,
+          url: this.form.issuingCertificates,
+        });
       }
-      // 恢复交易文件
       if (this.form.buyCertificate) {
-        this.tradeFileList = [
-          {
-            name: this.form.buyCertificateFileName || "",
-            url: this.form.buyCertificate
-          }
-        ];
+        this.tranFileList = [];
+        this.tranFileList.push({
+          name: this.form.buyCertificateFileName,
+          url: this.form.buyCertificate,
+        });
       }
-    }
+    },
   },
   mounted() {
-    this.formatCertification(getCertificationInstitutionDict(this.$store));
-    this.uploadParam = getSelfUploadProjectParams();
-    this.carbonEnterpriseList = this.setSelData(
-      getCarbonEnterprise(this.$store)
-    );
-    this.optionsStandard = getCertificationInstitutionList(this.$store);
-    let form = sessionStorage.getItem("carbonInstitutionForm");
+    // this.formatCertification(getCertificationInstitutionDict(this.$store));
+    this.upLoadParam = getFeiShuUpLoadProjectParams();
+    // this.carbonEnterpriseList = this.setSelData(getCarbonEnterprise(this.$store))
+    this.optionsStandard = getCertificationInstitutionDict(this.$store);
+    let form = sessionStorage.getItem("carbonUpload");
     let quotaForm = sessionStorage.getItem("carbonQuotaUpload");
-    loadQuotaChangeList({
-      size: true
-    }).then(res => {
+    loadCarbonExchangeList({ asc: true }).then((res) => {
       this.exchangeList = res.data.records;
     });
-    this.carbonEnterpriseList();
-    this.state = this.loadH1();
-    this.institution = getInstitutionInstitution(this.$store);
+    this.states = this.loadAll();
+    this.issueInstitution = getIssueInstitution(this.$store);
     if (form) {
       this.form = JSON.parse(form);
     }
     if (quotaForm) {
       this.quotaForm = JSON.parse(quotaForm);
     }
-  }
+  },
 };
 </script>
+
 <style lang="scss" scoped>
 .required-text {
   color: red;
+
   position: absolute;
-  left: -40px;
-  top: 20px;
+  left: -60px;
+  top: 3px;
 }
 
 .label {
   font-weight: 700;
-  width: 100px;
-  display: inline-block;
+  width: 120px;
   display: inline-block;
 }
 </style>

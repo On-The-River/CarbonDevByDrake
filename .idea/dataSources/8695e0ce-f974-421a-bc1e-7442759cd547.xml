@@ -36,7 +36,7 @@
     </schema>
     <schema id="11" parent="1" name="carbon">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2025-08-27.17:59:54</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-09-02.07:32:44</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <routine id="12" parent="11" name="P_BEy">
@@ -727,7 +727,7 @@ DYNAMIC</Options>
       <Position>7</Position>
     </column>
     <column id="121" parent="23" name="id">
-      <AutoIncrement>1061</AutoIncrement>
+      <AutoIncrement>1062</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -840,7 +840,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="141" parent="24" name="id">
-      <AutoIncrement>3</AutoIncrement>
+      <AutoIncrement>4</AutoIncrement>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -1401,7 +1401,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="240" parent="31" name="id">
-      <AutoIncrement>137</AutoIncrement>
+      <AutoIncrement>138</AutoIncrement>
       <Comment>id</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -1592,7 +1592,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="274" parent="32" name="id">
-      <AutoIncrement>23</AutoIncrement>
+      <AutoIncrement>24</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -1859,7 +1859,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="320" parent="35" name="id">
-      <AutoIncrement>6946</AutoIncrement>
+      <AutoIncrement>6947</AutoIncrement>
       <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -2155,7 +2155,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>carbon_metaregistry_id_uindex</UnderlyingIndexName>
     </key>
     <column id="374" parent="36" name="id">
-      <AutoIncrement>12733</AutoIncrement>
+      <AutoIncrement>12734</AutoIncrement>
       <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -2353,7 +2353,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>carbon_metaregistry_methodology_id_uindex</UnderlyingIndexName>
     </key>
     <column id="415" parent="39" name="id">
-      <AutoIncrement>1174</AutoIncrement>
+      <AutoIncrement>1175</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -2744,7 +2744,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="487" parent="44" name="id">
-      <AutoIncrement>4</AutoIncrement>
+      <AutoIncrement>16</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -3330,7 +3330,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="589" parent="46" name="id">
-      <AutoIncrement>4138</AutoIncrement>
+      <AutoIncrement>4139</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -3611,7 +3611,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="637" parent="50" name="id">
-      <AutoIncrement>92</AutoIncrement>
+      <AutoIncrement>93</AutoIncrement>
       <Comment>id</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -3767,7 +3767,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="664" parent="51" name="id">
-      <AutoIncrement>362</AutoIncrement>
+      <AutoIncrement>363</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -3952,7 +3952,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="696" parent="53" name="id">
-      <AutoIncrement>34</AutoIncrement>
+      <AutoIncrement>38</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -4121,7 +4121,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="725" parent="54" name="id">
-      <AutoIncrement>74</AutoIncrement>
+      <AutoIncrement>81</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -4244,7 +4244,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="747" parent="55" name="id">
-      <AutoIncrement>453</AutoIncrement>
+      <AutoIncrement>454</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -4600,7 +4600,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="810" parent="59" name="id">
-      <AutoIncrement>7</AutoIncrement>
+      <AutoIncrement>8</AutoIncrement>
       <Comment>id</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -4968,7 +4968,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="868" parent="66" name="id">
-      <AutoIncrement>191</AutoIncrement>
+      <AutoIncrement>196</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -5348,7 +5348,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="933" parent="71" name="id">
-      <AutoIncrement>103</AutoIncrement>
+      <AutoIncrement>104</AutoIncrement>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -5654,7 +5654,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="988" parent="75" name="id">
-      <AutoIncrement>113</AutoIncrement>
+      <AutoIncrement>114</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
@@ -5943,7 +5943,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="1038" parent="79" name="id">
-      <AutoIncrement>4698</AutoIncrement>
+      <AutoIncrement>4706</AutoIncrement>
       <Comment>主键</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>

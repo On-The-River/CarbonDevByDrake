@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 export function systemConfigCheck(pram) {
   const data = {
@@ -32,6 +32,7 @@ export function systemConfigSave(pram) {
 // 项目文档管理
 export function projectFileManager(pram) {
   return request({
+    baseURL:'http://localhost:9003',
     url: '/assets/carbonMetaregistryDoc/getPageList',
     method: 'POST',
     data: pram
@@ -81,24 +82,24 @@ export function fileListApi(params) {
 */
 export function getProjectDetail(id) {
   return request({
+    baseURL: "http://localhost:9003",
     url: '/assets/carbonMetaregistry/info/' + id,
     method: 'get',
   })
 }
 // 项目库详情页接口
 export function getProjectLibDetail(refId, typeCode) {
-  
-
-  var id = refId == "--" ? "" : refId
-  var code = typeCode == "--" ? "" : typeCode
+  const id = refId === "--" ? "" : refId;
+  const code = typeCode === "--" ? "" : typeCode;
   return request({
+    baseURL: "http://localhost:9003",
     url: '/assets/EscarbonMetaregistry/getByRef?refId=' + id + '&typeCode=' + code,
     method: 'get'
   })
 }
 /**
  * 图片列表 删除图片
- * @param data
+ * @param id
  */
 export function fileDeleteApi(id) {
   return request({

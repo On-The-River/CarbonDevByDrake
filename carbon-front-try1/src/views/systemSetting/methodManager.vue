@@ -30,7 +30,7 @@
                   placeholder="全部"
                   class="selectbox-input"
                   v-model="selectedField"
-                  :options="fieldCodelist"
+                  :options="fieldCodeList"
                   clearable
                   @change="onClickSearch"
                 >
@@ -384,23 +384,23 @@
 </template>
 <script>
 import {
-  getEscarbonMethodologyByKeyword,
   addCarbonMethodology,
-  updateCarbonMethodology,
-  synContentCarbonMethodology
+  delCarbonExchanger,
+  editMethod,
+  getEscarbonMethodologyByKeyword,
+  synContentCarbonMethodology,
+  updateCarbonMethodology
 } from "@/api/carbonAssetApi";
-
-import { editMethod } from "@/api/carbonAssetApi";
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
-import { openUrlInNewWindow } from "@/libs/OpenHelper";
-import { getCertificationCriteriaDict } from "@/config/dictHelper";
-import { getBusinessDict } from "@/config/dictHelper";
+import {openUrlInNewWindow} from "@/libs/OpenHelper";
 import {
+  getBusinessDict,
+  getCertificationCriteriaDict,
   getMethodStatusDict,
   getProjectAreaDict,
   getProjectTypeDict
 } from "@/config/dictHelper";
-import { cursor } from "@/libs/element-table";
+
 export default {
   name: "companyPackage",
   components: { selectDropDownBox },
@@ -415,7 +415,7 @@ export default {
       selectedStatus: "", //被选中的状态
       fieldCodeList: [], //领域字典
       selectedField: "", //领域
-      list: [],
+      list:[],
       total: 0,
       current: 0,
       pageCount: 1,
@@ -449,12 +449,12 @@ export default {
     cellStyle({ row, column, rowIndex, columnIndex }) {},
     //判断是否发布，若发布了则修改样式
     editStyleChange(status) {
-      return "afterSubmitEdit";
-      // if (status == 1) {
-      //   return "afterSubmitEdit";
-      // } else {
-      //   return "list-green-text";
-      // }
+      // return "afterSubmitEdit";
+      if (status == 1) {
+        return "afterSubmitEdit";
+      } else {
+        return "list-green-text";
+      }
     },
     publishStyleChange(status) {
       if (status == "0450000002") {
@@ -519,7 +519,6 @@ export default {
     },
     // 删除
     onClickDelete(id) {
-      var id = row_id;
       this.$confirm("删除内容不可复原，请谨慎操作").then(() => {
         delCarbonExchanger(id).then(
           res => {
@@ -553,7 +552,7 @@ export default {
       const data = {
         asc: true,
         size: this.pageSize,
-        // searchKey: this.searchKeyword,
+        searchKey: this.searchKeyword,
         statusCode: this.selectedStatus[0],
         fieldCode: this.selectedField[0],
         industryCode: this.selectedIndustry[0],
@@ -565,23 +564,25 @@ export default {
       let m = this.$message.success("查询中...");
       getEscarbonMethodologyByKeyword(data)
         .then(res => {
-          // this.list = res.data.records;
+
+
           m.close();
           if (res.data) {
             this.list = res.data.records;
+            console.log("LIST",this.list);
             this.total = parseInt(res.data.total);
             this.current = res.data.current;
             this.pageCount = Math.ceil(
               parseInt(res.data.total) / this.pageSize
             );
-            this.list.map(v => {
-              //遍历表格数据
-              v.checked = false;
-              v.statusName = this.statusName(v.statusCode);
-              for (var i in v) {
-                v[i] = v[i] ? v[i] : "---";
-              }
-            });
+            // this.list.map(v => {
+            //   //遍历表格数据
+            //   v.checked = false;
+            //   v.statusName = this.statusName(v.statusCode);
+            //   for (var i in v) {
+            //     v[i] = v[i] ? v[i] : "---";
+            //   }
+            // });
           }
         })
         .catch(error => {
@@ -592,11 +593,10 @@ export default {
     onEdit(row) {
       this.dialogText = "修改方法学";
       this.addMethodFormVisible = true;
-      let datas = { ...row };
-      this.methodForm = datas;
+      this.methodForm = {...row};
       console.log("this.methodForm", this.methodForm);
     },
-    saveMothod() {
+    saveMethod() {
       if (!this.methodForm["methodCode"]) {
         return this.$message("请输入方法学编码!");
       }

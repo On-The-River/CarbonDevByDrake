@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getAccoutEnterPriseInfo, getAccoutBaseInfo } from '@/api/tenant'
+import { getAccountEnterPriseInfo, getAccoutBaseInfo } from '@/api/tenant'
 import Cookies from 'js-cookie'
 export default {
   name: 'index',
@@ -89,7 +89,7 @@ export default {
   methods: {
     getAccountEnterPriseInfo(tenantId) {
       let tantId = tenantId;
-      getAccoutEnterPriseInfo(tantId).then(res => {
+      getAccountEnterPriseInfo(tantId).then(res => {
         this.baseInfo = res;
         console.log("baseInfo",this.baseInfo);
       }).catch(err => {

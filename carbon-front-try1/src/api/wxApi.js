@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 // TODO 微信沟通难度大暂放 呵呵
 

@@ -48,15 +48,18 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/EscarbonMetaregistry")
+@RequestMapping("/EscarbonMetaregistry")//EscarbonMetaregistry
 @Api(value = "项目文档管理Es模块", tags = {"项目文档管理Es模块"})
 public class CarbonMetaregistryEsController extends BaseController {
 
     @Autowired
-    private CarbonMetaregistryDocContentService carbonMetaregistryDocContentService;
+    private CarbonMetaregistryService carbonMetaregistryService;
 
     @Autowired
     private MethodologyRepository methodologyRepository;
+
+    @Autowired
+    private CarbonMetaregistryRepository carbonMetaregistryRepository;
 
     @Autowired
     private CarbonMetaregistryMapper carbonMetaregistryMapper;
@@ -101,6 +104,12 @@ public class CarbonMetaregistryEsController extends BaseController {
         }
         Map res= esUtil.matchRes3(restHighLevelClient,param);
         return ApiResult.ok(res);
+    }
+
+    @GetMapping("/importAll")
+    @ApiOperation(value = "...")
+    public ApiResult<Integer> importAll() {
+        return ApiResult.ok(carbonMetaregistryService.importAll());
     }
 }
 

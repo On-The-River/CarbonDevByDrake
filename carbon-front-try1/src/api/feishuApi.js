@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 /**
  * 拉取账户列表数据
@@ -8,11 +8,11 @@ import request from '@/utils/request'
  */
 /**
  * 获取鉴权信息 云文档
- * @param 
+ * @param datas
  */
  export function getFeishuInformation(datas) {
-  // return  console.log("datas",datas);
     return request({
+      baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/information',
       method: 'GET',
       params: datas,
@@ -23,11 +23,11 @@ import request from '@/utils/request'
 
 /**
  * 获取电子表格鉴权信息 云文档
- * @param 
+ * @param datas
  */
  export function getFeishuFormInformation(datas) {
-  // return  console.log("datas",datas);
     return request({
+      baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/formInformation',
       method: 'GET',
       params:datas,
@@ -38,11 +38,12 @@ import request from '@/utils/request'
   /**
  * 飞书API调用 模块
  * 修改指定内容
- * @param {} data
+ * @param data
  * @returns
  */
 export function putFeishuUpdate(data) {
   return request({
+    baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/update',
       method: 'POST',
       data,
@@ -52,11 +53,12 @@ export function putFeishuUpdate(data) {
  /**
  * 飞书API调用 模块
  * 修改指定内容测试
- * @param {} data
+ * @param data
  * @returns
  */
 export function putFeishuUpdateTest(data) {
   return request({
+    baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/update/test',
       method: 'POST',
       data,
@@ -67,11 +69,12 @@ export function putFeishuUpdateTest(data) {
  /**
  * 飞书API调用 模块
  * 根据文档编号和位置修改指定区域内容
- * @param {} data
+ * @param data
  * @returns
  */
 export function putFeishuUpdateByNum(data) {
   return request({
+    baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/updateByNum',
       method: 'POST',
       data,
@@ -80,12 +83,13 @@ export function putFeishuUpdateByNum(data) {
 }
 
  /**
- * 获取文档信息
- * @param {} data
- * @returns
- */
+  * 获取文档信息
+  * @returns
+  * @param templateNum
+  */
 export function getFeishuFileDate(templateNum) {
   return request({
+    baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/getFileDate/' + templateNum,
       method: 'GET',
       headers:{'Content-Type':"application/x-www-form-urlencoded"}
@@ -93,11 +97,12 @@ export function getFeishuFileDate(templateNum) {
 }
  /**
  * 获取项目对应的飞书文档
- * @param {} data
+ * @param data
  * @returns
  */
 export function getFeishuProjectFile(data) {
   return request({
+    baseURL: "http://127.0.0.1:9005/",
       url: '/system/feishu/getProjectFile' ,
       method: 'GET',
       params: data,
@@ -106,13 +111,13 @@ export function getFeishuProjectFile(data) {
 }
 
   /**
- * url =  用不到
- * @param {} url
- * code
- * @returns
- */
+   * url =  用不到
+   * code
+   * @returns
+   * @param code
+   */
 function getParams(code){
   let url  = window.location.search;
-  var res = new RegExp("(?:&|/?)" + code + "=([^&$]+)").exec(url);
+  const res = new RegExp("(?:&|/?)" + code + "=([^&$]+)").exec(url);
   return res ? res[1] : '';
 }

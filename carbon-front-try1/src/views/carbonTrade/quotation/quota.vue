@@ -50,6 +50,7 @@ export default {
     },
     clickBuy() {
       this.buyAssetsDlg = true
+      
     },
     changeDialogFormVisible(res) {
       if (res) {
@@ -58,7 +59,7 @@ export default {
         this.buyAssetsDlg = false
       }
       // if (res) {
-      //   this.$router.push('/trade/offer')
+        this.$router.push('/trade/offer')
       // }
       // this.$emit('changeTab', "sell");
     },

@@ -32,4 +32,6 @@ public interface CarbonMetaregistryService extends BaseService<CarbonMetaregistr
      */
     Paging<CarbonMetaregistryQueryVo> getCarbonMetaregistryPageList(CarbonMetaregistryQueryParam param);
 
+    Integer importAll();
+
 }

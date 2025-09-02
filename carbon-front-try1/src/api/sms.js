@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 /**
  * @description 短信发送记录 -- 列表
  */

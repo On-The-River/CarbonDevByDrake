@@ -1,6 +1,7 @@
-import request from '@/utils/request'
-import SettingMer from '@/utils/settingMer'
-import store from '@/store'
+import request from '../utils/request'
+import SettingMer from '../utils/settingMer'
+import store from '../store'
+
 /**
  * 拉取账户列表数据
  * @param {*} data
@@ -8,6 +9,7 @@ import store from '@/store'
  */
 export function getPageList(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/getPageList',
         method: 'post',
         data
@@ -84,6 +86,7 @@ export function widraw(userId, amount) {
 */
 export function getAccoutBaseInfo(userId) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/sysAccount/info/' + userId,
         method: 'GET',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -95,8 +98,9 @@ export function getAccoutBaseInfo(userId) {
   * @param {} userId
   * @returns
   */
-export function getAccoutEnterPriseInfo(userId) {
+export function getAccountEnterPriseInfo(userId) {
     return request({
+      baseURL: "http://localhost:9002",
         url: '/system/sysTenant/info/' + userId,
         method: 'GET',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -123,6 +127,7 @@ export function putAccountUpdate(data) {
  */
 export function putAccountUpdatePassword(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/sysAccount/update/password',
         method: 'POST',
         data
@@ -181,38 +186,40 @@ export function getAccoutUpdateBaseInfo(data) {
     })
 }
 /**
-*
-* 账号管理-碳交易所列表
-* @param {}
-* @returns
- /assets/carbonExchange/getListByTenant
-*/
+ *
+ * 账号管理-碳交易所列表
+ * @returns {Promise}
+ * @param data
+ */
 export function getListByTenant(data) {
     return request({
+        baseURL: "http://localhost:9003",
         url: '/assets/carbonExchange/getListByTenant',
         method: 'POST',
         data
     })
 }
 /**
-* 账号管理-修改手机号
-* @param {}
-* @returns
-*/
+ * 账号管理-修改手机号
+ * @returns {Promise}
+ * @param data
+ */
 export function putAccountUpdatePhone(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/sysAccount/update/phone',
         method: 'PUT',
         data
     })
 }
 /**
-* 账号管理-修改手机号
-* @param {}
-* @returns
-*/
+ * 账号管理-修改手机号
+ * @returns {Promise}
+ * @param phone
+ */
 export function getAccoutUpdateCode(phone) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/sysAccount/update/code/' + phone,
         method: 'GET',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -231,25 +238,25 @@ export function getAccoutUpdateCode(phone) {
 //         data
 //     })
 // }
-/**
-* 账号管理-账户-绑定-修改邮箱号（通过输入密码绑定-修改）
-* @param {}
-* @returns
 
-*/
+/**
+ * 账号管理-账户-绑定-修改邮箱号（通过输入密码绑定-修改）
+ * @returns {Promise}
+ * @param data
+ */
 export function putAccountSend(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/sysAccount/send/email',
         method: 'POST',
         data
     })
 }
 /**
-* 租户-用户 条件查询tenantUser
-* @param {}
-* @returns
-/system/tenantUser/query/{param}
-*/
+ * 租户-用户 条件查询tenantUser
+ * @returns {Promise}
+ * @param param
+ */
 export function getTenantUserQuery(param) {
     return request({
         url: '/system/tenantUser/query/' + param,
@@ -259,11 +266,10 @@ export function getTenantUserQuery(param) {
 
 }
 /**
-* 租户-用户  获取用户 分页列表
-* @param {}  
-* @returns 
-asc=&current=1&size=20&sortField=&sourceChannel=2&countId=&hitCount=&maxLimit=&optimizeCountSql=&orders%5B0%5D.asc=&orders%5B0%5D.column=&records=&searchCount=&total="
-*/
+ * 租户-用户  获取用户 分页列表
+ * @returns {Promise}
+ * @param data
+ */
 export function getUserGetPageList(data) {
     return request({
         url: '/system/tenantUser/getPageList/',
@@ -274,8 +280,8 @@ export function getUserGetPageList(data) {
 }
 /**
 * 租户-用户  查询用户详情
-* @param {}  
-* @returns 
+* @param {}
+* @returns
 /system/tenantUser/info/{id}
 */
 export function getUserInfo(id) {
@@ -287,13 +293,13 @@ export function getUserInfo(id) {
 
 }
 /**
-* 交易账户  添加交易账号
-* @param {}  
-* @returns 
-/assets/exchangeAccount/add
-*/
+ * 交易账户  添加交易账号
+ * @returns {Promise}
+ * @param data
+ */
 export function putAddExchangeAccount(data) {
     return request({
+        baseURL: "http://localhost:9003",
         url: '/assets/exchangeAccount/add',
         method: 'POST',
         data,
@@ -317,11 +323,10 @@ export function getUpLoadProjectParams() {
     }
 }
 /**
-* 飞书文件上传
-* @param {}  
-* @returns 
-*/
-export function getFeiShuUpLoadProjectParams() {
+ * 飞书文件上传
+ * @returns
+ */
+export function getFeiShuUploadProjectParams() {
     let token = !store.getters.token ? sessionStorage.getItem('token') : store.getters.token;
     return {
         url: `${SettingMer.apiBaseURL}assets/exchangeAccount/uploadCredential`,
@@ -329,7 +334,7 @@ export function getFeiShuUpLoadProjectParams() {
     }
 }
 // 飞书项目文件上传
-export function getFeiShuUpLoadFileParams() {
+export function getFeiShuUploadFileParams() {
     let token = !store.getters.token ? sessionStorage.getItem('token') : store.getters.token;
     return {
         url: `${SettingMer.apiBaseURL}system/feishu/uploadFile`,

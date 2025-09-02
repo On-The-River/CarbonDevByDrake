@@ -22,15 +22,17 @@
           查询
         </Button>
       </div>
-      <Button style="margin-top: 0px; margin-bottom: 20px" class="normal-white-btn" @click="addDict">
-        +添加
-      </Button>
-      <Button style="margin-top: 0px; margin-bottom: 20px; margin-left: 20px" class="normal-white-btn">
-        导出
-      </Button>
-      <Button style="margin-top: 0px; margin-bottom: 20px; margin-left: 20px" class="normal-white-btn">
-        导入
-      </Button>
+      <div class="content">
+        <Button style="margin-top: 0px; margin-bottom: 20px" class="normal-white-btn" @click="addDict">
+          +添加
+        </Button>
+        <Button style="margin-top: 0px; margin-bottom: 20px; margin-left: 20px" class="normal-white-btn">
+          导出
+        </Button>
+        <Button style="margin-top: 0px; margin-bottom: 20px; margin-left: 20px" class="normal-white-btn">
+          导入
+        </Button>
+      </div>
       <el-table :header-cell-style="{
         background: '#F5F5F7',
         border: '0px solid #000000',
@@ -39,16 +41,18 @@
       }" :show-header="true" :data="list" stripe :row-style="{ height: '40px' }" :cell-style="cellStyle"
                 style="width: 100%">
               <!--style="align: center"-->
-        <template slot="header" >
+        <!-- <template slot="header" >
           <el-checkbox v-model="columnChecked" :indeterminate="indeterminateFlag" checked="allChecked" label=""
                        @change="updateAllSelected"></el-checkbox>
-        </template>
-        <el-table-column>
+        </template> -->
+        <!-- <el-table-column>
           <template slot-scope="row">
             <el-checkbox @change="rowCheckChange" v-model="row.checked"></el-checkbox>
           </template>
-        </el-table-column>
-        <el-table-column prop="dictName" label="字典名称" min-width="10%" align="left" />
+        </el-table-column> -->
+        <el-table-column min-width="3%"/>
+        <el-table-column prop="dictName" label="字典名称" min-width="18%" align="left" />
+        <el-table-column min-width="2%"/>
         <el-table-column prop="dictCode" label="字典编码" min-width="10%" align="left" />
         <el-table-column align="left" prop="description" label="描述" min-width="20%" />
         <el-table-column align="left" prop="createTime" label="创建时间" min-width="10%" />
@@ -82,7 +86,7 @@
                        layout="total, sizes, prev, pager, next, jumper" :total="total" />
       </div>
       <!-- 弹窗 -->
-      <el-dialog :title="title" :visible.sync="dialogVisible" width="30%">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%">
         <el-form :model="form" label-width="60">
           <el-form-item label="字典类型" :label-width="60">
             <el-input v-model="form.dictName" autocomplete="off" size="medium"></el-input>
@@ -95,7 +99,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false" class="normal-white-btn">取消</el-button>
+          <el-button @click="dialogFormVisible = false" class="normal-white-btn">取消</el-button>
           <el-button type="primary" @click="submit" class="light-green-btn">确定</el-button>
         </div>
       </el-dialog>
@@ -394,6 +398,7 @@ export default {
     onEdit(row, bool) {
       this.dialogFormVisible = bool;
       if (bool) {
+        this.title = "编辑 - "+row.dictName;
         this.form.dictName = row.dictName;
         this.form.id = row.id;
         this.form.dictCode = row.dictCode;
@@ -574,6 +579,16 @@ export default {
   flex-direction: column;
   width: 100%;
 }
+
+.content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  float: left;
+  margin: 20px 0px 10px 20px;
+}
+
+
 
 :deep(.el-cascader .el-input .el-input__inner),
 :deep(.el-cascader .el-input.is-focus .el-input__inner) {

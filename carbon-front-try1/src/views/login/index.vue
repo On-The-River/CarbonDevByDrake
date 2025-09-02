@@ -226,7 +226,7 @@ export default {
       }
     },
     $route: {
-      handle: function (route) {
+      handler: function (route) {
         const query = route.query;
         if (query) {
           this.redirect = query.redirect;
@@ -270,12 +270,12 @@ export default {
     handleChecked() {
       this.rememberMe = !this.rememberMe;
     },
-    clickReg() {
-      let routeData = this.$route.resolve({ path: 'register' });
+    toRegister() {
+      let routeData = this.$router.resolve({ path: 'register' });
       window.open(routeData.href, '_blank');
     },
-    clickForgetPassword() {
-      let routeData = this.$route.resolve({ path: 'forgetPassWord' });
+    toForgetPwd() {
+      let routeData = this.$router.resolve({ path: 'forgetPassWord' });
       window.open(routeData.href, '_blank');
     },
     agentWeiXinLogin() {
@@ -343,6 +343,7 @@ export default {
             this.loading = false;
           }).catch((error) => {
             console.log("login failed");
+            console.error(error.message);
             this.loading = false;
             if (error && error.status === 40006) {
               this.$router.push({ path: '/loginErrSwiper' });

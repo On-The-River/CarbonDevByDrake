@@ -203,7 +203,7 @@ export default {
           putForgotPassword(data)
             .then((data, err) => {
               if (err) {
-                this.$message.error(error)
+                this.$message.error(err)
                 return false
               } else {
                 this.$message.success('恭喜您，' + data.data.msg + '!')

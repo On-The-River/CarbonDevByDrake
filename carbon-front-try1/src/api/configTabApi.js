@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 // 配置分类管理
 // 注意暂时没用到，使用无限极分类实现

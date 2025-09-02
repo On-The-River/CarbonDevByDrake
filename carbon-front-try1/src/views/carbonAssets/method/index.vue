@@ -9,7 +9,7 @@
                 <span class="selectbox-hint" style="min-width: 80px"
                   >核证标准</span
                 >
-                <div class="selectbox-deliver" />
+                <div class="selectbox-deliver" ></div>
                 <el-cascader
                   style="width: 120px"
                   placeholder="全部"
@@ -62,7 +62,7 @@
                 <span class="selectbox-hint" style="min-width: 100px"
                   >方法学搜索</span
                 >
-                <div class="selectbox-deliver" />
+                <div class="selectbox-deliver"></div>
                 <el-input
                   v-model="searchKeyWord"
                   placeholder="输入名称"
@@ -179,7 +179,7 @@
   </div>
 </template>
 <script>
-import { getEscarbonMethodologyByKeyword } from "@/api/carbonAssetApi";
+import {delCarbonExchanger, getEscarbonMethodologyByKeyword} from "@/api/carbonAssetApi";
 import { editMethod } from "@/api/carbonAssetApi";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import { getCertificationCriteriaDict } from "@/config/dictHelper";
@@ -262,7 +262,6 @@ export default {
       );
     },
     onClickDelete(id) {
-      var id = row_id;
       this.$confirm("删除内容不可复原，请谨慎操作").then(() => {
         delCarbonExchanger(id).then(
           res => {
@@ -305,9 +304,9 @@ export default {
       }
       getEscarbonMethodologyByKeyword(data)
         .then(res => {
-          // this.list = res.data.records;
-          this.list = res.data.data;
-          this.total = res.data.total;
+          this.list = res.data.records;
+          // this.list = res.data.data;
+          this.total = Number(res.data.total);
           this.current = res.data.current;
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(v => {
@@ -373,9 +372,9 @@ export default {
       }
       getEscarbonMethodologyByKeyword(data)
         .then(res => {
-          // this.list = res.data.records;
-          this.list = res.data.data;
-          this.total = res.data.total;
+          this.list = res.data.records;
+          // this.list = res.data.data;
+          this.total = Number(res.data.total);
           this.current = res.data.current;
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(v => {
@@ -405,11 +404,11 @@ export default {
       }
       getEscarbonMethodologyByKeyword(data)
         .then(res => {
-          // this.list = res.data.records;
-          this.list = res.data.data;
-          this.total = res.data.total;
+          this.list = res.data.records;
+          // this.list = res.data.data;
+          this.total = Number(res.data.total);
           this.current = res.data.current;
-          this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
+          this.pageCount = Math.ceil(parseInt(this.total) / this.pageSize);
           this.list.map(v => {
             v.checked = false;
             v.statusName = this.statusName(v.status);

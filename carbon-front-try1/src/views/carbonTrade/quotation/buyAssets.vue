@@ -1,353 +1,153 @@
-<!-- <template>
-  
-</template>
-<script>
-
-</script>
-<style lang="scss" scoped>
-
-</style> -->
-
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      :visible.sync="show"
-      width="720px"
-      top="5px"
-      class="spec-dialog"
-      :before-close="clickClose"
-    >
+    <el-dialog :title="title" :visible.sync="show" width="720px" top="5px" class="spec-dialog"
+      :before-close="clickClose">
       <div class="content-div">
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item prop="institutionName" label-width="20%">
-              <label slot="label"
-                >采购机构<span style="color: red">*</span></label
-              >
-              <el-autocomplete
-                v-model="subForm.institutionName"
-                size="medium"
-                style="padding-left: 0px"
-                class="input-text"
-                :fetch-suggestions="querySearchAsync"
-                placeholder="请输入采购机构"
-                @select="handleSelect"
-              >
+              <label slot="label">采购机构<span style="color: red">*</span></label>
+              <el-autocomplete v-model="subForm.institutionName" size="medium" style="padding-left: 0px"
+                class="input-text" :fetch-suggestions="querySearchAsync" placeholder="请输入采购机构" @select="handleSelect">
               </el-autocomplete>
             </el-form-item>
           </el-form>
         </div>
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item prop="name" label-width="20%">
-              <label slot="label"
-                >采购联系人<span style="color: red">*</span></label
-              >
-              <el-input
-                v-model="subForm.name"
-                class="input-text"
-                placeholder="请输入采购联系人"
-              />
+              <label slot="label">采购联系人<span style="color: red">*</span></label>
+              <el-input v-model="subForm.name" class="input-text" placeholder="请输入采购联系人" />
             </el-form-item>
           </el-form>
         </div>
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item prop="phone" label-width="20%">
-              <label slot="label"
-                >联系电话<span style="color: red">*</span></label
-              >
-              <el-input
-                v-model="subForm.phone"
-                class="input-text"
-                placeholder="请输入联系电话"
-              />
+              <label slot="label">联系电话<span style="color: red">*</span></label>
+              <el-input v-model="subForm.phone" class="input-text" placeholder="请输入联系电话" />
             </el-form-item>
           </el-form>
         </div>
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item label="邮箱" prop="email" label-width="20%">
-              <el-input
-                v-model="subForm.email"
-                class="input-text"
-                placeholder="请输入邮箱"
-              />
+              <el-input v-model="subForm.email" class="input-text" placeholder="请输入邮箱" />
             </el-form-item>
           </el-form>
         </div>
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item label="项目领域" prop="email" label-width="20%">
-              <el-cascader
-                class="selectbox-root half margleft"
-                placeholder="全部"
-                v-model="subForm.projectScopeCode"
-                :options="projectAreaList"
-                clearable
-              >
+              <el-cascader class="selectbox-root half margleft" placeholder="全部" v-model="subForm.projectScopeCode"
+                :options="projectAreaList" clearable>
               </el-cascader>
             </el-form-item>
           </el-form>
         </div>
-        <el-form
-          label-position="left"
-          ref="subForm"
-          :rules="formRules"
-          :model="subForm"
-          style="width: 100%"
-        >
+        <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm" style="width: 100%">
           <el-form-item label="资产类型" prop="email" label-width="20%">
-            <el-cascader
-              class="selectbox-root margleft"
-              placeholder="全部"
-              v-model="subForm.assetType"
-              :options="assetsTypeList"
-              clearable
-              @change="changeAssetType"
-            >
+            <el-cascader class="selectbox-root margleft" placeholder="全部" v-model="subForm.assetType"
+              :options="assetsTypeList" clearable @change="changeAssetType">
             </el-cascader>
           </el-form-item>
         </el-form>
 
-        <el-form
-          label-position="left"
-          ref="subForm"
-          :rules="formRules"
-          :model="subForm"
-          style="width: 100%"
-        >
+        <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm" style="width: 100%">
           <el-form-item label="项目类型" prop="email" label-width="20%">
-            <el-cascader
-              class="selectbox-root margleft"
-              placeholder="全部"
-              v-model="subForm.projectType"
-              :options="projectTypeList"
-              clearable
-              :disabled="isProjectTypeDisable"
-            >
+            <el-cascader class="selectbox-root margleft" placeholder="全部" v-model="subForm.projectType"
+              :options="projectTypeList" clearable :disabled="isProjectTypeDisable">
             </el-cascader>
           </el-form-item>
         </el-form>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item prop="tradeQuantity" label-width="20%">
-              <label slot="label"
-                >采购数量(tCO2e)<span style="color: red">*</span></label
-              >
-              <el-input
-                v-model="subForm.tradeQuantity"
-                class="input-text"
-                placeholder="请输入采购数量"
-              />
+              <label slot="label">采购数量(tCO2e)<span style="color: red">*</span></label>
+              <el-input v-model="subForm.tradeQuantity" class="input-text" placeholder="请输入采购数量" />
             </el-form-item>
           </el-form>
         </div>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item prop="negotiatedPrice" label-width="20%">
               <label slot="label">询价(¥)</label>
-              <el-input
-                v-model="subForm.assetUnitPrice"
-                class="input-text"
-                placeholder="请输入询价"
-              />
+              <el-input v-model="subForm.assetUnitPrice" class="input-text" placeholder="请输入询价" />
             </el-form-item>
           </el-form>
         </div>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm" style="width: 100%">
             <el-form-item prop="expirationDate" label-width="20%">
               <label slot="label">截止采购日期</label>
-              <el-date-picker
-                class="time-bg"
-                style="width: 100%; padding-right: 10px"
-                v-model="subForm.expirationDate"
-                type="datetime"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
-                placeholder="请选择日期"
-                align="right"
-                :picker-options="expirationPickerOptions"
-                size="medium"
-              >
+              <el-date-picker class="time-bg" style="width: 100%; padding-right: 10px" v-model="subForm.expirationDate"
+                type="datetime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择日期" align="right"
+                :picker-options="expirationPickerOptions" size="medium">
               </el-date-picker>
             </el-form-item>
           </el-form>
         </div>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%"
-          >
-            <el-form-item
-              label="期望交割日期"
-              prop="deliveryTime"
-              label-width="20%"
-            >
-              <el-date-picker
-                class="time-bg"
-                style="width: 100%; padding-right: 10px"
-                v-model="subForm.deliveryTime"
-                type="datetime"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
-                placeholder="请选择日期"
-                align="right"
-                :picker-options="pickerOptions"
-                size="medium"
-              >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm" style="width: 100%">
+            <el-form-item label="期望交割日期" prop="deliveryTime" label-width="20%">
+              <el-date-picker class="time-bg" style="width: 100%; padding-right: 10px" v-model="subForm.deliveryTime"
+                type="datetime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择日期" align="right"
+                :picker-options="pickerOptions" size="medium">
               </el-date-picker>
             </el-form-item>
           </el-form>
         </div>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%"
-          >
-            <el-form-item
-              label="期望交割方式"
-              prop="deliveryTime"
-              label-width="20%"
-            >
-              <el-cascader
-                class="selectbox-root half margleft"
-                placeholder="全部"
-                v-model="subForm.deliveryMethod"
-                :options="deliverMethodList"
-                clearable
-              >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm" style="width: 100%">
+            <el-form-item label="期望交割方式" prop="deliveryTime" label-width="20%">
+              <el-cascader class="selectbox-root half margleft" placeholder="全部" v-model="subForm.deliveryMethod"
+                :options="deliverMethodList" clearable>
               </el-cascader>
             </el-form-item>
           </el-form>
         </div>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%"
-          >
-            <el-form-item
-              label="期望交割场所"
-              prop="deliveryTime"
-              label-width="20%"
-            >
-              <el-cascader
-                class="selectbox-root half margleft"
-                placeholder="全部"
-                v-model="subForm.deliveryExchange"
-                :options="exchangeList"
-                clearable
-              >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm" style="width: 100%">
+            <el-form-item label="期望交割场所" prop="deliveryTime" label-width="20%">
+              <el-cascader class="selectbox-root half margleft" placeholder="全部" v-model="subForm.deliveryExchange"
+                :options="exchangeList" clearable>
               </el-cascader>
             </el-form-item>
           </el-form>
         </div>
 
         <div class="item-div">
-          <el-form
-            label-position="left"
-            ref="subForm"
-            :rules="formRules"
-            :model="subForm"
-            style="width: 100%; margin-right: 10px"
-          >
+          <el-form label-position="left" ref="subForm" :rules="formRules" :model="subForm"
+            style="width: 100%; margin-right: 10px">
             <el-form-item label="备注" prop="deliveryTime" label-width="20%">
-              <el-input
-                type="textarea"
-                placeholder="请输入内容"
-                rows="3"
-                v-model="subForm.mark"
-                class="input-mark"
-              >
+              <el-input type="textarea" placeholder="请输入内容" rows="3" v-model="subForm.mark" class="input-mark">
               </el-input>
             </el-form-item>
           </el-form>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button
-          type="primary"
-          @click="clickSubmit"
-          class="light-green-btn"
-          >{{ btnText }}</el-button
-        >
+        <el-button type="primary" @click="clickSubmit" class="light-green-btn">{{ btnText }}
+        </el-button>
       </div>
     </el-dialog>
 
     <!-- 确定dialog -->
-    <orderResultVue
-      :title="tipTitle"
-      :content="tipContent"
-      :bottomTxt="tipBottomTxt"
-      :img="tipImg"
-      :dialogFormVisible="comformDialogFormVisible"
-      @changeComfromDialogVisible="listenComfromDialogVisible"
-    />
+    <order-result-vue :title="tipTitle" :content="tipContent" :bottomTxt="tipBottomTxt" :img="tipImg"
+      :dialogFormVisible="comformDialogFormVisible" @changeComfromDialogVisible="listenComfromDialogVisible" />
   </div>
 </template>
 
@@ -407,77 +207,79 @@ export default {
       projectTypeList: [],
       deliverMethodList: [],
       exchangeList: [],
-      seletedExchange: ""
-    };
-  },
-  pickerOptions: {
-    shortcuts: [
-      {
-        text: "今天",
-        onClick(picker) {
-          picker.$emit("pick", new Date());
-        }
+      seletedExchange: "",
+
+
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            }
+          },
+          {
+            text: "昨天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            }
+          },
+          {
+            text: "一周前",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            }
+          }
+        ]
       },
-      {
-        text: "昨天",
-        onClick(picker) {
-          const date = new Date();
-          date.setTime(date.getTime() - 3600 * 1000 * 24);
-          picker.$emit("pick", date);
-        }
+      expirationPickerOptions: {
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            }
+          },
+          {
+            text: "昨天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            }
+          },
+          {
+            text: "一周前",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            }
+          }
+        ]
       },
-      {
-        text: "一周前",
-        onClick(picker) {
-          const date = new Date();
-          date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-          picker.$emit("pick", date);
-        }
-      }
-    ]
-  },
-  expirationPickerOptions: {
-    shortcuts: [
-      {
-        text: "今天",
-        onClick(picker) {
-          picker.$emit("pick", new Date());
-        }
+      btnText: "提交",
+      show: false,
+      tipTitle: "提示",
+      tipConetent: "您的采购单已提交，可在供需行情中查看。确定为您跳转供需行情沟通",
+      tipBottomTxt: "如需帮助，可添加交易专员企业微信，为您做开户引导服务",
+      tipImg: "@/assets/imgs/head.gif",
+      comformDialogFormVisible: false,
+      formRules: {
+        institutionName: [
+          { required: true, message: "请输入采购机构", trigger: "blur" }
+        ],
+        name: [{ required: true, message: "请输入采购联系人", trigger: "blur" }],
+        phone: [{ required: true, message: "请输入联系电话", trigger: "blur" }],
+        tradeQuantity: [
+          { required: true, message: "请输入采购数量", trigger: "blur" }
+        ]
       },
-      {
-        text: "昨天",
-        onClick(picker) {
-          const date = new Date();
-          date.setTime(date.getTime() - 3600 * 1000 * 24);
-          picker.$emit("pick", date);
-        }
-      },
-      {
-        text: "一周前",
-        onClick(picker) {
-          const date = new Date();
-          date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-          picker.$emit("pick", date);
-        }
-      }
-    ]
-  },
-  btnText: "提交",
-  show: false,
-  tipTitle: "提示",
-  tipConetent: "您的采购单已提交，可在供需行情中查看。确定为您跳转供需行情沟通",
-  tipBottomTxt: "如需帮助，可添加交易专员企业微信，为您做开户引导服务",
-  tipImg: "@/assets/imgs/head.gif",
-  comformDialogFormVisible: false,
-  formRules: {
-    institutionName: [
-      { required: true, message: "请输入采购机构", trigger: "blur" }
-    ],
-    name: [{ required: true, message: "请输入采购联系人", trigger: "blur" }],
-    phone: [{ required: true, message: "请输入联系电话", trigger: "blur" }],
-    tradeQuantity: [
-      { required: true, message: "请输入采购数量", trigger: "blur" }
-    ]
+    }
   },
   watch: {
     dialogFormVisible: {
@@ -509,7 +311,7 @@ export default {
           this.subForm.institutionName = res.tenantName;
           this.subForm.phone = res.telephone;
         })
-        .catch(err => {});
+        .catch(err => { });
     },
     querySearchAsync(queryString, cb) {
       var restaurants = this.states;
@@ -534,8 +336,10 @@ export default {
       this.show = false;
     },
     clickClose() {
+      // console.log("clickClose");
       this.$emit("changeBuyAssetsDialogFormVisible", false);
       this.show = false;
+      // dialogFormVisible=false;
     },
     clickSubmit() {
       let data = {
@@ -569,7 +373,7 @@ export default {
         this.show = false;
         // this.comformDialogFormVisible = true;
         pushQuote(data)
-          .then(res => {})
+          .then(res => { })
           .catch(error => {
             this.$message.error(error.msg);
           });
@@ -578,7 +382,7 @@ export default {
       }
     }
   },
-  created() {},
+  created() { },
   mounted() {
     this.initParams();
     this.show = this.dialogFormVisible;
@@ -637,10 +441,11 @@ export default {
   top: -5px;
 }
 
->>> .el-cascader .el-input .el-input__inner,
->>> .el-cascader .el-input.is-focus .el-input__inner {
+>>>.el-cascader .el-input .el-input__inner,
+>>>.el-cascader .el-input.is-focus .el-input__inner {
   border-color: transparent;
 }
+
 .content-div {
   display: flex;
   flex-direction: column;
@@ -697,6 +502,7 @@ export default {
 .padding-right {
   padding-right: 10px;
 }
+
 .input-mark {
   margin-top: auto;
   margin-bottom: auto;
@@ -738,23 +544,20 @@ export default {
   border: none;
   background: transparent !important;
 
-  >>> .el-input__inner {
+  >>>.el-input__inner {
     border: 2px solid #dcdfe6 !important;
     height: 40px;
   }
 }
 
->>> .el-form-item.is-required:not(.is-no-asterisk)
-  > .el-form-item__label:before,
-.el-form-item.is-required:not(.is-no-asterisk)
-  .el-form-item__label-wrap
-  > .el-form-item__label:before {
+>>>.el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before,
+.el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap>.el-form-item__label:before {
   content: "";
   color: transparent !important;
   margin-right: 0px;
 }
 
->>> .el-form-item__error {
+>>>.el-form-item__error {
   color: #ff4949;
 
   padding-top: 4px;
@@ -764,7 +567,7 @@ export default {
 }
 
 .spec-dialog {
-  >>> .el-dialog__body {
+  >>>.el-dialog__body {
     padding: 3px 30px;
     overflow-y: auto;
     height: calc(100vh - 140px);

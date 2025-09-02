@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 import md5 from 'js-md5';
 import { getToken } from '@/utils/auth'
 
@@ -10,8 +10,8 @@ const authURL = 'http://localhost:9001';
  * @returns {Promise}
  */
 export function register(data) {
-  data.password = md5.md5(data.password)
-  data.confirmPassword = md5.md5(data.confirmPassword)
+  data.password = md5(data.password)
+  data.confirmPassword = md5(data.confirmPassword)
   return request({
     baseURL: authURL,
     url: '/authCenter/auth/register',
@@ -25,8 +25,8 @@ export function register(data) {
  * @returns {Promise}
  */
 export function putForgotPassword(data) {
-  data.confirmPassword = md5.md5(data.confirmPassword)
-  data.password = md5.md5(data.password)
+  data.confirmPassword = md5(data.confirmPassword)
+  data.password = md5(data.password)
   return request({
     baseURL: authURL,
     url: '/authCenter/auth/forgotPassword',
@@ -46,9 +46,8 @@ export function putForgotPassword(data) {
 export function login(info) {
   const data = {
     "accountName": info.account,
-    "password": info.pwd,
+    "password": md5(info.pwd),
     "captcha": "123456"
-
   };
   return request({
     baseURL: authURL,

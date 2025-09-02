@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 export function configCheckUnique(pram) {
   const data = {
@@ -55,7 +55,7 @@ export function configSave(pram) {
       pid: pram.pid,
       status: pram.status,
       type: pram.type,
-      value: pram.value // value 存储表单配置数据，其他的参数来自于父级数据 justForAPI
+      value: pram.value
     }
   }
   return request({
@@ -65,6 +65,9 @@ export function configSave(pram) {
   })
 }
 
+/**
+ * @returns {Promise}
+ */
 export function configSaveForm(pram) {
   return request({
     url: '/admin/system/config/save/form',
@@ -90,34 +93,35 @@ export function configSaveUniq(pram) {
     key: pram.key,
     value: pram.value
   }
-  // return request({
-  //   url: '/admin/system/config/saveuniq',
-  //   method: 'POST',
-  //   params: data
-  // })
+  return request({
+    url: '/admin/system/config/saveuniq',
+    method: 'POST',
+    params: data
+  })
 }
 
+/**
+ * @returns {Promise}
+ */
 export function configGetUniq(pram) {
   const data = {
     key: pram.key
   }
-  // return request({
-  //   url: '/admin/system/config/getuniq',
-  //   method: 'GET',
-  //   params: data
-  // })
+  return request({
+    url: '/admin/system/config/getuniq',
+    method: 'GET',
+    params: data
+  })
 }
 
 /**
  * 获取全部字典
- * @param {} pram 
- * @returns 
+ * @returns {Promise}
  */
 export function getAllDict() {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysDict/getAllDict',
     method: 'GET',
   })
 }
-
-

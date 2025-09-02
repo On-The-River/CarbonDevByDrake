@@ -68,16 +68,23 @@ let carbonAssetManager = {
       name: "carbonQuota",
       meta: { title: "碳配额", icon: "" }
     },
-    // 已移除重复 quotaDetail name
-    // 已移除重复 quotaDetail name
+    {
+      path: "quotaDetail",
+      name: "QuotaDetail",
+      component: () => import("@/views/carbonAssets/quotaDetail.vue")
+    },
     {
       path: "credit",
       component: () => import("@/views/carbonAssets/credit"),
       name: "carbonCredit",
       meta: { title: "碳信用", icon: "" }
     },
-    // 已移除重复 assetDetail name
-    // 已移除重复 assetDetail name
+    {
+      path: "creditDetail",
+      component: () => import("@/views/carbonAssets/assetDetail.vue"),
+      name: "creditDetail",
+      meta: { title: "碳信用", icon: "" }
+    },
     {
       path: "credit/CarbonAssessment",
       component: () => import("@/views/carbonAssets/CarbonAssessment"),

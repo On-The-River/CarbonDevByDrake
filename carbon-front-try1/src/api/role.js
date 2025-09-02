@@ -1,22 +1,29 @@
-import request from '@/utils/request'
-import { getToken } from '@/utils/auth'
+import request from '../utils/request'
+
 export function addRole(data) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysRole/add',
     method: 'post',
     data: data
   })
 }
+
+/**
+ * @param id
+ * @returns {Promise}
+ */
 export function delRole(id) {
-  const url = '/system/sysRole/delete/' + id
   return request({
-    url: url,
+    baseURL: "http://localhost:9002",
+    url: '/system/sysRole/delete/' + id,
     method: 'DELETE',
   })
 }
 
 export function getRoleMenu(id) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysRole/menu/' + id,
     method: 'GET'
   })
@@ -33,12 +40,12 @@ export function getInfo(pram) {
 }
 
 /**
- * 
- * @param {获取角色列表} pram 
- * @returns 
-*/
+ * @returns
+ * @param data
+ */
 export function getRoleList(data) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysRole/getPageList',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -55,6 +62,7 @@ export function updateRole(pram) {
     status: pram.status
   }
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysRole/update',
     method: 'put',
     // params: {id: pram.id},

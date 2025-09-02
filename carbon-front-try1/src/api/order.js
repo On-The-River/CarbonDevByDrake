@@ -1,8 +1,8 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 /**
  * 订单 列表
- * @param pram
+ * @param params
  */
 export function orderListApi(params) {
   return request({

@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 // 配置管理
 
@@ -95,6 +95,7 @@ export function configUpdate(pram) {
   }
 
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysPermission/getPageList',
     method: 'POST',
     params: data
@@ -103,11 +104,11 @@ export function configUpdate(pram) {
 
 /**
  * 获取菜单
- * @param {*} tokenStr 
- * @returns 
+ * @returns {Promise}
  */
 export function getSliderMenus() {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/sysMenu/userMenus', 
     method: 'POST',
   })

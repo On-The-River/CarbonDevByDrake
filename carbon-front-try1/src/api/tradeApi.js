@@ -1,11 +1,12 @@
-import request from '@/utils/newRequest'
+import request from '../utils/newRequest'
     /**
      * 交易列表
-     * @param {*} data 
-     * @returns 
+     * @param {*} data
+     * @returns
      */
      export function laodTradeList(data) {
         return request({
+          baseURL: "http://localhost:9003",
         url:'/assets/carbonAssetsBusiness/getPageList',
         method: 'post',
         data
@@ -13,11 +14,12 @@ import request from '@/utils/newRequest'
     }
     /**
      * 根据ID获取中和资产交易信息
-     * @param {*} data 
-     * @returns 
+     * @returns
+     * @param id
      */
      export function getTradeInfo(id) {
             return request({
+              baseURL: "http://localhost:9003",
             url:'/assets/carbonAssetsBusiness/info/' + id,
             method: 'get',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -26,11 +28,12 @@ import request from '@/utils/newRequest'
 
     /**
      * 获取交易账号列表
-     * @param {*} params 
-     * @returns 
+     * @param {*} params
+     * @returns
      */
     export function getTradeAccountList(params) {
             return request({
+              baseURL: "http://localhost:9003",
             url:'/assets/exchangeAccount/getPageList',
             method: 'post',
             data: params,
@@ -40,11 +43,12 @@ import request from '@/utils/newRequest'
 
     /**
      * 获取交易账号信息
-     * @param {*} id 
-     * @returns 
+     * @param {*} id
+     * @returns
      */
     export function getTradeAccountInfo(id) {
         return request({
+          baseURL: "http://localhost:9003",
         url:'/assets/exchangeAccount/info/' + id,
         method: 'get',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -54,6 +58,7 @@ import request from '@/utils/newRequest'
 
    export function searchTradeAccountInfo(data) {
      return request({
+       baseURL: "http://localhost:9003",
         url:'/assets/exchangeAccount/getPageList',
         method: 'post',
         data:data,
@@ -63,11 +68,12 @@ import request from '@/utils/newRequest'
 
     /**
      * 绑定交易账号
-     * @param {*} id 
-     * @returns 
+     * @returns
+     * @param data
      */
     export function bindTradeAccountInfo(data) {
         return request({
+          baseURL: "http://localhost:9003",
         url:'/assets/exchangeAccount/binding',
         method: 'put',
         data:data,

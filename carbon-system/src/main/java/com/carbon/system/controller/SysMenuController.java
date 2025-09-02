@@ -109,7 +109,8 @@ public class SysMenuController extends BaseController {
     @PostMapping("/list")
     @ApiOperation(value = "查询菜单列表",notes = "查询菜单列表")
     public ApiResult<List<SysMenuVo>> getMenuList(@RequestBody SysMenuQueryParam param) {
-        return ApiResult.ok(sysMenuService.getSysMenuList(param));
+        SysMenuQueryParam param1 = param;
+        return ApiResult.ok(sysMenuService.getSysMenuList(param1));
     }
 
     /**

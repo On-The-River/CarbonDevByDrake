@@ -143,7 +143,7 @@
         <el-table-column min-width="10" />
         <el-table-column label="序号" align="left" min-width="40">
           <template slot-scope="scope">
-            <span>{{ getCurlistNo(scope.$index) }}</span>
+            <span>{{ getCurListNo(scope.$index) }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -323,7 +323,7 @@
         :dialogFormVisible="buyAssetsDlg"
         @changeBuyAssetsDialogFormVisible="changeDialogFormVisible"
       />
-      <carbonUploadVue
+      <carbon-upload-vue
         :dialogFormVisible="carbonUploadDlg"
         :selData="list"
         :isCredit="false"
@@ -338,7 +338,7 @@
 <script>
 import {
   getExchangeDict,
-  getDeliveryMethodeDict,
+  getDiliveryMethodeDict,
   getAssetStatusDict,
   AssetStatus,
 } from "@/config/dictHelper";
@@ -459,11 +459,13 @@ export default {
     };
   },
   mounted() {
+    
     this.getList(1);
     this.getTopData();
     this.exchangeList = getExchangeDict(this.$store);
-    this.tradeMethods = getDeliveryMethodeDict(this.$store);
+    this.tradeMethods = getDiliveryMethodeDict(this.$store);
     this.formatAssetStatus(getAssetStatusDict(this.$store));
+    
     // console.log(this.switchTradeStatus("160000001"));
   },
   methods: {
@@ -523,13 +525,15 @@ export default {
         }
         this.assetStatusList.push(CertificationItem);
       });
+      console.log("assetStatusList",this.assetStatusList);
     },
     onClickBuy() {
       this.buyAssetsDlg = true;
     },
     toDetail(id) {
+      
       this.$router.push({
-        path: "/assets/quato/quataDetail",
+        path: "/assets/quotaDetail",
         query: { id: id },
       });
     },
@@ -649,6 +653,7 @@ export default {
           });
 
           // 赋值分页数据到组件变量
+          console.log("QuotaRecords",res.data.records);
           this.list = res.data.records;
           this.total = Number(res.data.total);
           this.current = Number(res.data.current);

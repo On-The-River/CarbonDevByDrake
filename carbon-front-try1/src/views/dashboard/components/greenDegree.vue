@@ -39,7 +39,7 @@ export default {
              this.greenIndex.energyEfficiencyRate = res.energyEfficiencyRate
              this.greenIndex.environmentRate = res.environmentRate
           }).catch(e => {
-  
+
           })
         },
       },

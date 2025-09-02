@@ -4,12 +4,14 @@ import cn.hutool.extra.ssh.JschUtil;
 import cn.hutool.json.JSONUtil;
 import com.carbon.assets.entity.CarbonMetaregistry;
 import com.carbon.assets.mapper.CarbonMetaregistryMapper;
+import com.carbon.assets.repository.MethodologyRepository;
 import com.carbon.assets.service.CarbonMetaregistryService;
 import com.carbon.assets.param.CarbonMetaregistryQueryParam;
 import com.carbon.assets.vo.CarbonMetaregistryQueryVo;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.common.api.Paging;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -36,6 +38,9 @@ public class CarbonMetaregistryServiceImpl extends BaseServiceImpl<CarbonMetareg
     @Resource
     private CarbonMetaregistryMapper carbonMetaregistryMapper;
 
+    @Autowired
+    private MethodologyRepository methodologyRepository;
+
     @Override
     public CarbonMetaregistryQueryVo getCarbonMetaregistryById(Serializable id) {
         return carbonMetaregistryMapper.getCarbonMetaregistryById(id);
@@ -46,6 +51,16 @@ public class CarbonMetaregistryServiceImpl extends BaseServiceImpl<CarbonMetareg
         IPage<CarbonMetaregistryQueryVo> iPage = carbonMetaregistryMapper.getCarbonMetaregistryPageList(getPage(param),param);
         log.info("{}", JSONUtil.toJsonStr(iPage));
         return new Paging<>(iPage);
+    }
+
+    @Override
+    public Integer importAll() {
+//        CarbonMetaregistryQueryParam param = new CarbonMetaregistryQueryParam();
+//        param.setSize(Integer.MAX_VALUE);
+//        List<CarbonMetaregistryQueryVo> carbonMetaregistryPageList = getCarbonMetaregistryPageList(param).getRecords();
+//        methodologyRepository.save(carbonMetaregistryPageList);
+
+        return 0;
     }
 
 }

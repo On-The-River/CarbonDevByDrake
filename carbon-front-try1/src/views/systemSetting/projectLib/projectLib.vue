@@ -507,7 +507,7 @@ export default {
           data['methodSearchKey'] = this.searchMethodName;
         }
       }
-      this.getByEscarbonMetaregistryList(data);
+      this.getByCarbonMetaregistryList(data);
     },
     onClickSearch(type) {
       if (type) {
@@ -555,7 +555,7 @@ export default {
         }
       }
 
-      this.getByEscarbonMetaregistryList(data);
+      this.getByCarbonMetaregistryList(data);
     },
     getByEscarbonMetaregistryList(data) {
       let n = this.$message.success('查询中...');
@@ -663,7 +663,7 @@ export default {
           data['methodSearchKey'] = this.searchMethodName;
         }
       }
-      this.getByEscarbonMetaregistryList(data);
+      this.getByCarbonMetaregistryList(data);
     },
     formatTime(time) {
       const newTime = time.split(' ');

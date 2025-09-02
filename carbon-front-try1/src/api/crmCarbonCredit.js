@@ -1,11 +1,11 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 /**
-* 碳积分详情
-* @param {}  
-* @returns
-/system/crmCarbonCreditDetail/info/{userId}
-*/
+ * 碳积分详情
+ * @returns
+ /system/crmCarbonCreditDetail/info/{userId}
+ * @param userId
+ */
 export function getCrmCarbonCreditDetailInfo(userId){
     return request({
         url:'/system/crmCarbonCreditDetail/info/' + userId,

@@ -44,15 +44,18 @@ export default {
     this.loadSlidata();
   },
 
-  computed: {
+  methods: {
     loadSlidata() {
       getSliderMenus()
         .then((res) => {
           this.sidebarList = res;
           console.log(JSON.stringify(res));
         })
-        .error((err) => {});
+        .catch((err) => {});
     },
+  },
+
+  computed: {
     ...mapGetters(["permission_routes", "sidebar"]),
     activeMenu() {
       const route = this.$route;

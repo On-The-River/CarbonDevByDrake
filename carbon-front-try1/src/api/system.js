@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 /**
  * @description 附件分类 -- 所有分类
  */

@@ -104,7 +104,7 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
         if(targetQuote == null){
             throw new CommonBizException("履约记录对应的交易行情不存在");
         }
-        if(!TradeStatusEnum.IN_TRADE.getStatus().equals(tradeContract.getStatus())){
+        if(!TradeStatusEnum.INTENDED_TRADE.getStatus().equals(targetQuote.getStatus())){
             throw new CommonBizException("履约记录对应的交易行情状态不正确");
         }
 
@@ -119,7 +119,7 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
         }
 
         targetQuote.setStatus(TradeStatusEnum.TRADED.getStatus());
-
+        carbonTradeQuoteService.updateById(targetQuote);
 
 
         CarbonExchangeQueryVo exchange = assetsServiceApi.getExchangeInfoByDict(tradeContract.getDeliveryExchange()).getData();

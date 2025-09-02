@@ -161,6 +161,20 @@
       >
       </el-pagination>
     </el-card>
+
+    <!-- 上传弹窗 -->
+    <carbon-upload
+        :dialogFormVisible="carbonUploadDlg"
+        :selData="list"
+        :isCredit="true"
+        title="碳信用项目上传"
+        @changeVisible="changeCarbonVisible"
+        @submit="submited"
+    ></carbon-upload>
+
+    <!-- 场外交易按钮弹出页面 -->
+      
+
   </div>
 </template>
 
@@ -169,6 +183,7 @@
 import { loadCarbonCreditPageList } from "../../api/carbonAssetApi";
 import { delCredit } from "../../api/carbonAssetApi";
 // 引用场外上架的页面~~~~~
+import carbonUpload from "./carbonUpload.vue";
 import {
   getCertificationCriteriaDict,
   getProjectAreaDict,
@@ -182,6 +197,7 @@ export default {
     // 引用场外上架的页面
     // OuterShelve: () => import("../outerShelve.vue"),
     // import里面的名字
+    carbonUpload
   },
   data() {
     return {
@@ -190,6 +206,7 @@ export default {
       current: 1,
       pageSize: 10,
       dateRange: [],
+      carbonUploadDlg: false, // 控制上传弹窗显示
       searchForm: {
         certificationCriteria: "",
         industry: "",
@@ -200,6 +217,7 @@ export default {
         projectName: "",
         methodName: "",
       },
+      dialogFormVisible:false,
       optionsStandard: [],
       optionsIndustry: [],
       optionsOnlines: [],
@@ -316,11 +334,13 @@ export default {
     viewDetail(row) {
       // 跳转到碳资产详情页面
       this.$router.push({
-        path: "/carbonAssets/assetDetail",
+        path: "/assets/creditDetail",
         query: { id: row.id },
       });
     },
     outerShelve(row) {
+      // this.form=row;
+      // this.dialogFormVisible=true;
       // 跳转到场外上架页面,与详情页中的场外报价功能相同
       // this.$router.push({
       //   path: "/carbonAssets/assetDetail",
@@ -336,11 +356,18 @@ export default {
         path: "/carbonTrade/quotation/buyAssets",
       });
     },
+
+    changeCarbonVisible(res) {
+      this.carbonUploadDlg = res;
+    },
+
     onUpload() {
-      // 跳转到上传页面
-      this.$router.push({
-        path: "/carbonAssets/carbonUpload",
-      });
+      this.carbonUploadDlg = true;
+
+      // // 跳转到上传页面
+      // this.$router.push({
+      //   path: "/assets/carbonUpload",
+      // });
     },
     formatCertification(data) {
       if (!Array.isArray(data)) return;

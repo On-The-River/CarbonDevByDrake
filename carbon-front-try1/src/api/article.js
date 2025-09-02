@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
 /**
  * 绑定产品
@@ -10,6 +10,7 @@ export function bindProduct(pram) {
     productId: pram.productId
   }
   return request({
+    baseURL: "http://localhost:9002",
     url: '/admin/article/bind/product',
     method: 'POST',
     params: data
@@ -22,6 +23,7 @@ export function bindProduct(pram) {
  */
 export function DelArticle(id) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/carbonArticle/delete/' + id,
     method: 'DELETE',
   })
@@ -37,6 +39,7 @@ export function InfoArticle(id) {
     id: id
   }
   return request({
+    baseURL: "http://localhost:9002",
     url: '/admin/article/info',
     method: 'get',
     params: data
@@ -56,6 +59,7 @@ export function ListArticle(pram) {
     limit: pram.limit
   }
   return request({
+    baseURL: "http://localhost:9002",
     url: '/admin/article/list',
     method: 'GET',
     params: data
@@ -69,6 +73,7 @@ export function ListArticle(pram) {
  */
 export function AddArticle() {
   return request({
+    baseURL: "http://localhost:9002",
     url: "/system/carbonArticle/add",
     method: 'post',
     timeout: 5000
@@ -107,11 +112,12 @@ export function UpdateArticle(pram) {
 }
 
 /**
- * 
+ *
  * @returns 获取碳资讯列表
  */
 export function getCarbonArticles(param) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/carbonArticle/getPageList',
     method: 'post',
     data: param
@@ -120,6 +126,7 @@ export function getCarbonArticles(param) {
 //根据id修改碳文章状态
 export function changeCarbonStatusById(param) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/carbonArticle/updateStatu/',
     method: 'PUT',
     data: param
@@ -128,6 +135,7 @@ export function changeCarbonStatusById(param) {
 //同步文章
 export function syncArticle(datas) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/carbonArticle/getRefreshList',
     method: 'POST',
     data: datas,
@@ -137,6 +145,7 @@ export function syncArticle(datas) {
 //添加碳文章到数据库
 export function addArticleToSql(datas) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/carbonArticle/addmysql',
     method: 'POST',
     data: datas,
@@ -146,6 +155,7 @@ export function addArticleToSql(datas) {
 //添加碳文章到数据库
 export function updateArticle(datas) {
   return request({
+    baseURL: "http://localhost:9002",
     url: '/system/carbonArticle/update',
     method: 'PUT',
     data: datas,

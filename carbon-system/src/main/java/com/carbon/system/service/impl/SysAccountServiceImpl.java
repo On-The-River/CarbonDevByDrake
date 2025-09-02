@@ -227,12 +227,11 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
         if (account == null){
             throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_NOT_EXISTS);
         }
-        String oldPasswordMd5 = StrUtil.isEmpty(param.getOldPassword()) ? param.getOldPasswordMd5() : DigestUtils.md5Hex(param.getOldPassword());
-        //校验旧密码
-        if (StrUtil.isEmpty(oldPasswordMd5) || !oldPasswordMd5.equals(account.getPassword())){
+
+        if (StrUtil.isEmpty(param.getOldPassword()) || !param.getOldPassword().equals(account.getPassword())){
             throw new CommonBizException("旧密码不正确");
         }
-        account.setPassword(DigestUtils.md5Hex(param.getNewPassword()));
+        account.setPassword(param.getNewPassword());
         if (!this.updateById(account)){
             throw new CommonBizException("修改密码失败");
         }

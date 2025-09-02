@@ -51,12 +51,11 @@ const actions = {
     commit('SET_ROLES', [])
     removeToken()
     resetRouter()
-    let apiBaseURL = "";
+/*    let apiBaseURL = "";
     if(window.localStorage.getItem("apiBaseURL")){
       apiBaseURL =  window.localStorage.getItem("apiBaseURL")
-    }
+    }*/
     localStorage.clear();
-    localStorage.setItem("apiBaseURL",apiBaseURL)
     Cookies.remove('storeStaffList')
     Cookies.remove('JavaInfo')
     sessionStorage.removeItem('token')
@@ -74,7 +73,8 @@ const actions = {
         setToken(data.token)
         resolve()
       }).catch(error => {
-        reject(error)
+        console.error(error);
+        reject(error);
       })
     })
   },
