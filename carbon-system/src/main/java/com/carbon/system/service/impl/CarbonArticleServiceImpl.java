@@ -104,6 +104,10 @@ public class CarbonArticleServiceImpl extends BaseServiceImpl<CarbonArticleMappe
 
     @Override
     public Paging<CarbonArticleQueryVo> getCarbonArticlePageList2(CarbonArticleQueryParam param) {
+
+        //pre
+//        if(param!=null && param.getStatus().equals("0")){}
+
         //先查redis
         String key = RedisKeyName.CA_ARTICLE_LIST_KEY;
         String result = redisService.get(RedisKeyName.CA_ARTICLE_LIST_KEY);

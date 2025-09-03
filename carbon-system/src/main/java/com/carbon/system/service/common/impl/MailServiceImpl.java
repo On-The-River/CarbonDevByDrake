@@ -33,7 +33,7 @@ public class MailServiceImpl implements MailService {
     public void simple(String toEmail, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         // 发件人邮箱
-        message.setFrom("m15263411130@163.com");
+        message.setFrom("2557355806@qq.com");
         // 收信人邮箱
         String[] toArr = StrUtil.split(toEmail, ",");
 

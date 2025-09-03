@@ -12,7 +12,7 @@
           <div style="margin-left: 20px" class="selectbox-root">
             <span class="selectbox-hint" style="">文章状态</span>
             <div class="selectbox-deliver" />
-            <el-cascader placeholder="全部" class="selectbox-input" :options="articleStatus" clearable @change="onClickSearch">
+            <el-cascader placeholder="全部" class="selectbox-input" :options="articleStatus" v-model="statusValue" clearable @change="onClickSearch">
             </el-cascader>
           </div>
           <div style="margin-left: 20px" class="selectbox-root">
@@ -268,9 +268,9 @@ articalCategorySelected() {
     .catch((error) => ({}));
 },
 //当前选择的文章状态
-articleStatusSelected(value) {
-  this.statusValue = value;
-},
+// articleStatusSelected(value) {
+//   this.statusValue = value;
+// },
 onClickSearch() {
   const data = {
     asc: true,

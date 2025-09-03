@@ -294,7 +294,7 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
     public void sendEmail(SendEmailParam param) {
         //验证密码是否正确
         SysAccount sysAccount = baseMapper.selectById(param.getId());
-        if(!DigestUtils.md5Hex(param.getPassword()).equals(sysAccount.getPassword())){
+        if(!(param.getPassword()).equals(sysAccount.getPassword())){
             throw new CommonBizException("请输入正确的登录密码！");
         }
         //简单正则验证邮箱正确性
@@ -307,7 +307,7 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
         String value = RandomUtil.randomString(6);
         redisService.setEx(key,value,10,TimeUnit.MINUTES);
         String text="点击以下链接完成邮箱验证\n" +
-                "http://122.112.151.24:9091/system/sysAccount/renew/email/"+param.getId().toString()+"/"+param.getEmail()+"/"+value;
+                "https://1c9c2ae067e8.ngrok-free.app/system/sysAccount/renew/email/"+param.getId().toString()+"/"+param.getEmail()+"/"+value;
         mailService.simple(param.getEmail(),"【碳信使】邮箱验证",text);
     }
 

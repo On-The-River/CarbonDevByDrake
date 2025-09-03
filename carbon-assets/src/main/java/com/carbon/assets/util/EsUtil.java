@@ -161,24 +161,21 @@ public class EsUtil
 //    }
 
     public static String UpdateMethod(String json,int id) throws Exception{
-        String url="http://119.3.66.173:9200/esmethodology/_update/"+id;
+        String url="http://localhost:9200/esmethodology/_update/"+id;
         System.out.println("post请求发送url："+url);
         StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);//设置消息头 Content-Type application/json; charset=UTF-8
         HttpPost httpPost = new HttpPost(url);
         httpPost.setEntity(entity);
-        CloseableHttpResponse response2 = HttpClients.createDefault().execute(httpPost);
 
-        try {
-
+        try (CloseableHttpResponse response2 = HttpClients.createDefault().execute(httpPost)) {
             response2.getStatusLine().getStatusCode();//HttpStatus.SC_OK
 
             HttpEntity entity2 = response2.getEntity();
-            String response= EntityUtils.toString(entity2,"utf-8");//返回报文
+            String response = EntityUtils.toString(entity2, "utf-8");//返回报文
             System.out.println(response);
             EntityUtils.consume(entity2);//关闭资源
             return response;
-        } finally {
-            response2.close();//关闭资源
         }
+        //关闭资源
     }
 }

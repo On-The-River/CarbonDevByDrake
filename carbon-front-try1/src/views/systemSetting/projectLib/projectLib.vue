@@ -564,8 +564,8 @@ export default {
             n.close();
             console.log("records",res.data.records);
             this.list = res.data.records;
-            this.total = parseInt(res.data.total);
-            this.current = parseInt(res.data.current);
+            this.total = Number(res.data.total);
+            this.current = Number(res.data.current);
             this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
             this.list.map((v, i) => {
               v.order = i + 1;
@@ -588,8 +588,8 @@ export default {
       getCarbonMetaregistryList(data)
           .then((res) => {
             this.list = res.data.records;
-            this.total = parseInt(res.data.total);
-            this.current = parseInt(res.data.current);
+            this.total = Number(res.data.total);
+            this.current = Number(res.data.current);
             this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
             this.list.map((v, i) => {
               v.order = i + 1;

@@ -404,6 +404,9 @@ import {
 export default {
   name: "companyPackage",
   components: { selectDropDownBox },
+  props:{
+    currentPage:1,
+  },
   data() {
     return {
       indeterminateFlag: false, //表头复选框状态
@@ -571,7 +574,7 @@ export default {
             this.list = res.data.records;
             console.log("LIST",this.list);
             this.total = parseInt(res.data.total);
-            this.current = res.data.current;
+            this.current = Number(res.data.current);
             this.pageCount = Math.ceil(
               parseInt(res.data.total) / this.pageSize
             );
@@ -700,7 +703,7 @@ export default {
           this.list = res.data.records;
           // this.list = res.data.data;
           this.total = parseInt(res.data.total);
-          this.current = res.data.current;
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(v => {
             //遍历表格数据
