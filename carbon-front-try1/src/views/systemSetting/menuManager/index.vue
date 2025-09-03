@@ -216,14 +216,15 @@ export default {
       this.addForm.status = "0";
     },
     startStyleChange(status) {
-      if (status === "0") {
+      if (status === 0) {
         return "afterSubmitEdit";
       } else {
         return "list-green-text";
       }
     },
     banStyleChange(status) {
-      if (status === "0") {
+      console.log("status",status);
+      if (status === 0) {
         return "list-red-text";
       } else {
         return "afterSubmitOffline";

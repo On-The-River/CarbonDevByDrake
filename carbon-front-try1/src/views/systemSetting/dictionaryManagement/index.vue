@@ -5,7 +5,7 @@
         <div style="width: 300px" class="selectbox-root">
           <span class="selectbox-hint" style="width: 100px">字典名称</span>
           <div class="selectbox-deliver" />
-          <el-input v-model="searchItemCh" placeholder="请输入字典名称" clearable size="medium"
+          <el-input v-model="searchDictName" placeholder="请输入字典名称" clearable size="medium"
                     @keyup.enter.native="onClickSearchName" @clear="onClickSearchName" />
         </div>
         <Button style="margin-left: 10px" class="light-green-btn" @click="onClickSearchName">

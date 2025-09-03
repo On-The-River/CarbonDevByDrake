@@ -341,7 +341,6 @@ export default {
   watch: {
     selectedArea() {
       const typeList = [];
-      console.log(111);
       if (this.selectedArea) {
         if (Array.isArray(this.selectedArea)) {
           this.projectTypeDict.map((v) => {
@@ -470,47 +469,91 @@ export default {
       });
     },
     update() {
-      let data = {};
-      if (this.selectRecordDate && this.selectRecordDate[0]) {
-        data['refDateStart'] = this.selectRecordDate[0];
-      }
-      if (this.selectRecordDate && this.selectRecordDate[1]) {
-        data['refDateEnd'] = this.selectRecordDate[1];
-      }
-      if (this.selectIssueDate && this.selectIssueDate[0]) {
-        data['issueDateStart'] = this.selectIssueDate[0];
-      }
-      if (this.selectIssueDate && this.selectIssueDate[1]) {
-        data['issueDateEnd'] = this.selectIssueDate[1];
-      }
+      const data = {
+        asc: true,
+        size: this.pageSize,
+        current: 1,
+        refDateStart: this.selectRecordDate[0],
+        refDateEnd: this.selectRecordDate[1],
+        issueDateStart: this.selectIssueDate[0],
+        issueDateEnd: this.selectIssueDate[1],
+        projectName: null,
+        projectTypeCode: null,
+        certifiedStandardCode:null,
+        fieldCode:null,
+        projectIndustryCode:null,
+        projectStatusCode:null,
+        methodologyName:null,
+      };
       if (this.searchProjectName) {
-        data['searchKey'] = this.searchProjectName;
+        data.projectName = this.searchProjectName;
       }
-      if (this.selectedCertification && this.selectedCertification[0]) {
-        data['certifiedStandardCode'] = this.selectedCertification[0];
+      if (this.selectedProjectType) {
+        data.projectTypeCode = this.selectedProjectType[0];
       }
-      if (this.selectedProjectType && this.selectedProjectType[0]) {
-        data['projectTypeCode'] = this.selectedProjectType[0];
+      if (this.selectedCertification) {
+        data.certifiedStandardCode = this.selectedCertification[0];
       }
-      if (this.selectedArea && this.selectedArea[0]) {
-        data['projectScopeCode'] = this.selectedArea[0];
+      if (this.selectedArea) {
+        data.fieldCode = this.selectedArea[0];
       }
-      if (this.selectedIndustry && this.selectedIndustry[0]) {
-        data['projectIndustryCode'] = this.selectedIndustry[0];
+      if (this.selectedIndustry) {
+        data.projectIndustryCode = this.selectedIndustry[0];
       }
-      if (this.selectedStatus && this.selectedStatus[0]) {
-        data['projectStatusCode'] = this.selectedStatus[0];
+      if (this.selectedStatus) {
+        data.projectStatusCode = this.selectedStatus[0];
       }
 
       if (this.searchByType) {
+        if (this.searchProjectName) {
+          data.projectName=null;
+          this.searchProjectName = '';
+        }
         if (this.searchMethodName) {
-          data['methodSearchKey'] = this.searchMethodName;
+          data.methodologyName = this.searchMethodName;
         }
       }
+      // let data = {};
+      // if (this.selectRecordDate && this.selectRecordDate[0]) {
+      //   data['refDateStart'] = this.selectRecordDate[0];
+      // }
+      // if (this.selectRecordDate && this.selectRecordDate[1]) {
+      //   data['refDateEnd'] = this.selectRecordDate[1];
+      // }
+      // if (this.selectIssueDate && this.selectIssueDate[0]) {
+      //   data['issueDateStart'] = this.selectIssueDate[0];
+      // }
+      // if (this.selectIssueDate && this.selectIssueDate[1]) {
+      //   data['issueDateEnd'] = this.selectIssueDate[1];
+      // }
+      // if (this.searchProjectName) {
+      //   data['searchKey'] = this.searchProjectName;
+      // }
+      // if (this.selectedCertification && this.selectedCertification[0]) {
+      //   data['certifiedStandardCode'] = this.selectedCertification[0];
+      // }
+      // if (this.selectedProjectType && this.selectedProjectType[0]) {
+      //   data['projectTypeCode'] = this.selectedProjectType[0];
+      // }
+      // if (this.selectedArea && this.selectedArea[0]) {
+      //   data['projectScopeCode'] = this.selectedArea[0];
+      // }
+      // if (this.selectedIndustry && this.selectedIndustry[0]) {
+      //   data['projectIndustryCode'] = this.selectedIndustry[0];
+      // }
+      // if (this.selectedStatus && this.selectedStatus[0]) {
+      //   data['projectStatusCode'] = this.selectedStatus[0];
+      // }
+      //
+      // if (this.searchByType) {
+      //   if (this.searchMethodName) {
+      //     data['methodSearchKey'] = this.searchMethodName;
+      //   }
+      // }
       this.getByCarbonMetaregistryList(data);
     },
     onClickSearch(type) {
-      if (type) {
+      if (type) {//searchProjectName
         this.searchByType = true;
       }
       if (type === 0) {
@@ -525,33 +568,40 @@ export default {
         refDateEnd: this.selectRecordDate[1],
         issueDateStart: this.selectIssueDate[0],
         issueDateEnd: this.selectIssueDate[1],
+        projectName: null,
+        projectTypeCode: null,
+        certifiedStandardCode:null,
+        fieldCode:null,
+        projectIndustryCode:null,
+        projectStatusCode:null,
+        methodologyName:null,
       };
       if (this.searchProjectName) {
-        data['searchKey'] = this.searchProjectName;
+        data.projectName = this.searchProjectName;
       }
       if (this.selectedProjectType) {
-        data['projectTypeCode'] = this.selectedProjectType[0];
+        data.projectTypeCode = this.selectedProjectType[0];
       }
       if (this.selectedCertification) {
-        data['certifiedStandardCode'] = this.selectedCertification[0];
+        data.certifiedStandardCode = this.selectedCertification[0];
       }
       if (this.selectedArea) {
-        data['fieldCode'] = this.selectedArea[0];
+        data.fieldCode = this.selectedArea[0];
       }
       if (this.selectedIndustry) {
-        data['projectIndustryCode'] = this.selectedIndustry[0];
+        data.projectIndustryCode = this.selectedIndustry[0];
       }
       if (this.selectedStatus) {
-        data['projectStatusCode'] = this.selectedStatus[0];
+        data.projectStatusCode = this.selectedStatus[0];
       }
 
       if (this.searchByType) {
         if (this.searchProjectName) {
-          delete data['searchKey'];
+          data.projectName=null;
           this.searchProjectName = '';
         }
         if (this.searchMethodName) {
-          data['methodSearchKey'] = this.searchMethodName;
+          data.methodologyName = this.searchMethodName;
         }
       }
 
@@ -585,6 +635,7 @@ export default {
           });
     },
     getByCarbonMetaregistryList(data) {
+      console.log("keywordData",data);
       getCarbonMetaregistryList(data)
           .then((res) => {
             this.list = res.data.records;
@@ -780,6 +831,8 @@ export default {
     this.formatArea(getProjectAreaDict(this.$store));
     this.formatStatus(getProjectStatusDict(this.$store));
     let data = getProjectTypeDict(this.$store);
+    console.log("data",data);
+
     data.map((v) => {
       let CertificationItem = {
         label: "",

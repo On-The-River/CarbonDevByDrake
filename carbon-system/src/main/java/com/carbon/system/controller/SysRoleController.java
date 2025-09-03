@@ -104,7 +104,8 @@ public class SysRoleController extends BaseController {
     @GetMapping("/menu/{id}")
     @ApiOperation(value = "根据角色id查询该角色权限菜单",notes = "根据角色id查询该角色权限菜单 ")
     public ApiResult<List<SysRoleMenu>> selectRoleMenuById(@PathVariable Long id) {
-        return ApiResult.ok(sysRoleService.selectRoleMenuByid(id));
+        List<SysRoleMenu> sysRoleMenus = sysRoleService.selectRoleMenuByid(id);
+        return ApiResult.ok(sysRoleMenus);
     }
 
 

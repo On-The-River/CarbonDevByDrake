@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f8d0eca-aac3-4b36-892a-9df5dd2a2c3d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/util/EsUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/util/EsUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/methodManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/methodManager.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/newsManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/newsManager.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/administratorAuthority/adminList/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/administratorAuthority/adminList/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/dictionaryManagement/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/dictionaryManagement/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/menuManager/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/menuManager/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectLib/projectLib.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/projectLib/projectLib.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/common/impl/MailServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/common/impl/MailServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/CarbonArticleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/CarbonArticleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/SysAccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/SysAccountServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/SysRoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/SysRoleController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -680,7 +677,7 @@
     "project.structure.side.proportion": "0.2",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true",
     "应用程序.test.executor": "Run"
@@ -807,9 +804,9 @@
     </configuration>
     <list>
       <item itemvalue="Spring Boot.AssetsApplication" />
+      <item itemvalue="Spring Boot.MqApplication" />
       <item itemvalue="Spring Boot.AuthApplication" />
       <item itemvalue="Spring Boot.ChainMakerApplication" />
-      <item itemvalue="Spring Boot.MqApplication" />
       <item itemvalue="Spring Boot.SystemApplication" />
       <item itemvalue="Spring Boot.TradeApplication" />
       <item itemvalue="应用程序.test" />
@@ -851,7 +848,7 @@
       <workItem from="1756433037023" duration="7720000" />
       <workItem from="1756457264160" duration="26771000" />
       <workItem from="1756626017545" duration="10339000" />
-      <workItem from="1756688694192" duration="52079000" />
+      <workItem from="1756688694192" duration="61922000" />
     </task>
     <servers />
   </component>
@@ -902,29 +899,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-chainmaker/src/main/java/com/carbon/chainmaker/config/ChainSDKConfig.java</url>
-          <line>74</line>
-          <option name="timeStamp" value="30" />
+          <url>file://$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonMetaregistryController.java</url>
+          <line>82</line>
+          <option name="timeStamp" value="98" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-chainmaker/src/main/java/com/carbon/chainmaker/config/ChainSDKConfig.java</url>
-          <line>75</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-chainmaker/src/main/java/com/carbon/chainmaker/config/ChainSDKConfig.java</url>
-          <line>76</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-chainmaker/src/main/java/com/carbon/chainmaker/config/ChainSDKConfig.java</url>
-          <line>78</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/CarbonArticleServiceImpl.java</url>
-          <line>95</line>
-          <option name="timeStamp" value="89" />
+          <url>file://$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/SysRoleController.java</url>
+          <line>107</line>
+          <option name="timeStamp" value="99" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

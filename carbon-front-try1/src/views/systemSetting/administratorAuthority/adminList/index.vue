@@ -31,7 +31,7 @@
           添加角色
         </button>
       </div>
-    
+
     <el-table
       :header-cell-style="{
         background: '#B2F5FF',
@@ -46,7 +46,7 @@
       :cell-style="cellStyle"
       style="width: 100%"
     >
-      <!-- 
+      <!--
       <el-table-column label="" align="center">
         <template slot="header" slot-scope="{column}">
           <el-checkbox v-model="column.checked" indeterminate="indeterminateFlag" :checked="allchecked" label="" @change="updateAllSelected"></el-checkbox>
@@ -114,7 +114,7 @@
         </template>
       </el-table-column>
     </el-table>
-  
+
   <div style="margin-top: 30px; margin-bottom: 10px" class="pageBox">
     <div style="flex-grow: 1" />
     <a style="margin: auto" class="pageBox-total-num">共{{ total }}条</a>
@@ -188,7 +188,7 @@
   </el-drawer>
   <!-- 添加身份 -->
   <el-dialog title="添加角色" :visible.sync="addUserShow" width="500px">
-    <el-form :model="addForm" :label-position="left">
+    <el-form :model="addForm" label-position="left">
       <el-form-item label="角色名称">
         <el-input
           v-model="addForm.roleName"
@@ -406,6 +406,7 @@ export default {
       // }
       roleApi.getRoleMenu(row.id).then((res) => {
         const data = res;
+        console.log("adminData",data);
         this.getUserMenu(data);
         sessionStorage.setItem(
           "roleMenu" + this.editForm.roleId,
@@ -483,8 +484,8 @@ searchUser() {
     .getRoleList(para)
     .then((data) => {
       this.list = data.records;
-      this.total = data.total;
-      this.current = data.current;
+      this.total = parseInt(data.total);
+      this.current = parseInt(data.current);
       this.pageCount = Math.ceil(parseInt(this.total) / this.pageSize);
       this.list.map((v) => {
         //遍历表格数据
@@ -557,8 +558,8 @@ getList(page) {
     .getRoleList(para)
     .then((data) => {
       this.list = data.records;
-      this.total = data.total;
-      this.current = data.current;
+      this.total = parseInt(data.total);
+      this.current = parseInt(data.current);
       this.pageCount = Math.ceil(parseInt(this.total) / this.pageSize);
       this.list.map((v) => {
         //遍历表格数据
@@ -589,12 +590,14 @@ getList(page) {
 created() {},
 mounted() {
   this.getList(1);
-  // systemAdminApi.getMenuList(0).then((res) => {
-  //   this.data = res;
-  // }).catch(err)
-  // {
-  //   console.log(err);
-  // }
+  let data={};
+  systemAdminApi.getMenuList(data).then((res) => {
+    this.data = res;
+  }).catch(err)
+  {
+    console.log(err);
+
+  }
 },
 };
 </script>

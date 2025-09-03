@@ -228,6 +228,7 @@
         :title="dialogText"
         :visible.sync="addMethodFormVisible"
         width="40%"
+        top="50px"
       >
         <el-row>
           <el-col :span="5"
@@ -294,7 +295,7 @@
           </el-col>
           <div style="clear: both; height: 20px"></div>
           <el-col :span="5"><span class="table-text">行业:</span></el-col>
-          <el-col :span="5">
+          <el-col :span="19">
             <el-select
               v-model="methodForm.industryCode"
               placeholder="请选择行业"
@@ -373,7 +374,8 @@
               size="medium"
             ></el-input>
           </el-col>
-          <div slot="footer" class="dialog-footer" align="rigth">
+          <div style="clear: both; height: 20px"></div>
+          <div class="dialog-footer" align="right">
             <el-button @click="onCancel">取消</el-button>
             <el-button @click="saveMethod" type="primary">保存</el-button>
           </div>
@@ -633,6 +635,7 @@ export default {
               if (this.methodForm["wordUrl"]) {
                 this.syncContentCarbonMethodology(this.methodForm);
               }
+              this.update();
             }
           })
           .catch(err => {
@@ -943,4 +946,8 @@ ul {
   top: 10px;
   margin-left: 10px;
 }
+
+//.dialog-footer {
+//  margin-bottom: 20px;
+//}
 </style>
