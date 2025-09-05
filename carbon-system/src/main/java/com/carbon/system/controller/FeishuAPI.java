@@ -1,6 +1,7 @@
 package com.carbon.system.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carbon.common.entity.Message;
@@ -14,8 +15,10 @@ import com.carbon.domain.mq.entity.AssetUploadApproval;
 import com.carbon.system.entity.CarbonProjectToken;
 import com.carbon.system.entity.FeishuFiletoken;
 import com.carbon.system.param.FeiShuEventParam1;
+import com.carbon.system.param.FeiShuSheetChangeEvent;
 import com.carbon.system.service.CarbonApprovalService;
 import com.carbon.system.service.CarbonProjectTokenService;
+import com.carbon.system.service.SyncService;
 import com.carbon.system.vo.FeiShuEventVo;
 import com.carbon.system.vo.FileDate;
 import com.carbon.system.service.FeishuFiletokenService;
@@ -30,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Bae
@@ -49,6 +54,8 @@ public class FeishuAPI {
     RocketMQTemplate mqTemplate;
     @Autowired
     CarbonProjectTokenService tokenService;
+    @Autowired
+    private SyncService syncService;
 
 
     /**
@@ -56,7 +63,7 @@ public class FeishuAPI {
      */
     @GetMapping("/information")
     @ApiOperation(value = "获取云文档鉴权信息", notes = "获取云文档鉴权信息")
-    public ApiResult getTextAuthenticationInformation(String code, String templateNum, String refreshToken) {
+    public ApiResult<Message> getTextAuthenticationInformation(String code, String templateNum, String refreshToken) {
         String app="1";
         Message message = FeiShuAPI.getTextAuthenticationInformation(code, app,refreshToken);
         if (message == null) {
@@ -83,14 +90,12 @@ public class FeishuAPI {
 //        return ApiResult.ok(folder);
 //    }
 
-
-
     /**
      * 传入code 获取电子表格鉴权信息
      */
     @GetMapping("/formInformation")
     @ApiOperation(value = "获取电子表格鉴权信息", notes = "获取电子表格鉴权信息")
-    public ApiResult getFormAuthenticationInformation(String code, String templateNum, String refreshToken) {
+    public ApiResult<Message> getFormAuthenticationInformation(String code, String templateNum, String refreshToken) {
         FeishuFiletoken one = filetokenService.getOne(templateNum);
         Message message = FeiShuAPI.getFormAuthenticationInformation(code, one.getApp(), one.getWebRedirect() ,refreshToken);
         if (message == null) {
@@ -102,14 +107,9 @@ public class FeishuAPI {
         return ApiResult.ok(message);
     }
 
-
-
-
-
-
     @PostMapping("/updateByNum")
     @ApiOperation(value = "根据文档编号和位置修改指定区域内容", notes = "根据文档编号和位置修改指定区域内容")
-    public ApiResult updateFileByNum(String templateNum, String position, String replaceText) {
+    public ApiResult<Boolean> updateFileByNum(String templateNum, String position, String replaceText) {
         FeiShuAPI.updateFileByNum(templateNum, position, replaceText);
         //更新文档时间
         filetokenService.updatedTime(templateNum);
@@ -119,7 +119,7 @@ public class FeishuAPI {
 
     @PostMapping("/update")
     @ApiOperation(value = "修改指定内容", notes = "修改指定内容")
-    public ApiResult updateFile(String fileToken, String text, String replaceText) {
+    public ApiResult<Boolean> updateFile(String fileToken, String text, String replaceText) {
         FeiShuAPI.updateFileText(fileToken, text, replaceText);
         return ApiResult.ok("修改成功");
     }
@@ -127,13 +127,10 @@ public class FeishuAPI {
 
     /**
      * 获取指定文档的创建-修改日期
-     *
-     * @param templateNum
-     * @return
      */
     @GetMapping("/getFileDate/{templateNum}")
     @ApiOperation(value = "获取指定文档的创建-修改日期", notes = "获取指定文档的创建-修改日期")
-    public ApiResult getFileDate(@PathVariable("templateNum") String templateNum) {
+    public ApiResult<FileDate> getFileDate(@PathVariable("templateNum") String templateNum) {
         QueryWrapper<FeishuFiletoken> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("code", templateNum);
         FeishuFiletoken one = filetokenService.getOne(queryWrapper);
@@ -144,13 +141,12 @@ public class FeishuAPI {
 
 //    @PostMapping("/event")
 //    @ApiOperation(value = "审批监听事件", notes = "审批监听事件")
-//    public ApiResult testUpdateFile(@RequestBody FeiShuEventParam1 param) {
+//    public ApiResult<Boolean> testUpdateFile(@RequestBody FeiShuEventParam1 param) {
 //        log.info("审批监听事件:{}", JSONUtil.toJsonPrettyStr(param));
 //        carbonApprovalService.approvalEventCallback(param);
 //
 //        return ApiResult.ok();
 //    }
-
 
     @PostMapping("/event")
     @ApiOperation(value = "测试事件",notes = "测试事件")
@@ -159,6 +155,7 @@ public class FeishuAPI {
         vo.setChallenge(param.getChallenge());
         return vo;
     }
+
     /**
      * 传入项目ID和项目名称，返回对应飞书文档
      *
@@ -167,16 +164,76 @@ public class FeishuAPI {
      */
     @GetMapping("/getProjectFile")
     @ApiOperation(value = "获取项目对应飞书文档", notes = "获取项目对应飞书文档")
-    public ApiResult getProjectFile(@RequestParam("projectId") String projectId,@RequestParam("projectName") String projectName) {
-        Long code = tokenService.getProjectFileCode(projectId,projectName);
+    public ApiResult<ProjectFileCode> getProjectFile(
+            @RequestParam("projectId") String projectId,@RequestParam("projectName") String projectName) {
+        Long code = tokenService.getProjectFileCode(projectId, projectName);
         return ApiResult.ok(new ProjectFileCode(code));
     }
 
     @PostMapping("/uploadFile")
     @ApiOperation(value = "飞书上传文件", notes = "飞书上传文件")
-    public ApiResult uploadFiles(@RequestParam("file") MultipartFile file,@RequestParam("fileName") String fileName) {
+    public ApiResult uploadFiles(@RequestParam("file") MultipartFile file, @RequestParam("fileName") String fileName) {
         log.info("uploadFile");
         return FeiShuAPI.uploadFile(file, fileName);
     }
 
+    /**
+     * 初始化飞书表格与数据库同步
+     */
+    @PostMapping("/initSync")
+    @ApiOperation(value = "初始化表格同步", notes = "建立飞书表格与数据库表的同步关系")
+    public ApiResult<Boolean> initSync(
+            @RequestParam String feishuFileToken,
+            @RequestParam String databaseTable,
+            @RequestParam String controllerEndpoint,
+            @RequestBody LinkedHashMap<String, Object> fieldMapping) {
+
+        syncService.initializeSync(feishuFileToken, databaseTable, controllerEndpoint, fieldMapping);
+        return ApiResult.ok("同步初始化成功");
+    }
+
+    @PostMapping("/syncProjectToFeishu/{projectId}")
+    public ApiResult<Boolean> syncProjectToFeishu(@PathVariable Long projectId) {
+        syncService.syncProjectToFeishu(projectId);
+        return ApiResult.ok("同步到飞书成功");
+    }
+
+    /**
+     * 手动触发数据库到飞书的同步
+     */
+    @PostMapping("/syncToFeishu/{syncConfigId}")
+    @ApiOperation(value = "同步数据库数据到飞书", notes = "将数据库指定表数据同步到飞书表格")
+    public ApiResult<Boolean> syncDatabaseToFeishu(@PathVariable String syncConfigId) {
+        syncService.syncDatabaseToFeishu(syncConfigId);
+        return ApiResult.ok("同步到飞书成功");
+    }
+
+    /**
+     * 手动触发飞书到数据库的同步
+     */
+    @PostMapping("/syncToDatabase/{syncConfigId}")
+    @ApiOperation(value = "同步飞书数据到数据库", notes = "将飞书表格数据同步到数据库")
+    public ApiResult<Boolean> syncFeishuToDatabase(@PathVariable String syncConfigId) {
+        syncService.syncFeishuToDatabase(syncConfigId);
+        return ApiResult.ok("同步到数据库成功");
+    }
+
+    /**
+     * 飞书表格变更webhook
+     */
+    @PostMapping("/sheetChangeEvent")
+    @ApiOperation(value = "飞书表格变更事件", notes = "接收飞书表格变更通知")
+    public Object handleSheetChange(@RequestBody FeiShuSheetChangeEvent event) {
+        log.info("飞书表格变更事件: {}", JSONUtil.toJsonPrettyStr(event));
+        FeiShuEventVo vo = new FeiShuEventVo();
+
+        if (event.getChallenge() != null) {
+            vo.setChallenge(event.getChallenge());
+            return vo;
+        }
+        if (event.getEvent() != null) {
+            syncService.handleFeishuSheetChange(event);
+        }
+        return ApiResult.ok(vo);
+    }
 }

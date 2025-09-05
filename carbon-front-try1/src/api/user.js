@@ -465,3 +465,21 @@ export function regForgotPasswordCode(phone) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   })
 }
+
+/**
+ * 验证邮箱是否存在
+ *
+ * @returns
+ */
+export function verifyEmail(email) {
+  return request({
+    baseURL: "http://localhost:9001",
+
+    url: '/authCenter/auth/verifyEmail/' + email,
+    method: 'GET',
+    // headers: {'Content-Type': 'application/json'}
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+
+  })
+}
+

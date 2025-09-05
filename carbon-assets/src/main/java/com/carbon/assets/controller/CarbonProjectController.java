@@ -1,5 +1,6 @@
 package com.carbon.assets.controller;
 
+import com.carbon.assets.entity.CarbonProject;
 import com.carbon.assets.param.CarbonDataSubmissionQueryParam;
 import com.carbon.assets.param.CarbonProjectAddParam;
 import com.carbon.assets.param.CarbonProjectOwnerDataParam;
@@ -9,6 +10,7 @@ import com.carbon.assets.vo.CarbonDetectionDataVo;
 import com.carbon.assets.vo.CarbonProjectListVo;
 import com.carbon.assets.vo.CarbonProjectQueryVo;
 import com.carbon.assets.common.BaseController;
+import com.carbon.common.exception.CommonBizException;
 import com.carbon.domain.common.ApiResult;
 import com.carbon.common.api.Paging;
 import io.swagger.annotations.Api;
@@ -54,7 +56,8 @@ public class CarbonProjectController extends BaseController {
     @ApiOperation(value = "修改碳减排项目",notes = "修改碳减排项目")
     public ApiResult<Boolean> updateCarbonProject(@Valid @RequestBody CarbonProjectAddParam param) {
         boolean flag = carbonProjectService.updateCarbonProject(param);
-        return ApiResult.result(flag);
+        ApiResult<Boolean> ok=ApiResult.result(flag);
+        return ok;
     }
 
     /**
@@ -81,20 +84,36 @@ public class CarbonProjectController extends BaseController {
     * 获取碳减排项目
     */
     @GetMapping("/info/{id}")
-    @ApiOperation(value = "查看碳减排项目",notes = "查看碳减排项目")
-    public ApiResult<CarbonProjectQueryVo> getCarbonProject(@PathVariable String id) {
-        CarbonProjectQueryVo carbonProjectQueryVo = carbonProjectService.getCarbonProjectById(id);
-        return ApiResult.ok(carbonProjectQueryVo);
+    public ApiResult<CarbonProjectQueryVo> selectProject(@PathVariable("id") Long id) {
+        System.out.println("Project info Called");
+        return ApiResult.ok(carbonProjectService.getCarbonProjectById(id));
     }
 
-    /**
-     * 项目监测数据报送列表
-     */
+    @PostMapping("/sync/batch")
+    public ApiResult<Boolean> batchUpdateProjectList(@RequestBody List<CarbonProject> projects) {
+        return ApiResult.ok(carbonProjectService.updateBatchById(projects));
+    }
+
+    @GetMapping("/sync")
+    public ApiResult<List<CarbonProject>> selectAllProject() {
+        System.out.println("Project info Called");
+        return ApiResult.ok(carbonProjectService.selectProjectAll());
+    }
+
+    @GetMapping("/sync/{id}")
+    public ApiResult<CarbonProject> getProjectForSync(@PathVariable Long id) {
+        CarbonProject project = carbonProjectService.getById(id);
+        if (project == null) {
+            throw new CommonBizException("项目不存在");
+        }
+        return ApiResult.ok(project);
+    }
+
     @PostMapping("/dataSubmissionPageList")
-    @ApiOperation(value = "项目-监测数据报送",notes = "监测数据报送")
-    public ApiResult<Paging<CarbonProjectListVo>> getDataSubmissionPageList(@Valid @RequestBody(required = false) CarbonProjectQueryParam carbonProjectQueryParam) {
-        Paging<CarbonProjectListVo> paging = carbonProjectService.getDataSubmissionPage(carbonProjectQueryParam);
-        return ApiResult.ok(paging);
+    public ApiResult<Paging<CarbonProjectListVo>> submissionPagesListPost(
+            @Valid @RequestBody(required = false) CarbonProjectQueryParam param) {
+        System.out.println("Project dataSubmissionPageList Called");
+        return ApiResult.ok(carbonProjectService.getDataSubmissionPage(param));
     }
 
 
@@ -162,6 +181,12 @@ public class CarbonProjectController extends BaseController {
         System.out.println("---param:"+param);
         carbonProjectService.addFeishuProject(param);
         return ApiResult.ok();
+    }
+
+    @GetMapping("/rowCount")
+    public Long rowCount() {
+        System.out.println("Project rowCount Called");
+        return (long) carbonProjectService.count();
     }
 }
 

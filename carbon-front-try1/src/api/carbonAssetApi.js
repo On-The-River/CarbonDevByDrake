@@ -185,8 +185,8 @@ export function addOwnerData(data) {
 export function getUpLoadFileParams() {
   let token = !store.getters.token ? sessionStorage.getItem('token') : store.getters.token;
   return {
-    baseURL: "http://localhost:9003",
-    url: '/assets/carbonProject/uploadOwnerData',
+    baseURL: "",
+    url: 'http://localhost:9003/assets/carbonProject/uploadOwnerData',
     token: token
   }
 }

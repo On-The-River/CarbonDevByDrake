@@ -329,7 +329,7 @@ export function getUploadProjectParams() {
 export function getFeiShuUploadProjectParams() {
     let token = !store.getters.token ? sessionStorage.getItem('token') : store.getters.token;
     return {
-        url: `${SettingMer.apiBaseURL}assets/exchangeAccount/uploadCredential`,
+        url: "http://localhost:9003/assets/exchangeAccount/uploadCredential",
         token: token
     }
 }

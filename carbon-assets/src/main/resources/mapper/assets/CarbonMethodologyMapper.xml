@@ -35,7 +35,7 @@
                 and cm.status_code = #{param.statusCode}
             </if>
             <if test="param.fieldCode != '' and param.fieldCode != null">
-                and cm.field_Code = #{param.fieldCode}
+                and cm.field_code = #{param.fieldCode}
             </if>
             <if test="param.fieldChildCode != '' and param.fieldChildCode != null">
                 and cm.field_child_code = #{param.fieldChildCode}

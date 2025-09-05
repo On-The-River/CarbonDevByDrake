@@ -92,4 +92,7 @@ public class CarbonMetaregistryQueryVo implements Serializable{
 
     @ApiModelProperty("项目开发商")
     private String projectDeveloper;
+
+    @ApiModelProperty("核证机构")
+    private String projectVerifier;
 }

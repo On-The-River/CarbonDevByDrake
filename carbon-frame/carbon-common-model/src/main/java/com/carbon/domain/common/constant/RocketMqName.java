@@ -95,4 +95,13 @@ public class RocketMqName {
 
     public static final String SYN_METHOD_CONTENT_MSG = "SYN_METHOD_CONTENT_MSG";
 
+    /**
+     * 飞书表格到数据库同步
+     */
+    public static final String FEISHU_TO_DATABASE_SYNC = "FEISHU_TO_DATABASE_SYNC";
+
+    /**
+     * 数据库到飞书表格同步
+     */
+    public static final String DATABASE_TO_FEISHU_SYNC = "DATABASE_TO_FEISHU_SYNC";
 }

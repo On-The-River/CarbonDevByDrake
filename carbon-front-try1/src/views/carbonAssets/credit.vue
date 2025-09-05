@@ -99,15 +99,15 @@
       </el-form>
     </el-card>
     <!-- 表格数据区域 -->
+    <!-- :render-header="renderCheckHeader" 暂时注释这个el-table的render-header -->
+    <!-- @selection-change="handleSelectionChange" 暂时注释掉这个-->
     <el-card class="table-card" style="margin-top: 20px">
       <el-table
         :data="list"
         border
         style="width: 100%"
         :header-cell-style="{ background: '#f2f5f7' }"
-        :row-key="(row) => row.id"
-        @selection-change="handleSelectionChange"
-        :render-header="renderCheckHeader"
+        :row-key="row => row.id"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column label="序号" align="center" width="60">
@@ -130,20 +130,20 @@
         <el-table-column label="操作" align="center">
           <template v-slot="scope">
             <el-button type="text" @click="viewDetail(scope.row)"
-              >查看</el-button
+            >查看</el-button
             >
             <el-button type="text" @click="outerShelve(scope.row)"
-              >场外上架</el-button
+            >场外上架</el-button
             >
             <el-button type="text" @click="insideTransaction(scope.row)"
-              >场内交易</el-button
+            >场内交易</el-button
             >
             <el-button type="text" @click="onEdit(scope.row)">修改</el-button>
             <el-button
               type="text"
               @click="onClickDelete(scope.row)"
               style="color: red"
-              >删除</el-button
+            >删除</el-button
             >
           </template>
         </el-table-column>
@@ -163,33 +163,49 @@
     </el-card>
 
     <!-- 上传弹窗 -->
+    <!-- @submit="submited" 这个需要整改，还没有提交的一个调用方法，暂时注释-->
+    <!--      :selData="list"-->
     <carbon-upload
-        :dialogFormVisible="carbonUploadDlg"
-        :selData="list"
-        :isCredit="true"
-        title="碳信用项目上传"
-        @changeVisible="changeCarbonVisible"
-        @submit="submited"
+      :dialogFormVisible="carbonUploadDlg"
+      :isCredit="true"
+      title="碳信用项目上传"
+      @changeVisible="changeCarbonVisible"
     ></carbon-upload>
 
-    <!-- 场外交易按钮弹出页面 -->
-      
-
+    <!-- 场外上架按钮弹出页面 -->
+    <!-- @submit="outerShelveSubmit" 暂时注释掉这个方法，待提交 -->
+    <otc-listing
+      :dialogFormVisible="outerShelveDlg"
+      :selData="outerShelveRow"
+      @changeVisible="changeOuterShelveVisible"
+    ></otc-listing>
+    <!-- 编辑方法学弹出页面 -->
+    <!-- @submit="editMethodSubmit" 暂时注释掉这个方法，后续调用 -->
+<!--    <edit-method-->
+<!--      :dialogFormVisible="editMethodDlg"-->
+<!--      :selData="editMethodRow"-->
+<!--      @changeVisible="changeEditMethodVisible"-->
+<!--    ></edit-method>-->
   </div>
 </template>
 
 <script>
 // 确保接口方法正确引入
-import { loadCarbonCreditPageList } from "../../api/carbonAssetApi";
-import { delCredit } from "../../api/carbonAssetApi";
+import { loadCarbonCreditPageList } from "@/api/carbonAssetApi";
+import { delCredit } from "@/api/carbonAssetApi";
 // 引用场外上架的页面~~~~~
 import carbonUpload from "./carbonUpload.vue";
+// import assetDetail from "./assetDetail.vue";
+import otcListing from "@/views/carbonAssets/otcListing";
+// import editMethod from "./method/editMethod.vue";
 import {
   getCertificationCriteriaDict,
   getProjectAreaDict,
   getAssetTradeStatusDict,
-  getAssetStatusDict,
-} from "../../config/dictHelper";
+  getAssetStatusDict
+} from "@/config/dictHelper";
+import AssetDetail from "./assetDetail.vue";
+import Edit from "@/components/Category/edit.vue";
 
 export default {
   name: "CarbonCredit",
@@ -197,7 +213,10 @@ export default {
     // 引用场外上架的页面
     // OuterShelve: () => import("../outerShelve.vue"),
     // import里面的名字
-    carbonUpload
+    carbonUpload,
+    otcListing,
+    // editMethod,
+    Edit
   },
   data() {
     return {
@@ -207,6 +226,11 @@ export default {
       pageSize: 10,
       dateRange: [],
       carbonUploadDlg: false, // 控制上传弹窗显示
+      onUploadRow: null, // 存储点击“上传”的表格行数据（用于弹窗回显）
+      outerShelveDlg: false, //控制场外上架的弹窗显示，自加
+      outerShelveRow: null, // 存储点击“场外上架”的表格行数据（用于弹窗回显），自加
+      editMethodDlg: false, // 控制编辑方法学的弹窗显示，自加
+      editMethodRow: null, // 存储点击“编辑”的表格行数据（用于弹窗回显），自加
       searchForm: {
         certificationCriteria: "",
         industry: "",
@@ -216,8 +240,10 @@ export default {
         issuingDateEnd: "",
         projectName: "",
         methodName: "",
+        creatorId: "",
+        createdTime: ""
       },
-      dialogFormVisible:false,
+      dialogFormVisible: false,
       optionsStandard: [],
       optionsIndustry: [],
       optionsOnlines: [],
@@ -225,13 +251,13 @@ export default {
       totalHold: 200,
       available: 200,
       locked: 0,
-      frozen: 0,
+      frozen: 0
     };
   },
   methods: {
     formatTableData(list) {
       // 格式化表格数据
-      return list.map((item) => ({
+      return list.map(item => ({
         ...item,
         // 格式化日期
         // 分别处理开始和结束时间
@@ -246,7 +272,7 @@ export default {
         // 格式化资产估值，保留2位小数
         assetValue: item.assetValue
           ? Number(item.assetValue).toFixed(2)
-          : "0.00",
+          : "0.00"
       }));
     },
     getStatusName(status) {
@@ -254,30 +280,23 @@ export default {
         1: "正常",
         2: "锁定",
         3: "冻结",
-        4: "已用完",
+        4: "已用完"
       };
       return statusMap[status] || "未知";
     },
     onEdit(row) {
-      // 跳转到编辑页面
-      this.$router.push({
-        path: "/carbonAssets/method/editMethod",
-        query: {
-          id: row.id,
-          type: "edit",
-        },
-      });
+      this.editMethodRow = row;
+      this.editMethodDlg = true;
     },
     onClickDelete(row) {
       this.$confirm("确认删除该碳资产记录吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
-        .then(async () => {
+        .then(() => {
           try {
-            // TODO: 调用删除API
-            const res = await delCredit(row.id);
+            const res = delCredit(row.id);
             if (res.code === 200) {
               this.$message.success("删除成功");
               this.getList(); // 刷新列表
@@ -304,41 +323,51 @@ export default {
     insideTransaction(row) {
       this.$router.push({
         path: "/systemSetting/exchangeManager",
-        query: { row },
+        query: { row }
       });
     },
-    async getList() {
-      try {
-        const data = {
-          asc: true,
-          current: this.current,
-          size: this.pageSize,
-          ...this.searchForm,
-        };
-        console.log("请求参数", data);
-
-        const res = await loadCarbonCreditPageList(data);
+    getList() {
+      const data = {
+        asc: true,
+        current: this.current,
+        size: this.pageSize,
+        ...this.searchForm
+      };
+      console.log("请求参数", data);
+      loadCarbonCreditPageList(data).then(res => {
         console.log("接口返回", res);
 
         if (res.code === 200) {
-          this.list = this.formatTableData(res.data? res.data.records : []);
-          this.total = res.data? res.data.total : 0;
+          this.list = res.data.records;
+          console.log("上传的数据为：", this.list);
+          this.total = Number(res.data.total);
         } else {
           this.$message.error(res.msg || "获取列表失败");
         }
-      } catch (error) {
+      }).catch(error => {
         console.error("请求失败", error);
         this.$message.error("获取列表失败：" + (error.message || "未知错误"));
-      }
+      });
     },
+    // 定义的问题，组长的定义是这个
+    // viewDetail(row) {
+    //   // 跳转到碳资产详情页面
+    //   this.$router.push({
+    //     path: "/assets/creditDetail",
+    //     query: { id: row.id }
+    //   });
+    // },
     viewDetail(row) {
       // 跳转到碳资产详情页面
       this.$router.push({
-        path: "/assets/creditDetail",
-        query: { id: row.id },
+        path: "/carbonAssets/assetDetail",
+        query: { id: row.id }
       });
     },
     outerShelve(row) {
+      this.outerShelveRow = row;
+      console.log("传输的场外上架的数据为：",this.outerShelveRow);
+      this.outerShelveDlg = true;
       // this.form=row;
       // this.dialogFormVisible=true;
       // 跳转到场外上架页面,与详情页中的场外报价功能相同
@@ -353,48 +382,51 @@ export default {
     onBuyClick() {
       // 跳转到交易页面
       this.$router.push({
-        path: "/carbonTrade/quotation/buyAssets",
+        path: "/carbonTrade/quotation/buyAssets"
       });
     },
 
     changeCarbonVisible(res) {
       this.carbonUploadDlg = res;
     },
-
+    // 自加
+    changeOuterShelveVisible(res) {
+      this.outerShelveDlg = res;
+    },
+    // 自加，编辑
+    changeEditMethodVisible(res) {
+      this.editMethodDlg = res;
+    },
     onUpload() {
       this.carbonUploadDlg = true;
-
-      // // 跳转到上传页面
-      // this.$router.push({
-      //   path: "/assets/carbonUpload",
-      // });
+      this.getList();
     },
     formatCertification(data) {
       if (!Array.isArray(data)) return;
-      this.optionsStandard = data.map((v) => ({
+      this.optionsStandard = data.map(v => ({
         label: v.name === "全部" ? v.name : v.name,
-        value: v.name !== "全部" ? v.value : "",
+        value: v.name !== "全部" ? v.value : ""
       }));
     },
     formatIndustry(data) {
       if (!Array.isArray(data)) return;
-      this.optionsIndustry = data.map((v) => ({
+      this.optionsIndustry = data.map(v => ({
         label: v.name === "全部" ? v.name : v.name,
-        value: v.name !== "全部" ? v.value : "",
+        value: v.name !== "全部" ? v.value : ""
       }));
     },
     formatStatus(data) {
       if (!Array.isArray(data)) return;
-      this.optionsOnlines = data.map((v) => ({
+      this.optionsOnlines = data.map(v => ({
         label: v.name === "全部" ? v.name : v.name,
-        value: v.name !== "全部" ? v.value : "",
+        value: v.name !== "全部" ? v.value : ""
       }));
     },
     formatAssetStatus(data) {
       if (!Array.isArray(data)) return;
-      this.optionsAssetStatus = data.map((v) => ({
+      this.optionsAssetStatus = data.map(v => ({
         label: v.name === "全部" ? v.name : v.name,
-        value: v.name !== "全部" ? v.value : "",
+        value: v.name !== "全部" ? v.value : ""
       }));
     },
     handleDateChange(value) {
@@ -405,7 +437,7 @@ export default {
         this.searchForm.issuingDateStart = "";
         this.searchForm.issuingDateEnd = "";
       }
-    },
+    }
   },
   mounted() {
     console.log("credit mounted");
@@ -414,20 +446,13 @@ export default {
     this.formatIndustry(getProjectAreaDict(this.$store));
     this.formatStatus(getAssetTradeStatusDict(this.$store));
     this.formatAssetStatus(getAssetStatusDict(this.$store));
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .root {
   background: #f2f5f7;
-}
-
-.divBox {
-  margin: 20px;
-  background: #ffffff;
-  box-shadow: 0px 2px 8px 0px #eaf0f3;
-  border-radius: 8px;
 }
 
 .container {
@@ -442,30 +467,30 @@ export default {
   width: 100%;
 }
 
-:deep(.el-cascader .el-input .el-input__inner),
-:deep(.el-cascader .el-input.is-focus .el-input__inner) {
+::v-deep(.el-cascader .el-input .el-input__inner),
+::v-deep(.el-cascader .el-input.is-focus .el-input__inner) {
   border-color: transparent;
 }
 
-:deep(.el-date-picker.has-sidebar.has-time) {
+::v-deep(.el-date-picker.has-sidebar.has-time) {
   background: #0a5857d6;
   color: #fff;
   border: 1px solid #22f4d6;
 }
 
-:deep(.el-date-picker__header-label) {
+::v-deep(.el-date-picker__header-label) {
   color: #ffffff;
 }
 
 .acea-row {
-  :deep(.el-avatar--small) {
+  ::v-deep(.el-avatar--small) {
     width: 22px;
     height: 22px;
   }
 }
 
 .checkTime {
-  :deep(.el-radio__input) {
+  ::v-deep(.el-radio__input) {
     display: none;
   }
 }
@@ -475,7 +500,7 @@ export default {
 }
 
 .dashboard-console-visit {
-  :deep(.el-card__header) {
+  ::v-deep(.el-card__header) {
     padding: 14px 20px !important;
   }
 

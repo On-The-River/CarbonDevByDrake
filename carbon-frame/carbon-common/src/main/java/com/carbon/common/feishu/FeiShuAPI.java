@@ -1,7 +1,5 @@
 package com.carbon.common.feishu;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.InputStreamResource;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -19,15 +17,14 @@ import com.carbon.common.entity.Folder;
 import com.carbon.common.entity.Message;
 import com.carbon.common.entity.Test;
 import com.carbon.common.enums.ApprovalCodeEnum;
-import com.carbon.common.exception.CommonBizException;
 import com.carbon.domain.common.ApiResult;
 import com.carbon.domain.mq.entity.AddTradingAccountApproval;
 import com.carbon.domain.mq.entity.AssetUploadApproval;
 import com.carbon.domain.mq.entity.ProjectApproval;
 import com.carbon.domain.mq.entity.QuotaApproval;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -35,13 +32,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,92 +49,131 @@ import java.util.Map;
  */
 @Slf4j
 public class FeiShuAPI {
+    private static RestTemplate restTemplate = new RestTemplate();
 
-    private static String app_id="cli_a826d0701cb8100d";  //填写自己飞书的app_id
+    private static String cachedTenantToken = null;
+    private static Long tokenExpireTime = 0L;
 
-    private static String app_secret="v7w02GXyirLViZn8djEscdgZIper1lHE"; //填写自己飞书的app_secret
+    public static final String app_id = "cli_a826d0701cb8100d";
+    public static final String app_secret = "v7w02GXyirLViZn8djEscdgZIper1lHE";
+    public static final String open_id = "ou_77eeb6ad144d6e8b4f652866a351bfd4";
+    public static final String parent_node = "TNFWfyZbPlM9KedSbnyc8hBYnmd";
+
+    /**
+     * 跟进服务表
+     */
+    public static final String spreadsheet_token1 = "BzUew6hCDiePr4kBaM6ckNjJnOc";
+
+    /**
+     * 开发业务跟进
+     */
+    public static final String sheet_id_1_1 = "18105b";
+    /**
+     * 注册开户跟进
+     */
+    public static final String sheet_id_1_2 = "Uno7Rh";
+    /**
+     * 交易开户跟进
+     */
+    public static final String sheet_id_1_3 = "4h4YBu";
+    /**
+     * 采购客户跟进
+     */
+    public static final String sheet_id_1_4 = "ijLngq";
+    /**
+     * 出售客户跟进
+     */
+    public static final String sheet_id_1_5 = "yWAwGB";
+    /**
+     * 交易履约跟进
+     */
+    public static final String sheet_id_1_6 = "4jluvv";
+
+
+    /**
+     * 资产开发进度表
+     */
+    public static final String spreadsheet_token2 = "IyTEw27c5iptASkRTpTcLO9Xn0s";
+
+    /**
+     * 交易履约跟进
+     */
+    public static final String sheet_id_2_1 = "75eb32";
+
+
+
     /**
      * 获取企业自建应用app_id与app_secret
-     * @return
      */
-    public static Map<String,String> getEnterpriseInformation(){
-        Map map=new HashMap();
-        map.put("app_id",app_id);
-        map.put("app_secret",app_secret);
-        return map;
+    public static Map<String, Object> getEnterpriseInformation(){
+        return getTenantInformation();
     }
 
     /**
      * 获取租户应用app_id与app_secret
-     * @return
      */
-    public static Map<String,String> getTenantInformation(){
-        Map map=new HashMap();
-        map.put("app_id",app_id);
-        map.put("app_secret",app_secret);
+    public static Map<String, Object> getTenantInformation(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("app_id", app_id);
+        map.put("app_secret", app_secret);
         return map;
     }
 
-
-
     /**
      * 获取tenant_access_token
-     * @return
      */
     public static String getTenantToken(){
-        Map map=new HashMap();
-        map.put("app_id",app_id);
-        map.put("app_secret",app_secret);
-        String url="https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal";
-        String tokenStr = HttpUtil.post(url, map);
-        JSONObject object= JSON.parseObject(tokenStr);
-        String token = object.getString("tenant_access_token");
-        return "Bearer "+token;
+        if (System.currentTimeMillis() < tokenExpireTime) {
+            return cachedTenantToken;
+        }
+        // 缓存过期，重新获取并更新缓存
+        Map<String, Object> map = getTenantInformation();
+        String tokenStr = HttpUtil.post("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", map);
+        JSONObject object = JSON.parseObject(tokenStr);
+        cachedTenantToken = "Bearer " + object.getString("tenant_access_token");
+        tokenExpireTime = System.currentTimeMillis() + (70 * 60 * 1000); // 70分钟后过期
+        return cachedTenantToken;
     }
 
     /**
      * 获取app信息
-     * @return
      */
-    public static Map<String,String> getAppInfo(String app){
-        Map map=null;
-        if("1".equals(app)){
-            map=getEnterpriseInformation();
-        }else if("2".equals(app)){
-            map=getTenantInformation();
+    public static Map<String, Object> getAppInfo(String app){
+        Map<String, Object> map = null;
+        if ("1".equals(app)){
+            map = getEnterpriseInformation();
+        } else if ("2".equals(app)){
+            map = getTenantInformation();
         }
         return map;
     }
 
     /**
      * 获取app_access_token
-     * @return
      */
     public static String getAppToken(String app){
-        Map map =getAppInfo(app);
-        String url="https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal";
+        Map<String, Object> map = getAppInfo(app);
+        String url = "https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal";
         String tokenStr = HttpUtil.post(url, map);
-        JSONObject object= JSON.parseObject(tokenStr);
+        JSONObject object = JSON.parseObject(tokenStr);
         String token = object.getString("app_access_token");
-        return "Bearer "+token;
+        return "Bearer " + token;
     }
 
     /**
      * 刷新user_access_token
-     * @return
      */
     public static JSONObject refreshUserToken(String refreshToken,String app){
         String appToken = getAppToken(app);
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("grant_type", "refresh_token");
-        param.put("refresh_token", refreshToken);
-        String json=param.toString();
+        param.set("grant_type", "refresh_token");
+        param.set("refresh_token", refreshToken);
+        String json = param.toString();
 
-        String url="https://open.feishu.cn/open-apis/authen/v1/refresh_access_token";
+        String url = "https://open.feishu.cn/open-apis/authen/v1/refresh_access_token";
         String result = HttpRequest.post(url).header(Header.AUTHORIZATION, appToken).body(json).execute().body();
-        JSONObject object= JSON.parseObject(result);
-        JSONObject data = JSONObject.parseObject(object.getString("data"));
-        return data;
+        JSONObject object = JSON.parseObject(result);
+        return JSONObject.parseObject(object.getString("data"));
     }
 
     /**
@@ -148,17 +183,14 @@ public class FeiShuAPI {
     public static JSONObject getUser(String code,String app){
         String appToken = getAppToken(app);
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("code", code);
-        param.put("grant_type", "authorization_code");
+        param.set("code", code);
+        param.set("grant_type", "authorization_code");
         String json=param.toString();
 
         String url="https://open.feishu.cn/open-apis/authen/v1/access_token";
         String result = HttpRequest.post(url).header(Header.AUTHORIZATION, appToken).body(json).execute().body();
-//        String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, appToken).body(json).execute().body();
         JSONObject object= JSON.parseObject(result);
-        JSONObject data = JSONObject.parseObject(object.getString("data"));
-
-        return data;
+        return JSONObject.parseObject(object.getString("data"));
     }
 
 
@@ -177,48 +209,49 @@ public class FeiShuAPI {
      *   // 可以在这里进行组件动态渲染
      * })
      * @param  code  登录预授权码 code
-     * @return
      */
     public static Message getTextAuthenticationInformation(String code, String app, String refreshToken){
-        JSONObject data=null;
-        if(refreshToken==null||"".equals(refreshToken)){
+        JSONObject data;
+        if (refreshToken == null || "".equals(refreshToken)) {
             data = getUser(code,app);
-        }else {
-            data=refreshUserToken(refreshToken,app);
+        } else {
+            data = refreshUserToken(refreshToken,app);
         }
-        Message res=new Message();
+        Message res = new Message();
 
-        if(data==null){
+        if (data == null) {
             return null;
         }
         res.setRefreshToken(data.getString("refresh_token"));
 
-        //获取user_token
         String userToken = "Bearer "+data.getString("access_token");
-
-        //获取open_id
         res.setOpenId(data.getString("open_id"));
 
-        //获取jsapi_ticket
         String requestUrl="https://open.feishu.cn/open-apis/jssdk/ticket/get";
         String result = HttpUtil.createRequest(Method.POST, requestUrl).header(Header.AUTHORIZATION, userToken).execute().body();
         JSONObject object= JSON.parseObject(result);
         data = JSONObject.parseObject(object.getString("data"));
         String jsapi_ticket = data.getString("ticket");
 
-
         String noncestr= RandomUtil.randomString(16);
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url="http://saas.xcarbon.cc/";
 
-        String string1="jsapi_ticket="+jsapi_ticket+
-                "&noncestr="+noncestr+"&timestamp="+timestamp+"&url="+url;
+        return getMessage(app, res, jsapi_ticket, noncestr, timestamp, url);
+    }
+
+    private static Message getMessage(String app, Message res, String jsapi_ticket, String noncestr, String timestamp, String url) {
+        String string1 =
+                "jsapi_ticket=" + jsapi_ticket +
+                        "&noncestr=" + noncestr +
+                        "&timestamp="  +timestamp +
+                        "&url=" + url;
 
         String signature = SecureUtil.sha1(string1);
 
         res.setSignature(signature);
-        Map<String, String> appInfo = getAppInfo(app);
-        res.setAppId(appInfo.get("app_id"));
+        Map<String, Object> appInfo = getAppInfo(app);
+        res.setAppId((String) appInfo.get("app_id"));
         res.setTimestamp(timestamp);
         res.setNonceStr(noncestr);
         res.setUrl(url);
@@ -248,16 +281,15 @@ public class FeiShuAPI {
      * @param app    判定需获取文档在哪个应用
      * @param url    鉴权后重定向url
      * @param refreshToken    刷新user_token
-     * @return
      */
     public static Message getFormAuthenticationInformation(String code, String app, String url, String refreshToken){
-        JSONObject data=null;
-        if(refreshToken==null||"".equals(refreshToken)){
+        JSONObject data;
+        if(refreshToken == null || refreshToken.isEmpty()){
             data = getUser(code,app);
         }else {
-            data=refreshUserToken(refreshToken,app);
+            data = refreshUserToken(refreshToken,app);
         }
-        Message res=new Message();
+        Message res = new Message();
 
         if(data==null){
             return null;
@@ -265,7 +297,7 @@ public class FeiShuAPI {
         res.setRefreshToken(data.getString("refresh_token"));
 
         //获取user_token
-        String userToken = "Bearer "+data.getString("access_token");
+        String userToken = "Bearer " + data.getString("access_token");
 
         //获取open_id
         res.setOpenId(data.getString("open_id"));
@@ -277,38 +309,18 @@ public class FeiShuAPI {
         data = JSONObject.parseObject(object.getString("data"));
         String jsapi_ticket = data.getString("ticket");
 
-
         String noncestr= RandomUtil.randomString(16);
         String timestamp = String.valueOf(System.currentTimeMillis());
-//        String url="http://saas.xcarbon.cc/sys/business";
-
-        String string1="jsapi_ticket="+jsapi_ticket+
-                "&noncestr="+noncestr+"&timestamp="+timestamp+"&url="+url;
-
-        String signature = SecureUtil.sha1(string1);
-
-        res.setSignature(signature);
-        Map<String, String> appInfo = getAppInfo(app);
-        res.setAppId(appInfo.get("app_id"));
-        res.setTimestamp(timestamp);
-        res.setNonceStr(noncestr);
-        res.setUrl(url);
-        res.setJsApiList("DocsComponent");
-        res.setLocale("zh");
-
-        return res;
+        return getMessage(app, res, jsapi_ticket, noncestr, timestamp, url);
     }
 
 
     /**
      * 传入 code或refreshToken 为该用户创建文件夹 并返回链接
-     * @param folderName
-     * @param refreshToken
-     * @return
      */
     public static Folder createFolder(String app, String folderName, String code, String refreshToken){
-        JSONObject data=null;
-        if(refreshToken==null||"".equals(refreshToken)){
+        JSONObject data;
+        if(refreshToken==null|| refreshToken.isEmpty()){
             data = getUser(code,app);
         }else {
             data=refreshUserToken(refreshToken,app);
@@ -332,8 +344,6 @@ public class FeiShuAPI {
 
     /**
      * 根据文档编号返回文档token
-     * @param templateNum
-     * @return
      */
     public static String getTextToken(String templateNum){
         if("0420000001".equals(templateNum)){
@@ -348,8 +358,6 @@ public class FeiShuAPI {
         return null;
     }
 
-
-
     /**
      * 新增空白文章
      *
@@ -357,7 +365,6 @@ public class FeiShuAPI {
     public static AddResponse addArticle(){
         String tenantToken = getTenantToken();
         String url="https://open.feishu.cn/open-apis/doc/v2/create";
-//        String result = HttpRequest.post(url).header(Header.AUTHORIZATION, tenantToken).execute().body();
         String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).execute().body();
         JSONObject object= JSON.parseObject(result);
         JSONObject data = JSONObject.parseObject(object.getString("data"));
@@ -377,16 +384,15 @@ public class FeiShuAPI {
      */
     public static void modifyPermissions(String tenantToken,String fileToken){
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("external_access", true);
-        param.put("security_entity", "anyone_can_edit");
-        param.put("comment_entity", "anyone_can_edit");
-        param.put("share_entity", "anyone");
-        param.put("link_share_entity", "anyone_editable");
-        param.put("invite_external", true);
+        param.set("external_access", true);
+        param.set("security_entity", "anyone_can_edit");
+        param.set("comment_entity", "anyone_can_edit");
+        param.set("share_entity", "anyone");
+        param.set("link_share_entity", "anyone_editable");
+        param.set("invite_external", true);
         String json=param.toString();
 
         String url="https://open.feishu.cn/open-apis/drive/v1/permissions/"+fileToken+"/public?type=doc";
-//        String result = HttpRequest.patch(url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
         HttpUtil.createRequest(Method.PATCH, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
     }
 
@@ -400,9 +406,7 @@ public class FeiShuAPI {
         String result = HttpUtil.createRequest(Method.GET,url).header(Header.AUTHORIZATION, tenantToken).execute().body();
         JSONObject object= JSON.parseObject(result);
         JSONObject data = JSONObject.parseObject(object.getString("data"));
-
-        String rootFolderToken = data.getString("token");
-        return rootFolderToken;
+        return data.getString("token");
     }
 
     /**
@@ -418,8 +422,7 @@ public class FeiShuAPI {
         JSONObject object= JSON.parseObject(result);
         JSONObject data = JSONObject.parseObject(object.getString("data"));
 
-//        data.getString("")
-        return null;
+        return data.toString();
     }
 
     /**
@@ -449,20 +452,17 @@ public class FeiShuAPI {
         if (StrUtil.isBlank(fileToken)) {
             fileToken="xxxxxx";  //folder_token 可通过学习文档 飞书部分获取
         }
-
         String url="https://open.feishu.cn/open-apis/doc/v2/"+fileToken+"/batch_update";
 
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("Revision", getTextReversion(fileToken));
+        param.set("Revision", getTextReversion(fileToken));
         JSONArray array=new JSONArray();
         String requests="{\"requestType\":\"ReplaceAllTextRequestType\",\"replaceAllTextRequest\":{\"containsText\":{\"text\":\""+text+"\",\"matchCase\":false},\"replaceText\": \""+replaceText+"\"}}";
         array.add(requests);
-        param.put("Requests", array);
+        param.set("Requests", array);
 
         String json=param.toString();
-
-        String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
-
+        HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
     }
 
     /**
@@ -477,20 +477,23 @@ public class FeiShuAPI {
         if (StrUtil.isBlank(fileToken)) {
             fileToken="xxxxxx";   //folder_token 可通过学习文档 飞书部分获取
         }
-
         String url="https://open.feishu.cn/open-apis/doc/v2/"+fileToken+"/batch_update";
 
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("Revision", getTextReversion(fileToken));
+        param.set("Revision", getTextReversion(fileToken));
         JSONArray array=new JSONArray();
-        String requests="{\"requestType\":\"ReplaceAllTextRequestType\",\"replaceAllTextRequest\":{\"containsText\":{\"text\":\""+text+"\",\"matchCase\":false},\"replaceText\": \""+replaceText+"\"}}";
+        String requests="{\"requestType\":" +
+                "\"ReplaceAllTextRequestType\",\"replaceAllTextRequest\"" +
+                ":{\"containsText\":" +
+                "{\"text\":\""+text+"\",\"matchCase\":false}," +
+                "\"replaceText\": \""+replaceText+"\"" +
+                "}" +
+                "}";
         array.add(requests);
-        param.put("Requests", array);
+        param.set("Requests", array);
 
         String json=param.toString();
-
-        String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
-
+        HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
         return new Test(fileToken,text,replaceText);
     }
 
@@ -509,16 +512,14 @@ public class FeiShuAPI {
         String url="https://open.feishu.cn/open-apis/doc/v2/"+fileToken+"/batch_update";
 
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("Revision", getTextReversion(fileToken));
+        param.set("Revision", getTextReversion(fileToken));
         JSONArray array=new JSONArray();
         String requests="{\"requestType\":\"ReplaceAllTextRequestType\",\"replaceAllTextRequest\":{\"containsText\":{\"text\":\""+text+"\",\"matchCase\":false},\"replaceText\": \""+replaceText+"\"}}";
         array.add(requests);
-        param.put("Requests", array);
+        param.set("Requests", array);
 
         String json=param.toString();
-
-        String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
-
+        HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
     }
 
     /**
@@ -526,21 +527,17 @@ public class FeiShuAPI {
      */
     public static void updateFile(String fileToken, String text,String replaceText){
         String tenantToken = getTenantToken();
-
-
         String url="https://open.feishu.cn/open-apis/doc/v2/"+fileToken+"/batch_update";
 
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("Revision", getTextReversion(fileToken));
+        param.set("Revision", getTextReversion(fileToken));
         JSONArray array=new JSONArray();
         String requests="{\"requestType\":\"ReplaceAllTextRequestType\",\"replaceAllTextRequest\":{\"containsText\":{\"text\":\""+text+"\",\"matchCase\":false},\"replaceText\": \""+replaceText+"\"}}";
         array.add(requests);
-        param.put("Requests", array);
+        param.set("Requests", array);
 
         String json=param.toString();
-
-        String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
-
+        HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
     }
 
     /**
@@ -588,23 +585,23 @@ public class FeiShuAPI {
         String tenantToken = getTenantToken();
         String updateContent = appendString(data);
         String s = searchForm(spreadsheetToken, sheetId, idField,rightRange);
-        String url=null;
-        String location1=null;
-        String location2=null;
-        if(s==null){ //没有此纪录  则在工作表中追加数据
+        String url;
+        String location1;
+        String location2;
+        if(s == null) {
             url="https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/"+spreadsheetToken+"/values_append";
             location1="1";
             location2="5000";
-        }else {  //若有此纪录 则修改
+        } else {
             url="https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/"+spreadsheetToken+"/values";
             location1 = location2 = new StringBuilder(s).deleteCharAt(0).toString();
         }
-        String json="{\n" +
+        String json = "{\n" +
                 "    \"valueRange\":{\n" +
                 "        \"range\": \""+sheetId+"!A"+location1+":"+rightRange+location2+"\",\n" +
                 "        \"values\": [\n" +
                 "        [\n" +
-                            updateContent +
+                updateContent +
                 "        ]\n" +
                 "        ]\n" +
                 "    }\n" +
@@ -648,9 +645,8 @@ public class FeiShuAPI {
         JSONObject data = JSONObject.parseObject(object.getString("data"));
         JSONObject find_result = JSONObject.parseObject(data.getString("find_result"));
         com.alibaba.fastjson.JSONArray matched_cells = find_result.getJSONArray("matched_cells");
-//        System.out.println(matched_cells.get(0));
-        if(matched_cells.size()==0)
-        {
+
+        if(matched_cells.isEmpty()) {
             return null;
         }
         return (String) matched_cells.get(0);
@@ -658,8 +654,6 @@ public class FeiShuAPI {
 
     /**
      * 将对象中所有属性拼接为字符串返回
-     * @param o
-     * @return
      */
     public static String appendString(Object o) {
         Field[] fields = o.getClass().getDeclaredFields();
@@ -674,7 +668,7 @@ public class FeiShuAPI {
                     sb.append(",");
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
         sb.deleteCharAt(sb.length()-1);
@@ -687,7 +681,7 @@ public class FeiShuAPI {
      * @param project  项目立项审批表单MQ实体类
      */
     public static String projectApproval(ProjectApproval project){
-        log.info("----------发送项目立项审批！！！",project);
+        log.info("----------发送项目立项审批----------\n{}", project);
         String tenantToken = getTenantToken();
         String url="https://www.feishu.cn/approval/openapi/v2/instance/create";
 //        project.setMethodologyName("方法学");
@@ -705,9 +699,9 @@ public class FeiShuAPI {
                 +"\"},{\"id\":\"developPrincipalContactNumber\", \"type\": \"input\", \"value\":\""+project.getPrincipalPhone()
                 +"\"},{\"id\":\"projectInformation\", \"type\": \"input\", \"value\":\""+project.getProjectIntroduction()+"\"}]";
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("approval_code", ApprovalCodeEnum.PROJECT_INITIATION_APPROVAL.getCode());
-        param.put("open_id","xxxxxx");  //open_id可通过接口获取 详情见飞书学习文档
-        param.put("form", form);
+        param.set("approval_code", ApprovalCodeEnum.PROJECT_INITIATION_APPROVAL.getCode());
+        param.set("open_id", open_id);
+        param.set("form", form);
 
         String json=param.toString();
         log.info("projectApproval-param:{}",json);
@@ -738,8 +732,8 @@ public class FeiShuAPI {
                 +"\"},{\"id\":\"proofOfPosition\", \"type\": \"input\", \"value\":\""+asset.getProofOfPosition()
                 +"\"},{\"id\":\"issuingAgency\", \"type\": \"input\", \"value\":\""+asset.getIssuingAgency()+"\"}]";
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
-        param.put("approval_code",ApprovalCodeEnum.ASSETS_APPROVAL.getCode());
-        param.put("open_id","xxxxxx");  //open_id可通过飞书接口获取 详情见飞书学习文档
+        param.put("approval_code", ApprovalCodeEnum.ASSETS_APPROVAL.getCode());
+        param.put("open_id", open_id);
         param.put("form", form);
 
         String json=param.toString();
@@ -771,7 +765,7 @@ public class FeiShuAPI {
                 +"\"},{\"id\":\"issuingAgency\", \"type\": \"input\", \"value\":\""+quota.getIssuingAgency()+"\"}]";
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
         param.put("approval_code",ApprovalCodeEnum.QUOTA_APPROVAL.getCode());
-        param.put("open_id","xxxxxx");  //open_id可通过飞书接口获取 详情见飞书学习文档
+        param.put("open_id", open_id);
         param.put("form", form);
 
         String json=param.toString();
@@ -802,7 +796,7 @@ public class FeiShuAPI {
                 "{\"id\":\"widget16587490813080001\", \"type\":\"input\", \"value\":\""+account.getAccountProof()+"\"}]";
         cn.hutool.json.JSONObject param = JSONUtil.createObj();
         param.put("approval_code", ApprovalCodeEnum.TRADE_ACCOUNT_APPROVAL.getCode());
-        param.put("open_id","ou_7ff37dc25e7e81326864c2a29d5468a8");  //open_id可通过飞书接口获取 详情见飞书学习文档
+        param.put("open_id", open_id);
         param.put("form", form);
 
         String json=param.toString();
@@ -816,39 +810,8 @@ public class FeiShuAPI {
         return data.getString("instance_code");
     }
 
-
-
-
-    /**
-     * 为没有PPD文档的项目生成对应PDD文档
-     * @param projectId      项目ID
-     * @param projectName    项目名称
-     * @return
-     */
-//    public static String addProjectFile(String projectId,String projectName){
-//        String tenantToken = getTenantToken();
-//
-//        String url="https://open.feishu.cn/open-apis/drive/explorer/v2/file/copy/files/doccnX6eWrZtQtCvvGLCNtZVRlh";
-//        cn.hutool.json.JSONObject param = JSONUtil.createObj();
-//        param.put("type", "doc");
-//        param.put("dstFolderToken","fldcnSjlFG6i10m4fNip8zPIcSe");
-//        param.put("dstName", "PDD文档模板");
-//        param.put("commentNeeded", "false");
-//
-//        String json=param.toString();
-//
-//        String result = HttpUtil.createRequest(Method.POST, url).header(Header.AUTHORIZATION, tenantToken).body(json).execute().body();
-//        JSONObject object= JSON.parseObject(result);
-//        JSONObject data = JSONObject.parseObject(object.getString("data"));
-//        String fileToken = data.getString("token");
-//        modifyPermissions(tenantToken,fileToken);
-//        System.out.println("初始化项目------");
-//        updateFile(fileToken,"初始项目名称",projectName);
-//        return fileToken;
-//    }
-
     /*阿帕奇HttpClient测试*/
-    public static String addProjectFile(String projectId,String projectName){
+    public static String addProjectFile(String projectId, String projectName){
         String tenantToken = getTenantToken();
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         String url="https://open.feishu.cn/open-apis/drive/explorer/v2/file/copy/files/doccnX6eWrZtQtCvvGLCNtZVRlh";
@@ -886,40 +849,192 @@ public class FeiShuAPI {
     public static ApiResult uploadFile(MultipartFile file, String fileName) {
         String url="https://open.feishu.cn/open-apis/drive/v1/files/upload_all";
         try {
-
             InputStreamResource isr = new InputStreamResource(file.getInputStream(),file.getOriginalFilename());
             String result = HttpUtil.createRequest(Method.POST, url)
-                    .header(Header.AUTHORIZATION,getTenantToken())
+                    .header(Header.AUTHORIZATION, getTenantToken())
                     .contentType("multipart/form-data")
                     .form("file_name", fileName)
                     .form("size", file.getSize())
                     .form("file", isr)
                     .form("parent_type", "explorer")
-                    .form("parent_node", "fldcn1GFDTAYWVE2WgRsfIExhZg")
+                    .form("parent_node", parent_node)
                     .execute().body();
-
 
             return JSONUtil.toBean(result, ApiResult.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
 
-//    /**
-//     * 返回当前用户的root文件夹路径
-//     * @return rootUrl 文件夹路径
-//     */
-//    public static String jumpRootFolder(){
-//        String tenantToken = getTenantToken();
-//        String url = "https://open.feishu.cn/open-apis/drive/explorer/v2/root_folder/meta";
-//        String result = HttpUtil.createRequest(Method.GET, url).header(Header.AUTHORIZATION, tenantToken).execute().body();
-//        JSONObject object= JSON.parseObject(result);
-//        JSONObject data = JSONObject.parseObject(object.getString("data"));
-//        //获取到云空间的文件夹token
-//        String folder_token = data.getString("token");
-//        String rootUrl = "https://open.feishu.cn/drive/folder/"+folder_token;
-//        return rootUrl;
-//    }
+    public static List<List<String>> getSheetData(String spreadsheetToken) {
+        return getSheetData(spreadsheetToken, sheet_id_2_1);
+    }
 
+    /**
+     * 获取指定工作表的数据
+     * @param spreadsheetToken 飞书表格的token
+     * @param sheetId 工作表的id，如果为null则获取第一个工作表
+     * @return 二维列表，每一行是一个字符串列表
+     */
+    public static List<List<String>> getSheetData(String spreadsheetToken, String sheetId) {
+        List<List<String>> dataList = new ArrayList<>();
+
+        String tenantToken = getTenantToken();
+        if (sheetId == null) {
+            sheetId = getFirstSheetId(spreadsheetToken);
+        }
+
+        Long size = restTemplate.getForObject("http://localhost:9003/assets/carbonProject/rowCount", Long.class);
+
+        if (size == null) {
+            log.warn("project表无数据");
+            return dataList;
+        }
+        size++;
+        String url = "https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/" +
+                spreadsheetToken + "/values/" + sheetId + "!A1:AW" + size;
+
+        String result = HttpUtil.createRequest(Method.GET, url)
+                .header(Header.AUTHORIZATION, tenantToken)
+                .execute().body();
+
+        JSONObject object = JSON.parseObject(result);
+        if (object.getInteger("code") != 0) {
+            log.error("获取表格数据失败: {}", object.getString("msg"));
+            return dataList;
+        }
+
+        JSONObject data = object.getJSONObject("data");
+        JSONObject valueRange = data.getJSONObject("valueRange");
+        com.alibaba.fastjson.JSONArray values = valueRange.getJSONArray("values");
+
+        if (values == null) {
+            log.warn("values在JSON中不存在");
+            return dataList;
+        }
+
+        for (int i = 0; i < values.size(); i++) {
+            com.alibaba.fastjson.JSONArray row = values.getJSONArray(i);
+            List<String> rowList = new ArrayList<>();
+            if (row != null) {
+                for (int j = 0; j < row.size(); j++) {
+                    rowList.add(row.getString(j));
+                }
+            }
+            dataList.add(rowList);
+        }
+        return dataList;
+    }
+
+    /**
+     * 更新整个飞书表格的数据
+     * @param spreadsheetToken 飞书表格的token
+     * @param data 二维列表，每一行是一个字符串列表
+     * @return 是否成功
+     */
+    public static Boolean updateSheetData(String spreadsheetToken, List<List<String>> data) {
+        return updateSheetData(spreadsheetToken, sheet_id_2_1, data);
+    }
+
+    /**
+     * 更新指定工作表的数据
+     * @param spreadsheetToken 飞书表格的token
+     * @param sheetId 工作表的id，如果为null则使用第一个工作表
+     * @param data 二维列表，每一行是一个字符串列表
+     * @return 是否成功
+     */
+    public static Boolean updateSheetData(String spreadsheetToken, String sheetId, List<List<String>> data) {
+        String tenantToken = getTenantToken();
+
+        // 如果未指定sheetId，获取第一个工作表
+        if (sheetId == null) {
+            sheetId = getFirstSheetId(spreadsheetToken);
+        }
+
+        Long maxCols = (long) data.stream().mapToInt(List::size).max().orElse(0);
+        String endCol = getColumnLetter(maxCols);
+        String range = sheetId + "!A1:" + endCol + data.size();
+
+        String url = "https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/" + spreadsheetToken + "/values_batch_update";
+
+        cn.hutool.json.JSONObject body = new cn.hutool.json.JSONObject();
+        cn.hutool.json.JSONArray valueRanges = new cn.hutool.json.JSONArray();
+
+        cn.hutool.json.JSONObject valueRange = new cn.hutool.json.JSONObject();
+        valueRange.set("range", range);
+        valueRange.set("values", data);
+        valueRanges.add(valueRange);
+
+        body.set("valueRanges", valueRanges);
+        String rawJSON = body.toString();
+
+        String result = HttpUtil.createRequest(Method.POST, url)
+                .header("Authorization", tenantToken)
+                .header(Header.CONTENT_TYPE, "application/json")
+                .body(rawJSON)
+                .execute().body();
+
+        JSONObject object = JSON.parseObject(result);
+        if (object.getInteger("code") != 0) {
+            log.error("更新表格数据失败: {}", object.getString("msg"));
+            return false;
+        }
+        return true;
+    }
+
+    public static String getSpreadsheetToken(String nodeToken) {
+        String tenantToken = getTenantToken();
+        String url = "https://open.feishu.cn/open-apis/wiki/v2/spaces/get_node?token=" + nodeToken;
+
+        String result = HttpUtil.createRequest(Method.GET, url)
+                .header(Header.AUTHORIZATION, tenantToken)
+                .header("Content-Type", "application/json")
+                .execute().body();
+
+        JSONObject object = JSON.parseObject(result);
+        if (object.getInteger("code") == 0) {
+            JSONObject node = object.getJSONObject("data").getJSONObject("node");
+            if (node != null && !node.isEmpty()) {
+                return node.getString("obj_token");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取表格的第一个工作表ID
+     */
+    private static String getFirstSheetId(String spreadsheetToken) {
+        String tenantToken = getTenantToken();
+        String url = "https://open.feishu.cn/open-apis/sheets/v3/spreadsheets/" + spreadsheetToken + "/sheets/query";
+
+        String result = HttpUtil.createRequest(Method.GET, url)
+                .header(Header.AUTHORIZATION, tenantToken)
+                .execute().body();
+
+        JSONObject object = JSON.parseObject(result);
+        if (object.getInteger("code") == 0) {
+            JSONObject data = object.getJSONObject("data");
+            com.alibaba.fastjson.JSONArray sheets = data.getJSONArray("sheets");
+            if (sheets != null && !sheets.isEmpty()) {
+                JSONObject firstSheet = sheets.getJSONObject(0);
+                return firstSheet.getString("sheet_id");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 将列数转换为列字母（A, B, C, ..., AA, AB, ...）
+     */
+    private static String getColumnLetter(Long columnNumber) {
+        StringBuilder result = new StringBuilder();
+        while (columnNumber > 0) {
+            columnNumber--;
+            result.insert(0, (char) ('A' + columnNumber % 26));
+            columnNumber /= 26;
+        }
+        return result.toString();
+    }
 }

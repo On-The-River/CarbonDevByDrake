@@ -1,5 +1,7 @@
 package com.carbon.auth.controller;
 
+import com.carbon.auth.entity.CarbonProjectQueryVo;
+import com.carbon.auth.entity.VerifyResult;
 import com.carbon.auth.service.LoginService;
 import com.carbon.auth.service.SmsService;
 import com.carbon.common.utils.HttpContextUtils;
@@ -7,7 +9,9 @@ import com.carbon.domain.auth.param.ForgotPasswordParam;
 import com.carbon.domain.auth.param.LoginParam;
 import com.carbon.domain.auth.param.RegisterParam;
 import com.carbon.domain.auth.vo.LoginInfoVo;
+import com.carbon.domain.common.ApiCode;
 import com.carbon.domain.common.ApiResult;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +87,18 @@ public class LoginController {
     @ApiOperation(value = "验证账户是否存在", notes = "验证账户是否存在,存在返回false")
     public ApiResult<Boolean> verifyAccountName(@PathVariable String accountName) {
         return ApiResult.ok(loginService.verify(accountName));
+    }
+
+    @GetMapping("/verifyEmail/{email}")
+    @ApiOperation(value = "验证邮箱是否存在", notes = "验证邮箱是否存在,存在返回false")
+    public ApiResult<Boolean> verifyEmail(@PathVariable String email) {
+        // 使用loginService.verifyEmail方法检查邮箱是否已存在
+//        Boolean isUnique = loginService.verifyEmail(email);;
+//        System.out.println("邮箱是否已存在：" + ApiResult.ok(isUnique));
+        // 返回true表示邮箱未被注册，false表示邮箱已存在
+
+//        ApiResult<CarbonProjectQueryVo> ok = ApiResult.ok(Vo);
+        return ApiResult.ok();
     }
 }
 

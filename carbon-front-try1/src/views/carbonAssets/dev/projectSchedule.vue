@@ -33,7 +33,7 @@ export default {
       jsApiList: ["DocsComponent"],
       lang: "",
       isShow: false,
-      fileUrl: "https://zfx2bso661.feishu.cn/sheets/shtcnoHokr9Y57IRpgiWODMHaHd",
+      fileUrl: "https://scn57kg4m083.feishu.cn/wiki/IyTEw27c5iptASkRTpTcLO9Xn0s",
       fileToken: "ur-270qb6i414la2ktBGkJGw1ggiBy05HK3p100hhA00tjB",
       // replaceTextList 高量区数据 textList替换数据 后面再字典加
       positionList: [],

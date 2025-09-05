@@ -48,6 +48,7 @@
         cm.project_scope_code,
         cm.project_scope,
         cm.project_owner,
+        cm.project_verifier,
         cm.certified_standard_code,
         s1.item_ch certified_Standard,
         cm.methodology_name,

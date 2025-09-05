@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carbon.assets.common.enums.ProjectStatus;
@@ -68,10 +69,17 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
     private CarbonResourceFileService carbonResourceFileService;
     @Resource
     private RocketMQTemplate mqTemplate;
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
 
     @Autowired
     DictMapper dictMapper;
 
+
+    private void triggerSyncToFeishu(Long projectId) {
+        Message<Long> message = MessageBuilder.withPayload(projectId).build();
+        rocketMQTemplate.send(RocketMqName.DATABASE_TO_FEISHU_SYNC, message);
+    }
 
     @Override
     public Boolean delDataSubmissionPage(String id) {
@@ -142,37 +150,18 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
     }
 
     @Override
-    public CarbonProjectQueryVo addCarbonProject(CarbonProjectAddParam param) {
-        //log.info("----> CarbonProjectAddParam: {}", JSONUtil.toJsonStr(param));
+    public List<CarbonProject> selectProjectAll() {
+        return carbonProjectMapper.selectList(new LambdaQueryWrapper<>());
+    }
 
+    @Override
+    public CarbonProjectQueryVo addCarbonProject(CarbonProjectAddParam param) {
         CarbonProject carbonProject = BeanUtil.copyProperties(param, CarbonProject.class);
         carbonProject.setProjectStatus(ProjectStatus.STATUS_1.getStatus());
         carbonProject.setTenantId(getCurrentTenantId());
-        // log.info("----> Save: carbonProject :{}",carbonProject);
-        // carbonProject.setTenantId(1L);
         save(carbonProject);
 
-//        ProjectApproval approval = ProjectApproval.builder()
-//                .projectId(carbonProject.getId())
-//                .legalPersonName(handleNull(carbonProject.getLegalPersonName()))
-//                .legalPersonPhone(handleNull(carbonProject.getLegalPersonPhone()))
-//                .ownerName(handleNull(carbonProject.getOwnerName()))
-//                .projectName(handleNull(carbonProject.getProjectName()))
-//                .carbonMethodology(handleNull(carbonProject.getCarbonMethodology()))
-//                .country(handleNull(carbonProject.getCountry()))
-//                .province(handleNull(carbonProject.getProvince()))
-//                .city(handleNull(carbonProject.getCity()))
-//                .address(handleNull(carbonProject.getAddress()))
-//                .developAgencies(handleNull(carbonProject.getAssetsDevelopAgency()))
-//                .principalName(handleNull(carbonProject.getPrincipalName()))
-//                .principalPhone(handleNull(carbonProject.getPrincipalPhone()))
-//                .projectIntroduction(handleNull(carbonProject.getProjectIntroduction()))
-//                .build();
-//        Message<ProjectApproval> msg= MessageBuilder.withPayload(approval).build();
-//        mqTemplate.syncSend(RocketMqName.ProjectApproval_MSG,msg,500000, RocketDelayLevelConstant.SECOND5);
-//
-//        Message<CarbonProjectAddParam> msg2= MessageBuilder.withPayload(param).build();
-//        mqTemplate.syncSend(RocketMqName.ProjectAdd_MSG,msg2,500000, RocketDelayLevelConstant.SECOND1);
+        triggerSyncToFeishu(carbonProject.getId());
         return getCarbonProjectById(carbonProject.getId());
     }
 
@@ -201,7 +190,11 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
             }
         }
         carbonResourceFileService.saveBatch(files);
-        return updateById(carbonProject);
+        boolean result = updateById(carbonProject);
+        if (result) {
+            triggerSyncToFeishu(param.getId());
+        }
+        return result;
     }
 
     @Override
@@ -228,6 +221,7 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
             }
         }
         carbonResourceFileService.saveBatch(files);
+        triggerSyncToFeishu(param.getId());
     }
 
     @Override

@@ -149,6 +149,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JUnit3 Test Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -666,49 +667,50 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JUnit.CarbonProjectContentServiceImplTest.testGetCarbonProjectContentPageList.executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.AssetsApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.AuthApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.ChainMakerApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.GateApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.MqApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.SystemApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.TradeApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit3&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3&quot;: &quot;junit.framework.TestCase&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/QST_Projs/Carbon/CarbonDevByDrake/carbon-front-try1/src/views&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\IntelliJ IDEA 2024.1.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;应用程序.test.executor&quot;: &quot;Run&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.CarbonProjectContentServiceImplTest.testGetCarbonProjectContentPageList.executor": "Run",
+    "Maven.carbon-frame [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.AssetsApplication.executor": "Debug",
+    "Spring Boot.AuthApplication.executor": "Debug",
+    "Spring Boot.ChainMakerApplication.executor": "Debug",
+    "Spring Boot.GateApplication.executor": "Debug",
+    "Spring Boot.MqApplication.executor": "Debug",
+    "Spring Boot.SystemApplication.executor": "Debug",
+    "Spring Boot.TradeApplication.executor": "Debug",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit3",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit3": "junit.framework.TestCase",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/QST_Projs/Carbon/CarbonDevByDrake/carbon-mq/src/main/java/com/carbon/mq/feishu",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.test.executor": "Run"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;redis&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "redis"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
     <option name="stackFrameCustomizationEnabled" value="false" />
@@ -718,6 +720,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-mq\src\main\java\com\carbon\mq\feishu" />
+      <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-front-try1\src\views\carbonAssets" />
       <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-system\src\main\java\com\carbon\system\config" />
       <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-front-try1\src\layout\components\Sidebar" />
     </key>
@@ -733,8 +737,11 @@
       <recent name="com.carbon.assets.mapper" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.carbon.trade.config" />
-      <recent name="com.carbon.assets.config" />
+      <recent name="com.carbon.system.mapper" />
+      <recent name="com.carbon.system.service.impl" />
+      <recent name="com.carbon.system.entity" />
+      <recent name="com.carbon.system.service" />
+      <recent name="com.carbon.system.param" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -766,13 +773,14 @@
           <value>
             <set>
               <option value="ChainMakerApplication" />
+              <option value="GateApplication" />
             </set>
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.TradeApplication">
+  <component name="RunManager" selected="Spring Boot.AuthApplication">
     <configuration name="test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test" />
       <module name="carbon-common" />
@@ -801,6 +809,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="GateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="carbon-gate" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.carbon.gate.GateApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MqApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="carbon-mq" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.carbon.mq.MqApplication" />
@@ -823,8 +838,9 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Spring Boot.AssetsApplication" />
+      <item itemvalue="Spring Boot.GateApplication" />
       <item itemvalue="Spring Boot.MqApplication" />
+      <item itemvalue="Spring Boot.AssetsApplication" />
       <item itemvalue="Spring Boot.AuthApplication" />
       <item itemvalue="Spring Boot.ChainMakerApplication" />
       <item itemvalue="Spring Boot.SystemApplication" />
@@ -869,7 +885,7 @@
       <workItem from="1756457264160" duration="26771000" />
       <workItem from="1756626017545" duration="10339000" />
       <workItem from="1756688694192" duration="89856000" />
-      <workItem from="1756954068381" duration="7875000" />
+      <workItem from="1756954068381" duration="38010000" />
     </task>
     <servers />
   </component>
@@ -920,9 +936,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/controller/CarbonTradeQuoteController.java</url>
+          <url>file://$PROJECT_DIR$/carbon-assets/src/main/java/com/carbon/assets/controller/CarbonCreditAssetsController.java</url>
           <line>44</line>
-          <option name="timeStamp" value="6" />
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/controller/FeishuAPI.java</url>
+          <line>190</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

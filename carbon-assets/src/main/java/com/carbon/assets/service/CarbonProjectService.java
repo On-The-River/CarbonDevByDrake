@@ -57,6 +57,8 @@ public interface CarbonProjectService extends BaseService<CarbonProject> {
      */
     Paging<CarbonProjectListVo> getDataSubmissionPage(CarbonProjectQueryParam param);
 
+    List<CarbonProject> selectProjectAll();
+
     /**
      * 添加减排项目
      * @param param 参数

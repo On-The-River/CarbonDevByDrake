@@ -9,21 +9,13 @@
 </template>
 <script>
 import "@/api/feishuSdk.js";
-import {getAccoutBaseInfo} from "@/api/tenant";
-import Cookies from 'js-cookie'
-import { getAppId } from "@/config/dictHelper";
-import {
-  getFeishuInformation,
-  putFeishuUpdateByNum,
-  getFeishuFormInformation
-} from "@/api/feishuApi";
 
 export default {
   name: "approve",
 
   data() {
     return {
-      baseInfo:{},
+      baseInfo: {},
       app_id: "cli_a205c375b139d013",
       code: "",//测试写死
       openId: "",
@@ -35,34 +27,27 @@ export default {
       jsApiList: ["DocsComponent"],
       lang: "",
       isShow: false,
-      fileUrl: "https://zfx2bso66l.feishu.cn/sheets/shtcnbYcQtLLL3qrapu0gj1xELe",
+      fileUrl: "https://scn57kg4m083.feishu.cn/wiki/BzUew6hCDiePr4kBaM6ckNjJnOc",
       fileToken: "",
       //  replaceTextList 高量区数据 textList替换数据  后面再字典加
-      positionList:[],
-      position:"",
-      templateNum:'',
+      positionList: [],
+      position: "",
+      templateNum: '',
 
     };
   },
 
   methods: {
-     
-
     sendCode() {
-
-      let url = this.fileUrl;
-       window.location.href=url
-      //window.open(url);
+      window.location.href = this.fileUrl;
     },
 
   },
   mounted() {
-   
-       this.sendCode();
-      
+    this.sendCode();
   },
   created() {
-  //  this.templateNum = this.$route.query.templateNum;
+    //  this.templateNum = this.$route.query.templateNum;
   },
 };
 </script>
@@ -77,7 +62,8 @@ export default {
   overflow: auto;
   font-family: PingFangSC-Regular, PingFang SC;
 }
-.top-title{
+
+.top-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -86,36 +72,42 @@ export default {
   /* height: 24px; */
 
 }
-.pro-title{
+
+.pro-title {
   font-size: 18px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: #24A776;
   line-height: 18px;
 }
-.feishu-btn{
+
+.feishu-btn {
   background: #26B581;
   border-radius: 3px;
   padding: 9px 12px;
   color: #FFFFFFFF;
   border: none;
 }
-.feishu-btn:active{
+
+.feishu-btn:active {
   opacity: 0.8;
 }
-.span-text > span{
+
+.span-text > span {
   font-size: 13px;
   padding-left: 4px;
- 
+
   font-weight: 400;
   color: #808EA5;
   line-height: 13px;
 }
-.ff-ppc{
- font-family: PingFangSC-Regular, PingFang SC;
+
+.ff-ppc {
+  font-family: PingFangSC-Regular, PingFang SC;
 }
-.mag-rl{
-  margin: 0px 8px ;
+
+.mag-rl {
+  margin: 0px 8px;
 }
 
 </style>

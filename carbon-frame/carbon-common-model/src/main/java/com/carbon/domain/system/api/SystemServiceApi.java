@@ -28,6 +28,12 @@ import java.util.Map;
 @RequestMapping("system")
 public interface SystemServiceApi {
 
+	@PostMapping("/feishu/syncProjectToFeishu/{projectId}")
+	ApiResult syncProjectToFeishu(@Valid @PathVariable Long projectId);
+
+	@PostMapping("/feishu/syncToDatabase/{syncConfigId}")
+	ApiResult syncFeishuToDatabase(@Valid @PathVariable String syncConfigId);
+
 	/**
 	 * 添加账号
 	 * @param param SysAccountParam

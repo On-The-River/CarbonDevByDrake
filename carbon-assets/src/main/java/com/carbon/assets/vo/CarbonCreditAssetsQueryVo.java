@@ -136,5 +136,27 @@ public class CarbonCreditAssetsQueryVo implements Serializable{
     @ApiModelProperty(value = "领域编码")
     private String ProjectScopeCode;
 
+    @ApiModelProperty(value = "创建时间")
+    private Date createdTime;
 
+    @ApiModelProperty(value = "更新时间")
+    private Date updatedTime;
+
+    @ApiModelProperty(value = "创建者ID")
+    private Long creatorId;
+
+    @ApiModelProperty(value = "更新者ID")
+    private Long updatedId;
+
+    @ApiModelProperty(value = "方法学编号")
+    private String methodologySn;
+
+    @ApiModelProperty(value = "方法学状态")
+    private String status;
+
+    @ApiModelProperty(value = "方法学状态编码")
+    private String statusCode;
+
+    @ApiModelProperty(value = "方法学id")
+    private Long methodologyId;
 }

@@ -47,20 +47,25 @@
     </select>
 
     <select id="getCarbonCreditAssetsPageList" resultType="com.carbon.assets.vo.CarbonCreditAssetsQueryVo">
-        select <include refid="Base_Column_List"/>,
+        select distinct <include refid="Base_Column_List"/>,
 
         ce.name carbonExchangeName,
         cmp.project_introduction,
         cml.name carbonMethodologyName,
         cml.certification_criteria,
+        cml.status,
         cmr.project_status_code,
         cmr.project_name,
         cmr.project_scope_code,
         cmr.project_industry_code,
         cmr.project_scope_type_code,
-        cmr.project_scope_type
+        cmr.project_scope_type,
+        cmr.methodology_sn,
+        cml.status_code,
+        cml.id as methodologyId
         from carbon_credit_assets cca
         left join carbon_exchange ce on ce.id = cca.carbon_exchange_id
+--         left join carbon_metaregistry cmp on cmp.id = cca.carbon_project_id
         left join carbon_metaregistry_project cmp on cmp.metaregistry_id = cca.carbon_project_id
         left join carbon_metaregistry cmr on cmr.id = cmp.metaregistry_id
         left join carbon_methodology cml on cml.dict_code = cmr.methodology_code
