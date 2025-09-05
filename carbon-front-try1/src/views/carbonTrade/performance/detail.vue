@@ -1,11 +1,13 @@
 <template>
 <div>
      <el-dialog top="15px" v-if="isInquiry" :title="inquiryForm.title" :visible.sync="show" width="720px" :before-close="clickClose">
+       <!--:rules="rules"-->
          <el-form
           label-position="left"
           label-width="130px"
           :model="inquiryForm"
-          :rules="rules">
+
+         >
           <el-form-item label="采购方联系人姓名" prop="institutionName">
             <el-input
               disabled
@@ -16,7 +18,7 @@
           </el-form-item>
           <el-form-item label="资产类型" prop="assetTypeName">
             <el-input
-                disabled 
+                disabled
                 v-model="inquiryForm.assetTypeName"
                 size="medium"
                 class="contentItem">
@@ -85,11 +87,12 @@
      </el-dialog>
 
      <el-dialog top="15px" v-else :title="inquiryForm.title" :visible.sync="show" width="720px" :before-close="clickClose">
-         <el-form
+       <!--:rules="rules"-->
+       <el-form
           label-position="left"
           label-width="130px"
           :model="inquiryForm"
-          :rules="rules">
+          >
           <el-form-item label="供应方联系人姓名" prop="institutionName">
             <el-input
               disabled
@@ -100,7 +103,7 @@
           </el-form-item>
           <el-form-item label="资产类型" prop="assetTypeName">
             <el-input
-                disabled 
+                disabled
                 v-model="inquiryForm.assetTypeName"
                 size="medium"
                 class="contentItem">
@@ -171,7 +174,7 @@
 </div>
 </template>
 <script>
-import {getDiliveryMethodeDict, getExchangeDict} from "@/config/dictHelper";
+import {getDeliveryMethodDict, getExchangeDict} from "@/config/dictHelper";
 import { updateCarbonTradePriceDetail } from "@/api/carbonAssetApi";
 import { error } from 'console';
 export default {
@@ -213,8 +216,8 @@ export default {
         ],
       },
       selectDate: "",
-      dialogFormVisible: false, // 询价dialog,
-      detailData:{},
+      // dialogFormVisible: false, // 询价dialog,
+
       show: false,
       detailData:{},
       isInquiry:true,
@@ -239,22 +242,27 @@ export default {
         this.show = this.dialogFormVisible;
       }
   },
-  mounted() {
-    this.initParams()
-  },
+
   methods: {
     initParams() {
         this.detailData = this.data;
         this.inquiryForm.assetTypeName = this.detailData.assetTypeName
         this.inquiryForm.projectTypeName = this.detailData.projectTypeName
-        this.inquiryForm.expirationDate = this.detailData.expirationDate.split(' ')[0]
+        if(this.detailData.expirationDate)
+        {
+          this.inquiryForm.expirationDate = this.detailData.expirationDate.split(' ')[0]
+
+        }
         debugger
         this.inquiryForm.quantity = this.detailData.tradeQuantity
         this.inquiryForm.price = this.detailData.assetUnitPrice
         this.inquiryForm.deliveryMethodName = this.detailData.deliveryMethodName
-        this.inquiryForm.deliveryTime = this.detailData.deliveryTime.split(' ')[0]
+        if(this.detailData.deliveryTime)
+        {
+          this.inquiryForm.deliveryTime = this.detailData.deliveryTime.split(' ')[0]
+        }
         this.inquiryForm.deliveryExchangeName =  this.detailData.deliveryExchangeName
-        if (this.detailData.tradeRole == '0270000001') {
+        if (this.detailData.tradeRole === '0270000001') {
             this.isInquiry = true
             this.inquiryForm.institutionName = this.detailData.buyerName
             this.inquiryForm.title = "报价单";
@@ -304,14 +312,12 @@ export default {
        })
     }
   },
-  created() {
-   
-  },
+  created() { },
   mounted() {
-    this.initParams()
+    this.initParams();
     this.show = this.dialogFormVisible;
 
-    let data = getDiliveryMethodeDict(this.$store);
+    let data = getDeliveryMethodDict(this.$store);
     this.deliverMethodList = [];
     data.map((v) => {
         let item = {

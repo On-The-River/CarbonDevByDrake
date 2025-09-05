@@ -403,7 +403,7 @@ import { intendedTransaction } from "@/api/carbonAssetApi";
 import { getTenantInfo } from "@/api/systemadmin";
 import { verifyPhoneNumber, emailVerify } from "@/libs/public";
 import {
-  getDiliveryMethodeDict,
+  getDeliveryMethodDict,
   getExchangeDict,
   getAssetTypeDict,
   getProjectTypeDict
@@ -773,7 +773,7 @@ export default {
     this.show = this.dialogFormVisible;
     // this.initParams();
 
-    let data = getDiliveryMethodeDict(this.$store);
+    let data = getDeliveryMethodDict(this.$store);
     this.deliverMethodList = [];
     data.map(v => {
       let item = {

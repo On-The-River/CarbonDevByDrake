@@ -471,8 +471,8 @@ export default {
         getCarbonTradePriceList(data)
           .then(res => {
             this.list = res.data.records;
-            this.total = res.data.total;
-            this.current = res.data.current;
+            this.total = Number(res.data.total);
+            this.current = Number(res.data.current);
             this.pageCount = Math.ceil(
               parseInt(res.data.total) / this.pageSize
             );
@@ -558,8 +558,8 @@ export default {
       getCarbonTradePriceList(data)
         .then(res => {
           this.list = res.data.records;
-          this.total = res.data.total;
-          this.current = res.data.current;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           // this.list.map((v) => {
           //   v.projectStatusName = this.pickProjectName(v.projectStatus);
@@ -586,8 +586,8 @@ export default {
       getCarbonTradePriceList(data)
         .then(res => {
           this.list = res.data.records;
-          this.total = res.data.total;
-          this.current = res.data.current;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(element => {
             element.assetTypeName =

@@ -123,7 +123,7 @@
 <script>
 import { startTrading } from "@/api/carbonAssetApi";
 import {
-  getDiliveryMethodeDict,
+  getDeliveryMethodDict,
   getExchangeDict,
   getAssetTypeDict,
   getProjectTypeDict,
@@ -131,7 +131,7 @@ import {
 } from "@/config/dictHelper";
 import { isProjectTypeDisable } from "@/libs/public";
 import { getAccontEnterpriseInfo } from "@/api/tenant";
-import { getAccoutEnterPriseInfo } from "@/api/tenant";
+import { getAccountEnterPriseInfo } from "@/api/tenant";
 
 export default {
   name: "companyPackage",
@@ -186,7 +186,7 @@ export default {
         ]
       },
       selectDate: "",
-      dialogFormVisible: false, // 询价dialog,
+      // dialogFormVisible: false, // 询价dialog,
       btnText: "询价",
       subForm: {
         institutionName: "",
@@ -280,13 +280,14 @@ export default {
         : this.subForm.deliveryExchange;
 
       if (this.form && this.form.publisherId) {
-        getAccoutEnterPriseInfo(this.form.publisherId).then(res => {
+        getAccountEnterPriseInfo(this.form.publisherId).then(res => {
           this.subForm.institutionName = res.tenantName;
         });
       }
 
       this.subTitle = this.title;
       this.subForm = this.form;
+      console.log("form",this.form);
 
       this.subForm.assetUnitPrice =
         this.subForm.assetUnitPrice === null ||
@@ -295,7 +296,7 @@ export default {
           : this.subForm.assetUnitPrice;
 
       this.show = this.dialogFormVisible;
-      let data = getDiliveryMethodeDict(this.$store);
+      let data = getDeliveryMethodDict(this.$store);
       this.deliverMethodList = [];
       data.map(v => {
         let item = {
@@ -335,7 +336,7 @@ export default {
       console.log("assetTypeList");
       console.log(this.assetTypeList);
       debugger;
-      
+
 
       this.projectTypeList = [];
       data = getProjectTypeDict(this.$store);

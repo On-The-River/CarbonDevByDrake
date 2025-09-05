@@ -155,7 +155,7 @@
           <el-table-column min-width="10"></el-table-column>
           <el-table-column label="序号" align="left" min-width="40">
             <template slot-scope="scope"
-              ><span>{{ getCurListNo(scope, $index) }}</span></template
+              ><span>{{ getCurListNo(scope) }}</span></template
             >
           </el-table-column>
           <el-table-column
@@ -331,8 +331,8 @@ export default {
       getCarbonProjectPageList(data)
         .then(res => {
           this.list = res.data.records;
-          this.total = res.data.total;
-          this.current = res.data.current;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(v => {
             for (var i in v) {
@@ -493,8 +493,8 @@ export default {
       getCarbonProjectPageList(data)
         .then(res => {
           this.list = res.data.records;
-          this.total = res.data.total;
-          this.current = res.data.current;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(v => {
             // v.projectStatusName = this.pickProjectName(v.projectStatus);

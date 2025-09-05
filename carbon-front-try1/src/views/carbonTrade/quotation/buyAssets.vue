@@ -156,7 +156,7 @@ import { validateIsEmpty } from "@/libs/inputValidate";
 import { pushQuote } from "@/api/carbonAssetApi";
 import orderResultVue from "./orderResult.vue";
 import {
-  getDeliveryMethodeDict,
+  getDeliveryMethodDict,
   getExchangeDict,
   getAssetTypeDict,
   getProjectTypeDict,
@@ -172,13 +172,10 @@ export default {
     orderResultVue
   },
   props: {
-    dialogFormVisible: {
-      type: Boolean,
-      default: false
-    },
+    dialogFormVisible: false,
     accountInfo: {
       type: Array,
-      default: []
+      default: ()=>[]
     }
   },
   data() {
@@ -265,7 +262,7 @@ export default {
       btnText: "提交",
       show: false,
       tipTitle: "提示",
-      tipConetent: "您的采购单已提交，可在供需行情中查看。确定为您跳转供需行情沟通",
+      tipContent: "您的采购单已提交，可在供需行情中查看。确定为您跳转供需行情沟通",
       tipBottomTxt: "如需帮助，可添加交易专员企业微信，为您做开户引导服务",
       tipImg: "@/assets/imgs/head.gif",
       comformDialogFormVisible: false,
@@ -386,7 +383,7 @@ export default {
   mounted() {
     this.initParams();
     this.show = this.dialogFormVisible;
-    let data = getDiliveryMethodeDict(this.$store);
+    let data = getDeliveryMethodDict(this.$store);
     this.deliverMethodList = [];
     data.map(v => {
       let item = {

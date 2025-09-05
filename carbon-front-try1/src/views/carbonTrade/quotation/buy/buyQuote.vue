@@ -83,7 +83,7 @@
           <el-input
             style="width: 600px"
             class="selectbox-input"
-            v-model="searchKeyWord"
+            v-model="searchKeyword"
             @keyup.enter.native="onClickSearch"
             clearable
             @clear="onClickSearch"
@@ -209,7 +209,7 @@
       :bottomTxt="tipBottomTxt"
       :img="tipImg"
       :dialogFormVisible="comformDialogFormVisible"
-      @changeComfromDialogVisible="listencomformDialogFormVisible"
+      @changeConformDialogVisible="listenConformDialogFormVisible"
     />
   </div>
 </template>
@@ -248,7 +248,7 @@ export default {
       assetStatusList: [],
       seletedProject: "",
 
-      orderForm: null,
+      orderForm: {},
       projectList: [],
       pickerOptions: {
         shortcuts: [
@@ -279,12 +279,12 @@ export default {
       selectDate: "",
       seletedField: "",
       selectEndDate: "",
-      searchKeyWord: "",
+
       exchangesUrl:
         "https://carbonmsger.feishu.cn/drive/folder/fldcn66yo6D4OoXwZqEMHL6OQSg?from=space_persnoal_filelist",
       title: "",
       isSearch: false, //判断是否在搜索
-      form: null,
+      form: {},
       btnText: "报价",
       tipTitle: "报价提示",
       // tipConetent: '您的报价已提交，可在采购行情中查看，确定为您跳转供需行情',
@@ -340,7 +340,7 @@ export default {
     changeOrderDialogFormVisible(res) {
       this.orderDialogFormVisible = res;
     },
-    listenconformDialogFormVisible(res) {
+    listenConformDialogFormVisible(res) {
       this.conformDialogFormVisible = res;
       if (res) {
         this.$router.push("/trade/offer");
@@ -383,6 +383,7 @@ export default {
     },
     // 按关键字搜索交易所
     onClickSearch() {
+      console.log(this.searchKeyword);
       if (this.searchKeyword) {
         this.isSearch = true;
         // searchKeyword(param).then((res) => {
@@ -410,7 +411,8 @@ export default {
           pageNum: 1,
           pageSize: this.pageSize
         };
-        debugger;
+
+        console.log("quoteData",data);
         this.getQuotePageList(data);
       } else {
         this.isSearch = false;
@@ -531,6 +533,7 @@ export default {
           this.projectField.push(item);
         });
       }
+      this.projectField[0].value="";
     },
     // render-header方法
     renderCheckHeader(h, { column, $index }) {
@@ -549,7 +552,8 @@ export default {
     // checkbox end
   },
   created() {
-    this.handleChangeVisitType();
+    // this.handleChangeVisitType();
+
   },
   mounted() {
     this.getList(0);
@@ -567,6 +571,7 @@ export default {
       this.assetStatusList.push(item);
     });
     this.assetStatusList[0].value = "";
+
     data = getProjectTypeDict(this.$store);
     this.projectList = [];
     data.map(v => {
@@ -578,6 +583,7 @@ export default {
       item.label = v.name;
       this.projectList.push(item);
     });
+    this.projectList[0].value="";
   }
 };
 </script>

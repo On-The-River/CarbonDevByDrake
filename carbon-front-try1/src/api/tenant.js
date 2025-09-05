@@ -315,7 +315,7 @@ export function getUpLoadFileParams() {
         token: token
     }
 }
-export function getUpLoadProjectParams() {
+export function getUploadProjectParams() {
     let token = !store.getters.token ? sessionStorage.getItem('token') : store.getters.token;
     return {
         url: `${SettingMer.apiBaseURL}/system/oss/uploadFiles`,

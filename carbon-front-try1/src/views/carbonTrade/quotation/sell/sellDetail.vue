@@ -6,11 +6,12 @@
     width="720px"
     :before-close="clickClose"
   >
+    <!--:rules="rules"-->
     <el-form
       label-position="left"
       label-width="130px"
       :model="subForm"
-      :rules="rules"
+
     >
       <el-form-item label="供应方" prop="institutionName">
         <el-input
@@ -93,7 +94,7 @@
   </el-dialog>
 </template>
 <script>
-import { getDiliveryMethodeDict, getExchangeDict } from "@/config/dictHelper";
+import { getDeliveryMethodDict, getExchangeDict } from "@/config/dictHelper";
 import { getAccountEnterPriseInfo } from "@/api/tenant";
 export default {
   name: "companyPackage",
@@ -145,7 +146,7 @@ export default {
         ]
       },
       selectDate: "",
-      dialogFormVisible: false, // 询价dialog,
+      // dialogFormVisible: false, // 询价dialog,
       btnText: "确定",
       subForm: {},
       subTitle: "",
@@ -198,7 +199,7 @@ export default {
     this.subForm = this.form;
     this.initParams();
     this.show = this.dialogFormVisible;
-    let data = getDiliveryMethodeDict(this.$store);
+    let data = getDeliveryMethodDict(this.$store);
     this.deliverMethodList = [];
     data.map(v => {
       let item = {

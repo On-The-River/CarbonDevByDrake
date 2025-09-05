@@ -111,7 +111,6 @@ let carbonAssetManager = {
     },
     {
       path: "/carbonMethodology/editMethod",
-      name: "editSourceAsset",
       name: "editMethod",
       meta: { title: "编辑方法学", icon: "" }
     }

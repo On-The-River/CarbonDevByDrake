@@ -255,7 +255,7 @@ export default {
       pageCount: 1,
       pageSize: 10,
       value: "",
-      orderForm: null,
+      orderForm: {},
       seletedAssetStatus: "",
       assetStatusList: [],
       seletedProject: "",
@@ -288,7 +288,6 @@ export default {
       },
       selectDate: "",
       selectEndDate: "",
-      searchKeyword: "",
       isSearch: false, //是否在搜索
       exchangesUrl:
         "https://carbonmsger.feishu.cn/drive/folder/fldor66yo6D40oXwZgEMHL600Sg?from=space_personal_filelist",
@@ -307,7 +306,7 @@ export default {
       isProjectTypeDisable: false
     };
   },
-  
+
 
   methods: {
     changeAssetType() {
@@ -449,6 +448,7 @@ export default {
     clickSell(row) {
       this.title = "询价单-" + row.institutionName;
       this.orderForm = { ...row };
+      console.log("orderForm",this.orderForm);
       this.detailDialogFormVisible = false;
       this.orderDialogFormVisible = true;
       this.comformDialogFormVisible = false;
@@ -556,7 +556,7 @@ export default {
     // checkbox end
   },
   created() {
-    this.handleChangeVisitType();
+    // this.handleChangeVisitType();
   },
   mounted() {
     this.getList(1);

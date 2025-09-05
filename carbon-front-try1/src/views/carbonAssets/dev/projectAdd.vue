@@ -329,6 +329,7 @@
     <a class="list-blue-text" @click="pickMethod(scope.row)">选择</a>
   </template>
 </el-table-column>
+
 </el-table>
 <div style="margin-top: 30px; margin-bottom: 10px" class="pageBox">
   <div style="flex-grow: 1" />
@@ -359,7 +360,7 @@ import { getCountryDict } from "@/config/dictHelper";
 import { getCertificationCriteriaDict } from "@/config/dictHelper";
 import { getBusinessDict } from "@/config/dictHelper";
 import { getProjectAreaDict } from "@/config/dictHelper";
-import { 
+import {
     getMethodologyDict,
     getCityDict
 } from "@/config/dictHelper";
@@ -489,8 +490,8 @@ export default {
       loadMethodList(data)
         .then((res) => {
           this.methodList = res.data.records;
-          this.total = res.data.total;
-          this.methodCurrent = res.data.current;
+          this.total = Number(res.data.total);
+          this.methodCurrent = Number(res.data.current);
           this.pageCount = Math.ceil(
             parseInt(res.data.total) / this.methodPageSize
           );
@@ -554,12 +555,13 @@ export default {
         this.$message.error("保存失败");
       }
     },
-  
-  onCancel() {
-  if (this.fromPath == "/carbon/projectCreate/ownerAdd") {
-  } else {
-    this.$router.go(-1);
-  }
+    onCancel() {
+      if (this.fromPath == "/carbon/projectCreate/ownerAdd") {
+      } else {
+        this.$router.go(-1);
+      }
+
+
 },
 // onSubmit() {
 //   // if (this.onSave()) {
@@ -582,8 +584,8 @@ onClickSearch() {
   loadMethodList(data)
     .then((res) => {
       this.methodList = res.data.records;
-      this.total = res.data.total;
-      this.methodCurrent = res.data.current;
+      this.total = Number(res.data.total);
+      this.methodCurrent = Number(res.data.current);
       this.pageCount = Math.ceil(
         parseInt(res.data.total) / this.methodPageSize
       );
@@ -610,12 +612,13 @@ getMethodList(val) {
     certificationCriteria: this.selectedCertification[0],
     status: "0450000002",
     // status: 1,
+
   };
   loadMethodList(data)
     .then((res) => {
       this.methodList = res.data.records;
-      this.total = res.data.total;
-      this.methodCurrent = res.data.current;
+      this.total = Number(res.data.total);
+      this.methodCurrent = Number(res.data.current);
       this.pageCount = Math.ceil(
         parseInt(res.data.total) / this.methodPageSize
       );
@@ -651,6 +654,7 @@ toNext() {
   if (!(this.form.country && this.form.province && this.form.projectName && this.form.ownerName && this.form.address && this.form.assetsDevelopAgency)) {
     this.$message.error("必填项不能为空！");
   }
+
   sessionStorage.setItem("projectAdd", JSON.stringify(this.form));
   if (sessionStorage.getItem("projectAdd")) {
   } else {
@@ -688,21 +692,21 @@ changeProvince() {
     if (Array.isArray(this.form.province)) {
       this.form.province = this.form.province[0];
     }
-    
+
     console.log("cityList",this.cityList);
     // console.log(this.form);
     var provinceCode = this.form.province.slice(8, 10);
     console.log("provinceCode",provinceCode);
     var bDoOnce=true;
     for (var i in this.cityList)
-    {   
+    {
         var curCityProvinceCode = this.cityList[i].value.slice(6,8);
         if (curCityProvinceCode == provinceCode) {
             this.list.push(this.cityList[i]);
         }
     }
     console.log("list",this.list);
-    
+
     if (this.list) {
     //   for (var j in this.list) {
     //     this.nowCityList.push({ value: "012015" + j, label: this.list[j] });
@@ -744,7 +748,7 @@ formatCountry(data) {
       value: "",
       label: "",
     };
-    if (v.label == "全部") {
+    if (v.label === "全部") {
       CertificationItem.value = "";
       CertificationItem.label = v.name;
     } else {

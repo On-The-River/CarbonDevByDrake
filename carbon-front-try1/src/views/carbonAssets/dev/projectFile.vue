@@ -7,8 +7,9 @@
                         <span class="selectbox-hint">文档类型</span>
                         <div class="selectbox-deliver" />
                         <el-cascader style="width: 100px" placeholder="全部" class="selectbox-input"
-                            v-model="selectedType" options="DocumentTypeDict" clearable @clear="update"
+                            v-model="selectedType" :options="DocumentTypeDict" clearable @clear="update"
                             @change="update">
+
                         </el-cascader>
                     </div>
                     <div style="width: 380px; margin-left: 16px" class="selectbox-root">
@@ -87,12 +88,12 @@
                 </el-form-item>
                 <el-form-item>
                     <span class="label">项目文档<span style="color: red;"> *</span></span>
-                    <el-upload class="upload-demo" ref="upload" 
-                        
+                    <el-upload class="upload-demo" ref="upload"
+
                         :file-list="fileList"
-                        :auto-upload="true" 
-                        :limit="1" 
-                        :on-success="uploadSuccess" 
+                        :auto-upload="true"
+                        :limit="1"
+                        :on-success="uploadSuccess"
                         :on-preview="handleFile"
                         :headers="{ token: uploadParam.token }"
                         :action="uploadParam.url"

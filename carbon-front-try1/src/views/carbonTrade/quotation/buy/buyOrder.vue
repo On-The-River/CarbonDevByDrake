@@ -140,7 +140,7 @@ class="contentItem">
 import { startTrading } from "@/api/carbonAssetApi";
 import { isProjectTypeDisable } from "@/libs/public";
 import {
-  getDiliveryMethodeDict,
+  getDeliveryMethodDict,
   getExchangeDict,
   getAssetTypeDict,
   getProjectTypeDict,
@@ -201,7 +201,7 @@ export default {
         ]
       },
       selectDate: "",
-      dialogFormVisible: false, // 询价dialog,
+      // dialogFormVisible: false, // 询价dialog,
       btnText: "报价",
       subForm: {
         institutionName: "",
@@ -275,7 +275,7 @@ export default {
       this.subTitle = this.title;
       this.subForm = this.form;
       this.show = this.dialogFormVisible;
-      let data = getDiliveryMethodeDict(this.$store);
+      let data = getDeliveryMethodDict(this.$store);
       this.deliverMethodList = [];
       data.map(v => {
         let item = {

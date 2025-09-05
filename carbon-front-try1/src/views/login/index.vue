@@ -271,7 +271,7 @@ export default {
       this.rememberMe = !this.rememberMe;
     },
     toRegister() {
-      let routeData = this.$router.resolve({ path: 'register' });
+      let routeData = this.$router.resolve({ path: 'reg' });
       window.open(routeData.href, '_blank');
     },
     toForgetPwd() {

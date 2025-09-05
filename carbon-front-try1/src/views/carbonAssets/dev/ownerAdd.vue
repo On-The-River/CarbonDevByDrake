@@ -252,9 +252,9 @@
 
 <script>
 import * as credit from "@/api/carbonAssetApi";
-import { getUpLoadProjectParams } from "@/api/tenant";
+import { getUploadProjectParams } from "@/api/tenant";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
-import { getFeiShuUpLoadProjectParams } from "@/api/tenant";
+import { getFeiShuUploadProjectParams } from "@/api/tenant";
 export default {
   name: "ownerADD",
   data() {
@@ -654,6 +654,7 @@ export default {
 
     getOwnerList() {
       let data = this.$route.query;
+
       this.form = data.form;
       this.id = data.id;
       this.isEdit = data.isEdit;
@@ -677,7 +678,7 @@ export default {
   },
 
   mounted() {
-    this.upLoadParams = getFeiShuUpLoadProjectParams();
+    this.upLoadParams = getFeiShuUploadProjectParams();
     this.getOwnerList();
   },
 };

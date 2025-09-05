@@ -31,8 +31,8 @@
                 and (cm.name like CONCAT('%',#{param.searchKey},'%') or cm.dict_code like CONCAT('%',#{param.searchKey},'%')
                 or cm.method_code like CONCAT('%',#{param.searchKey},'%') )
             </if>
-            <if test="param.status != null and param.status != ''">
-                and cm.status_code = #{param.status}
+            <if test="param.statusCode != null and param.statusCode != ''">
+                and cm.status_code = #{param.statusCode}
             </if>
             <if test="param.fieldCode != '' and param.fieldCode != null">
                 and cm.field_Code = #{param.fieldCode}

@@ -7,11 +7,12 @@
       width="720px"
       :before-close="clickClose"
     >
+      <!--:rules="rules"-->
       <el-form
         label-position="left"
         label-width="130px"
         :model="inquiryForm"
-        :rules="rules"
+
       >
         <el-form-item label="采购方" prop="institutionName">
           <el-input
@@ -184,7 +185,7 @@
 </template>
 
 <script>
-import { getDeliveryMethodeDict, getExchangeDict } from "@/config/dictHelper";
+import { getDeliveryMethodDict, getExchangeDict } from "@/config/dictHelper";
 import { startTrading } from "@/api/carbonAssetApi";
 export default {
   name: "detail",
@@ -225,7 +226,7 @@ export default {
         ]
       },
       selectDate: "",
-      dialogFormVisible: false, // 询价dialog,
+      // dialogFormVisible: false, // 询价dialog,
       // detailData: {},
       show: false,
       isInquiry: true,
@@ -252,9 +253,6 @@ export default {
     dialogFormVisible() {
       this.show = this.dialogFormVisible;
     }
-  },
-  mounted() {
-    // this.initParams();
   },
   methods: {
     initParams() {
@@ -296,7 +294,7 @@ export default {
       this.show = false;
       this.detailData = {};
     },
-    submitInquery() {
+    submitInquiry() {
       this.clickClose();
       // let data = {
       //   assetUnitPrice: this.inquiryForm.price,
@@ -322,7 +320,7 @@ export default {
   mounted() {
     this.initParams();
     this.show = this.dialogFormVisible;
-    let data = getDeliveryMethodeDict(this.$store);
+    let data = getDeliveryMethodDict(this.$store);
     this.deliverMethodList = [];
     data.map(v => {
       let item = {

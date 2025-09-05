@@ -60,7 +60,7 @@
           <el-table-column min-width="10"></el-table-column>
           <el-table-column label="序号" align="left" min-width="60">
             <template slot-scope="scope">
-              <span>{{ getCurListNo(scope, $index) }}</span>
+              <span>{{ getCurListNo(scope) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -183,7 +183,7 @@ export default {
       openUrl: ""
     };
   },
-  mounted() {},
+
   methods: {
     cellStyle(data) {
       return cursor(data);
@@ -219,8 +219,8 @@ export default {
         loadCarbonExchangeList(data)
           .then(res => {
             this.list = res.data.records;
-            this.total = res.data.total;
-            this.current = res.data.current;
+            this.total = Number(res.data.total);
+            this.current = Number(res.data.current);
             this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
             this.list.map(v => {
               //遍历表格数据
@@ -288,8 +288,8 @@ export default {
         .then(res => {
           debugger;
           this.list = res.data.records;
-          this.total = res.data.total;
-          this.current = res.data.current;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(v => {
             //遍历表格数据
@@ -364,7 +364,7 @@ export default {
   },
 
   created() {
-    this.handleChangeVisitType();
+    // this.handleChangeVisitType();
   },
   mounted() {
     this.getList(0);

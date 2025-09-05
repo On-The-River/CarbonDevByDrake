@@ -131,7 +131,7 @@ export default {
         "https://carbonmsger.feishu.cn/drive/folder/fldcn66yo06D40oXwZqEMHL600Sg?from=space_personal_filelist",
     };
   },
-  mounted() {},
+
   methods: {
     cellStyle(data) {
       return cursor(data);
@@ -169,8 +169,8 @@ export default {
         .then((res) => {
           debugger;
           this.list = res.data.records;
-          this.total = res.data.total;
-          this.current = res.data.current;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
         })
         .catch((err) => {});
@@ -205,8 +205,8 @@ getList(page) {
   getTradeAccountList(data)
     .then((res) => {
       this.list = res.data.records;
-      this.total = res.data.total;
-      this.current = res.data.current;
+      this.total = Number(res.data.total);
+      this.current = Number(res.data.current);
       this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
     })
     .catch((error) => {});
@@ -267,7 +267,7 @@ renderCheckHeader(h, { column, $index }) {
 // checkbox end
 },
 created() {
-  this.handleChangeVisitType();
+  // this.handleChangeVisitType();
 },
 mounted() {
   this.getList(0);

@@ -438,7 +438,7 @@ export function loadMethodList(data) {
   return request({
     baseURL: 'http://localhost:9003',
     url: '/assets/carbonMethodology/getPageList',
-    method: 'GET',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data
   })

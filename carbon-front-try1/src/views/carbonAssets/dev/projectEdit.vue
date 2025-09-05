@@ -417,7 +417,8 @@ import { getProvinceDict } from "@/config/dictHelper";
 import { getCountryDict } from "@/config/dictHelper";
 import { getCityDict } from "@/config/dictHelper";
 import { getCertificationCriteriaDict } from "@/config/dictHelper";
-import { getBusinessAreaDict } from "@/config/dictHelper";
+import { getBusinessDict } from "@/config/dictHelper";
+import { getProjectAreaDict } from "@/config/dictHelper";
 import { getProjectDict } from "@/config/dictHelper";
 import { getMethodologyDict } from "@/config/dictHelper";
 import * as project from "@/api/carbonAssetApi";
@@ -731,6 +732,23 @@ export default {
         this.provinceList.push(CertificationItem);
       });
     },
+    // 格式化国家字典
+    formatCountry(data) {
+      data.map((v) => {
+        let CertificationItem = {
+          value: "",
+          label: "",
+        };
+        if (v.label === "全部") {
+          CertificationItem.value = "";
+          CertificationItem.label = v.name;
+        } else {
+          CertificationItem.value = v.value;
+          CertificationItem.label = v.name;
+        }
+        this.countryList.push(CertificationItem);
+      });
+    },
     toNext() {
       sessionStorage.setItem(
         "projectEdit-" + this.form.id,
@@ -774,14 +792,15 @@ formatCity(data) {
       value: "",
       label: "",
     };
-    if (v.label == "全部") {
+    if (v.label === "全部") {
       CertificationItem.value = "";
       CertificationItem.label = v.name;
     } else {
     CertificationItem.value = v.value;
     CertificationItem.label = v.name;
   }
-  this.countryList.push(CertificationItem);
+  this.cityList.push(CertificationItem);
+
 });
 },
 loadProject() {

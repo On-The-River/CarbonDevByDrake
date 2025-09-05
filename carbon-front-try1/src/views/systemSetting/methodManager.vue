@@ -553,7 +553,7 @@ export default {
         }
       );
     },
-    onClickSearch() {
+    onClickSearch() {//selectedStatus
       const data = {
         asc: true,
         size: this.pageSize,
@@ -569,8 +569,6 @@ export default {
       let m = this.$message.success("查询中...");
       getEscarbonMethodologyByKeyword(data)
         .then(res => {
-
-
           m.close();
           if (res.data) {
             this.list = res.data.records;
@@ -795,7 +793,7 @@ export default {
         let CertificationItem = {
           label: ""
         };
-        if (v.name == "全部") {
+        if (v.name === "全部") {
           CertificationItem.label = v.name;
         } else {
           CertificationItem.value = v.value;
@@ -807,11 +805,12 @@ export default {
     },
     // 格式化方法学状态字典
     formatMethodStatus(data) {
+      console.log("methodData",data);
       data.map(v => {
         let CertificationItem = {
           label: ""
         };
-        if (v.name == "全部") {
+        if (v.name ==="全部") {
           CertificationItem.label = v.name;
         } else {
           CertificationItem.value = v.value;

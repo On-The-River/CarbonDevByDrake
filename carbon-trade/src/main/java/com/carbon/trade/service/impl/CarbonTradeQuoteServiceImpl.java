@@ -101,9 +101,9 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
 
 
         //发送Mq 消息
-        Message<MqCarbonTradeQuote> message = MessageBuilder
-                .withPayload(BeanUtil.copyProperties(tradeQuote, MqCarbonTradeQuote.class)).build();
-        mqTemplate.syncSend(RocketMqName.FS_TEST,message,3000,RocketDelayLevelConstant.SECOND10);
+//        Message<MqCarbonTradeQuote> message = MessageBuilder
+//                .withPayload(BeanUtil.copyProperties(tradeQuote, MqCarbonTradeQuote.class)).build();
+//        mqTemplate.syncSend(RocketMqName.FS_TEST,message,3000,RocketDelayLevelConstant.SECOND10);
     }
 
     @Override
@@ -113,6 +113,20 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
 
     @Override
     public Paging<CarbonTradeQuoteQueryVo> getCarbonTradeQuotePageList(CarbonTradeQuoteQueryParam param) {
+
+//        if(param!=null)
+//        {
+//            if(param.getProjectType().substring(8).equals("000"))
+//            {
+//                param.setProjectType(null);
+//            }
+//
+//            if(param.getProjectScope().substring(8).equals("000"))
+//            {
+//                param.setProjectScope(null);
+//            }
+//
+//        }
         //分页列表按更新时间降序
         Page<?> page = getPage(param);
         page.addOrder(OrderItem.desc("ctq.updated_time"));

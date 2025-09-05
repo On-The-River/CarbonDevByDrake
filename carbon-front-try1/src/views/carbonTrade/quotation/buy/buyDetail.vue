@@ -88,7 +88,7 @@
   </el-dialog>
 </template>
 <script>
-import { getDiliveryMethodeDict, getExchangeDict } from "@/config/dictHelper";
+import { getDeliveryMethodDict, getExchangeDict } from "@/config/dictHelper";
 import { getAccountEnterPriseInfo } from "@/api/tenant";
 export default {
   name: "buyDetail",
@@ -130,7 +130,7 @@ export default {
         ]
       },
       selectDate: "",
-      dialogFormVisible: false, // 询价dialog,
+      // dialogFormVisible_Inner: false, // 询价dialog,
       btnText: "确定",
       subForm: {},
       subTitle: "",
@@ -142,8 +142,8 @@ export default {
       this.subTitle = this.title;
     },
     form() {
-      // this.subForm = { ...this.form };
-      // this.initParams();
+      this.subForm = { ...this.form };
+      this.initParams();
     },
     dialogFormVisible() {
       this.show = this.dialogFormVisible;
@@ -191,7 +191,7 @@ export default {
     this.subForm = this.form;
     this.initParams();
     this.show = this.dialogFormVisible;
-    let data = getDiliveryMethodeDict(this.$store);
+    let data = getDeliveryMethodDict(this.$store);
     this.deliverMethodList = [];
     data.map(v => {
       let item = {

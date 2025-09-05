@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     clickClose() {
-      this.$emit("changeComfromDialogVisible", false);
+      this.$emit("changeConformDialogVisible", false);
       this.show = false;
     },
     clickOk() {

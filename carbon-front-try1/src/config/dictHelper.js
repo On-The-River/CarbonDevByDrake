@@ -325,7 +325,7 @@ export function getNewsTypeDict(store) {
  * @param {*} store
  * @returns
  */
-export function getDiliveryMethodeDict(store) {
+export function getDeliveryMethodDict(store) {
   return getDircByCode(store, DiliveryMethod);
 }
 
@@ -464,7 +464,7 @@ function getDircByCode(store, key) {
     getAllDiction(store);
     let dircsStr = localStorage.getItem("dircs");
     if (dircsStr) {
-      // return [{value:"0140000000",name:"没东西2"}];
+
       let res = JSON.parse(dircsStr);
       if (res && Array.isArray(res)) {
         res.map(e => {
@@ -485,5 +485,5 @@ function getDircByCode(store, key) {
   if (dircs && dircs[key]) {
     return dircs[key];
   }
-  return [{value:"0140000000",name:"没东西!"}];
+  return [{value:"0140000000",name:"空"}];
 }
