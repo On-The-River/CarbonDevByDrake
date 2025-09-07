@@ -7,7 +7,7 @@
         select ifnull(sum(total),0) from carbon_credit_assets
         <where>
             <if test="statDate != null">
-                and date_format(issuing_date, '%Y-%m') = date_format(curdate(), '%Y-%m')
+                and date_format(issuing_date, '%Y-%m') = date_format(#{statDate}, '%Y-%m')
             </if>
         </where>
 
@@ -16,7 +16,7 @@
         select ifnull(sum(total),0) from carbon_quota_assets
         <where>
             <if test="statDate != null">
-                and date_format(issuing_date, '%Y-%m') = date_format(curdate(), '%Y-%m')
+                and date_format(issuing_date, '%Y-%m') = date_format(#{statDate}, '%Y-%m')
             </if>
         </where>
     </select>
@@ -38,4 +38,30 @@
         left join carbon_credit_assets cca on cca.carbon_project_id = cp.id
          limit 10
     </select>
+
+    <select id="getPerformancePrice" resultType="java.lang.Double">
+        select sum(ctc.trade_quantity * ctc.asset_unit_price)
+        from carbon_trade_contract ctc
+        <where>
+            <if test="statDate != null">
+                and date_format(delivery_time, '%Y-%m') = date_format(#{statDate}, '%Y-%m')
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getPerformanceAmount" resultType="java.lang.Double">
+        select ifnull(sum(ctc.trade_quantity),0)
+        from carbon_trade_contract ctc
+        left join carbon_trade_quote ctq on ctc.trade_quote_id = ctq.id
+        <where>
+            <if test="assetType != null and assetType != '' ">
+                and ctq.asset_type = #{assetType}
+            </if>
+            <if test="statDate != null">
+                and date_format(ctc.delivery_time, '%Y-%m') = date_format(#{statDate}, '%Y-%m')
+            </if>
+        </where>
+    </select>
+
 </mapper>

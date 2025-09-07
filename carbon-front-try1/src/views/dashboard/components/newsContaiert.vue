@@ -11,7 +11,7 @@
               <news-list />
             </el-tab-pane>
             <el-tab-pane class="lable2" label="知识库" name="second" :key="'second'">
-              <knowleadgeList />
+              <knowleage-list />
             </el-tab-pane>
             <el-tab-pane name="more">
               <div slot="label" class="tab-more">
@@ -30,7 +30,7 @@
             <a class="more-text" @click="openMoreNotic">查看更多</a>
           </div>
           <div class="my-divier" />
-          <noticeList />
+          <notice-list />
         </div>
 
         <div class="right-part-news-bottom-container">
@@ -39,7 +39,7 @@
             <a class="more-text" @click="openMoreQuestion">查看更多</a>
           </div>
           <div class="my-divier" />
-          <questionList />
+          <question-list />
         </div>
       </div>
     </div>
@@ -47,20 +47,21 @@
 </template>
 
 <script>
-import knowleadgeList from './knowleageList.vue';
+import knowleageList from './knowleageList.vue';
 import newsList from './newsList.vue';
 import questionList from './questionList.vue';
 import noticeList from './noticeList.vue';
 import { openUrlInNewWindow } from '@/libs/OpenHelper'
-import knowleageList from "@/views/dashboard/components/knowleageList.vue";
+// import knowleageList from "@/views/dashboard/components/knowleageList.vue";
 export default {
-  components: [
-    newsList,
-    knowleageList,
-    noticeList,
-    questionList,
-  ],
+
   name: 'news',
+  components: {
+    'news-list': newsList,
+    'knowleage-list': knowleageList, // 保持标签名一致
+    'notice-list': noticeList,
+    'question-list': questionList
+  },
   data() {
     return {
       //默认第一个选项卡

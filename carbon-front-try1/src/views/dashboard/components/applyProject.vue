@@ -46,7 +46,22 @@
           </div>
           <div class="card-empty"></div>
           <div class="card-right-div">
-         
+            <a class="card-right-3-text"
+            ><router-link :to="{ path: '/carbon/projectCreate' }"
+            >去选择
+            </router-link>
+            </a>
+            <a class="card-right-3-text"
+            ><router-link :to="{ path: '/carbon/projectDo' }"
+            >去添加
+            </router-link>
+            </a>
+            <a style="margin-bottom: 0px" class="card-right-3-text"
+            ><router-link :to="{ path: '/carbon/projectDo' }"
+            >去查看
+            </router-link></a
+            >
+
           </div>
         </div>
       </div>

@@ -6,33 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="6f8d0eca-aac3-4b36-892a-9df5dd2a2c3d" name="Default Changelist" comment="Default Changelist">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-assets/src/main/resources/mapper/assets/CarbonMethodologyMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-assets/src/main/resources/mapper/assets/CarbonMethodologyMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/carbonAssetApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/carbonAssetApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/api/tenant.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/api/tenant.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/config/dictHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/config/dictHelper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/TagsView/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/layout/components/TagsView/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/ownerAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/ownerAdd.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectAdd.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectDevHome.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectDevHome.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectEdit.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectEdit.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectFile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonAssets/dev/projectFile.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/account/exchangeManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/account/exchangeManager.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/account/tradeAccountManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/account/tradeAccountManager.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/offer/detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/offer/detail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/offer/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/offer/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/offer/order.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/offer/order.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/performance/detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/performance/detail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/performance/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/performance/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyDetail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyOrder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyOrder.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyQuote.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buy/buyQuote.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buyAssets.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/buyAssets.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/orderResult.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/orderResult.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/sell/sellDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/sell/sellDetail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/sell/sellOrder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/sell/sellOrder.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/sell/sellQuote.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/carbonTrade/quotation/sell/sellQuote.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/methodManager.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/systemSetting/methodManager.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeQuoteServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-trade/src/main/java/com/carbon/trade/service/impl/CarbonTradeQuoteServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/applyProject.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/applyProject.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/commomUsageGrid.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/commomUsageGrid.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/companyPackage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/companyPackage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/knowleageList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/knowleageList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsContaiert.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsContaiert.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/newsList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/projectStatistical.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/projectStatistical.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/questionList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/questionList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/tradeInfo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-front-try1/src/views/dashboard/components/tradeInfo.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/mapper/DataPanelMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/mapper/DataPanelMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/DataPanelServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/java/com/carbon/system/service/impl/DataPanelServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carbon-system/src/main/resources/mapper/system/DataPanelMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/carbon-system/src/main/resources/mapper/system/DataPanelMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,8 +133,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JUnit3 Test Class" />
         <option value="Class" />
+        <option value="JUnit3 Test Class" />
       </list>
     </option>
   </component>
@@ -670,6 +655,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "JUnit.CarbonProjectContentServiceImplTest.testGetCarbonProjectContentPageList.executor": "Run",
+    "JUnit.DataPanelMapperTest.getDataPanelData.executor": "Run",
     "Maven.carbon-frame [install].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -733,6 +719,7 @@
       <recent name="D:\QST_Projs\Carbon\CarbonDevByDrake\carbon-front-try1\src" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.carbon.system.mapper" />
       <recent name="com.carbon.assets.service.impl" />
       <recent name="com.carbon.assets.mapper" />
     </key>
@@ -780,10 +767,26 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.AuthApplication">
+  <component name="RunManager" selected="Spring Boot.SystemApplication">
     <configuration name="test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="test" />
       <module name="carbon-common" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DataPanelMapperTest.getDataPanelData" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="carbon-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.carbon.system.mapper.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.carbon.system.mapper" />
+      <option name="MAIN_CLASS_NAME" value="com.carbon.system.mapper.DataPanelMapperTest" />
+      <option name="METHOD_NAME" value="getDataPanelData" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -838,6 +841,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="JUnit.DataPanelMapperTest.getDataPanelData" />
       <item itemvalue="Spring Boot.GateApplication" />
       <item itemvalue="Spring Boot.MqApplication" />
       <item itemvalue="Spring Boot.AssetsApplication" />
@@ -849,6 +853,7 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.DataPanelMapperTest.getDataPanelData" />
         <item itemvalue="应用程序.test" />
       </list>
     </recent_temporary>
@@ -886,6 +891,7 @@
       <workItem from="1756626017545" duration="10339000" />
       <workItem from="1756688694192" duration="89856000" />
       <workItem from="1756954068381" duration="38010000" />
+      <workItem from="1757090676143" duration="28762000" />
     </task>
     <servers />
   </component>

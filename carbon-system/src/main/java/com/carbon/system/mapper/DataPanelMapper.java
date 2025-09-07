@@ -31,4 +31,8 @@ public interface DataPanelMapper extends BaseMapper<DataPanel> {
 
     List<StatCarbonProject> getProjectList();
 
+    Double getPerformancePrice(@Param("statDate") Date statDate);
+
+    Double getPerformanceAmount(@Param("statDate") Date statDate, @Param("assetType") String assetType);
+
 }

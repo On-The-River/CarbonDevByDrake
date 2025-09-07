@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.carbon.common.exception.CommonBizException;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.system.entity.DataPanel;
 import com.carbon.system.entity.SysAccount;
@@ -14,7 +13,6 @@ import com.carbon.system.service.*;
 import com.carbon.system.vo.*;
 import com.carbon.system.mapper.DataPanelMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,30 +74,54 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         //上个月
         DateTime lastMonth = DateUtil.offsetMonth(DateUtil.date(), -1);
         DateTime statDate = DateUtil.date();
+        DateTime lastYear = DateUtil.offsetMonth(DateUtil.date(),-12);
 
         BigDecimal carbonCreditTotal = dataPanelMapper.getCarbonCreditTotal(null);
         BigDecimal carbonQuotaTotal = dataPanelMapper.getCarbonQuotaTotal(null);
-        BigDecimal carbonCreditMonth = dataPanelMapper.getCarbonCreditTotal(lastMonth);
-        BigDecimal carbonQuotaMonth = dataPanelMapper.getCarbonQuotaTotal(lastMonth);
+        BigDecimal carbonCreditLastMonth = dataPanelMapper.getCarbonCreditTotal(lastMonth);
+        BigDecimal carbonQuotaLastMonth = dataPanelMapper.getCarbonQuotaTotal(lastMonth);
+        BigDecimal carbonCreditCurrentMonth = dataPanelMapper.getCarbonCreditTotal(statDate);
+        BigDecimal carbonQuotaCurrentMonth = dataPanelMapper.getCarbonQuotaTotal(statDate);
+        BigDecimal carbonCreditLastYear = dataPanelMapper.getCarbonCreditTotal(lastYear);
+        BigDecimal carbonQuotaLastYear = dataPanelMapper.getCarbonQuotaTotal(lastYear);
+        double currentTotal=carbonCreditCurrentMonth.add(carbonQuotaCurrentMonth).doubleValue();
+
 
         //资产收入
         StatCarbonIncomeVo assetsIncome = new StatCarbonIncomeVo();
         assetsIncome.setStatDate(statDate);
-        assetsIncome.setMonthIncome(carbonCreditMonth.add(carbonQuotaMonth));
+        assetsIncome.setMonthIncome(carbonCreditLastMonth.add(carbonQuotaLastMonth));
         assetsIncome.setTotalIncome(carbonCreditTotal.add(carbonQuotaTotal));
-        assetsIncome.setMonthOnMonthRatio(BigDecimal.ZERO);
-        assetsIncome.setYearOnYearRatio(BigDecimal.ZERO);
+        {
+            double assetsTotalLastMonth=carbonCreditLastMonth.add(carbonQuotaLastMonth).doubleValue();
+            BigDecimal monthOnMonthRatio=BigDecimal.valueOf((assetsTotalLastMonth-currentTotal)/currentTotal);
+            assetsIncome.setMonthOnMonthRatio(monthOnMonthRatio);
+        }
+        {
+            BigDecimal assetsLastYearTotal=carbonCreditLastYear.add(carbonQuotaLastYear);
+            BigDecimal yearOnYearRatio=BigDecimal.valueOf(currentTotal).subtract(assetsLastYearTotal).divide(assetsLastYearTotal,2,BigDecimal.ROUND_HALF_UP);
+            assetsIncome.setYearOnYearRatio(yearOnYearRatio);
+        }
         vo.setAssetsIncome(assetsIncome);
 
         //资金收入
+        double performanceCurrent=dataPanelMapper.getPerformancePrice(statDate);
+        double performanceLastMonth=dataPanelMapper.getPerformancePrice(lastMonth);
+        double performanceLastYear=dataPanelMapper.getPerformancePrice(lastYear);
+        double performanceTotal=dataPanelMapper.getPerformancePrice(null);
+
         StatCarbonIncomeVo fundIncome = new StatCarbonIncomeVo();
         fundIncome.setStatDate(statDate);
-        fundIncome.setMonthIncome(BigDecimal.ZERO);
-        fundIncome.setTotalIncome(BigDecimal.ZERO);
-        fundIncome.setMonthOnMonthRatio(BigDecimal.ZERO);
-        fundIncome.setYearOnYearRatio(BigDecimal.ZERO);
-        vo.setFundIncome(fundIncome);
+        fundIncome.setMonthIncome(BigDecimal.valueOf(performanceLastMonth));
+        fundIncome.setTotalIncome(BigDecimal.valueOf(performanceTotal));
 
+        double monthOnMonth=(performanceCurrent-performanceLastMonth)/performanceLastMonth;
+        fundIncome.setMonthOnMonthRatio(BigDecimal.valueOf(monthOnMonth));
+        double yearOnYear=(performanceCurrent-performanceLastYear)/performanceLastYear;
+        fundIncome.setYearOnYearRatio(BigDecimal.valueOf(yearOnYear));
+
+
+        vo.setFundIncome(fundIncome);
         vo.setCarbonCredit(carbonCreditTotal);
         vo.setCarbonQuota(carbonQuotaTotal);
         vo.setGreenScore(BigDecimal.ZERO);
@@ -107,10 +129,10 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         //供应量
         StatCarbonMonthVo monthSupply = new StatCarbonMonthVo();
         monthSupply.setStatDate(statDate);
-        monthSupply.setCarbonCredit(carbonCreditMonth);
-        monthSupply.setCarbonQuota(carbonQuotaMonth);
+        monthSupply.setCarbonCredit(carbonCreditLastMonth);
+        monthSupply.setCarbonQuota(carbonQuotaLastMonth);
         monthSupply.setGreenScore(BigDecimal.ZERO);
-        monthSupply.setCarbonSupply(carbonCreditMonth.add(carbonQuotaMonth));
+        monthSupply.setCarbonSupply(carbonCreditLastMonth.add(carbonQuotaLastMonth));
         monthSupply.setCarbonSupplyTotal(carbonCreditTotal.add(carbonQuotaTotal));
         monthSupply.setCarbonValuation(getAmount(monthSupply.getCarbonSupplyTotal()));
         vo.setMonthSupply(monthSupply);
@@ -118,13 +140,18 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         vo.setMonthDevelopment(monthSupply);
 
         //销售量
+        double pfmAmountCurrent=dataPanelMapper.getPerformanceAmount(statDate,null);
+        double pfmCreditAmountLastMonth=dataPanelMapper.getPerformanceAmount(lastMonth,"0140000001");
+        double pfmQuotaAmountLastMonth=dataPanelMapper.getPerformanceAmount(lastMonth,"0140000002");
+        double pfmAmountTotal=dataPanelMapper.getPerformanceAmount(null,null);
+
         StatCarbonMonthVo monthSales = new StatCarbonMonthVo();
         monthSales.setStatDate(statDate);
-        monthSales.setCarbonCredit(BigDecimal.ZERO);
-        monthSales.setCarbonQuota(BigDecimal.ZERO);
+        monthSales.setCarbonCredit(BigDecimal.valueOf(pfmCreditAmountLastMonth));
+        monthSales.setCarbonQuota(BigDecimal.valueOf(pfmQuotaAmountLastMonth));
         monthSales.setGreenScore(BigDecimal.ZERO);
-        monthSales.setCarbonSupply(BigDecimal.ZERO);
-        monthSales.setCarbonSupplyTotal(BigDecimal.ZERO);
+        monthSales.setCarbonSupply(BigDecimal.valueOf(pfmCreditAmountLastMonth+pfmQuotaAmountLastMonth));
+        monthSales.setCarbonSupplyTotal(BigDecimal.valueOf(pfmAmountTotal));
         monthSales.setCarbonValuation(BigDecimal.ZERO);
         vo.setMonthSales(monthSales);
 

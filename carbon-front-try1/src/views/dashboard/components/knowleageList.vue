@@ -1,9 +1,9 @@
 <template>
-  <el-table height="400px" show-header="false" :data="records" style="width: 100%" @row-click="handle" :cell-style="cellStyle">
+  <el-table height="400px" :show-header="false" :data="records" style="width: 100%" @row-click="handle" :cell-style="cellStyle">
     <el-table-column width="24px" label="日期">
       <template slot-scope="scope">
         <div>
-          <i :class="icon" v-if="scope.row.browseNum" />
+          <img :class="icon" v-if="scope.row.browseNum" />
           <img class="icon" v-if="Number(scope.row.browseNum) >= 10" src="@/assets/imgs/icon_new_hot.png" />
           <img class="icon" v-if="Number(scope.row.browseNum) < 10" src="@/assets/imgs/icon_new_jin.png" />
         </div>
@@ -59,7 +59,6 @@ export default {
       }
       artical.getCarbonArticles(data).then(res => {
         this.records = res.records;
-        debugger
         // this.total = res.total
         // this.current = res.current
       }).catch(error => {

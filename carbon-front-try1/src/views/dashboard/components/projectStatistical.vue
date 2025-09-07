@@ -48,11 +48,100 @@
         style="width: 100%"
         max-height="368"
       >
+        <el-table-column label="项目名称" width="120">
+          <template slot-scope="scope">
+            <span class="word79">{{ scope.row.projectId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="预计减排量(tCO2e)">
+          <template slot-scope="scope">
+            <span class="word79">{{ scope.row.projectName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="碳资产估值(￥)">
+          <template slot-scope="scope">
+            <span class="word79">{{ scope.row.projectType }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="项目状态">
+          <template slot-scope="scope">
+            <span class="word79">{{ scope.row.status }}</span>
+          </template>
+        </el-table-column>
         <!-- 表格列定义 -->
       </el-table>
     </div>
   </div>
 </template>
+
+<script>
+import * as echarts from "echarts";
+import { getHomePanelData } from "@/api/homeApi.js";
+import { getToken } from "@/utils/auth";
+
+export default {
+  name: 'ProjectStatistical',
+  data() {
+    return {
+      // 初始化 projectStat 对象
+      projectStat: {
+        reductionTotal: 0,
+        approvedCount: 0,
+        filingCount: 0,
+        singCount: 0,
+        projectList: []
+      }
+    }
+  },
+  mounted() {
+    this.fetchProjectStatData()
+  },
+  methods: {
+    async fetchProjectStatData() {
+      try {
+        // 这里调用获取数据的 API
+        const response = await getHomePanelData()
+        this.projectStat = response.data || this.defaultProjectStat()
+      } catch (error) {
+        console.error('获取项目统计数据失败:', error)
+      }
+    },
+    // 默认数据结构
+    defaultProjectStat() {
+      return {
+        reductionTotal: 0,
+        approvedCount: 0,
+        filingCount: 0,
+        singCount: 0,
+        projectList: []
+      }
+    }
+  }
+}
+</script>
+<!--<script>-->
+<!--import * as echarts from "echarts";-->
+<!--import { getHomePanelData } from "@/api/homeApi.js";-->
+<!--import { getToken } from "@/utils/auth";-->
+
+<!--export default {-->
+<!--  name: "projectStatistical",-->
+<!--  data() {-->
+<!--    return {-->
+<!--      projectList: this.projectStat.projectList-->
+<!--    };-->
+<!--  },-->
+<!--  props: {-->
+<!--    projectStat: {},-->
+<!--  },-->
+<!--  mounted() {-->
+<!--    this.projectList = this.projectStat.projectList-->
+<!--  },-->
+<!--  computed: {},-->
+<!--  methods: {},-->
+<!--  created() {},-->
+<!--};-->
+<!--</script>-->
 
 <style lang="scss" scoped>
 .root {

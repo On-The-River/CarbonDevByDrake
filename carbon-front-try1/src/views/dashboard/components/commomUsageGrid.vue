@@ -41,7 +41,50 @@
           <a class="hint-text">国内外权威碳交易所列目，支持各大交易所开户</a>
         </div>
       </router-link>
-    </div>
+      <!-- 监测数据报送 -->
+      <router-link :to="{ path: '/carbon/pddReport' }">
+        <div class="grid-item-div">
+          <div class="icon-text-container">
+            <img class="my-icon" src="@/assets/imgs/icon_usage_open.png" />
+            <span class="my-text">监测数据报送</span>
+          </div>
+          <span class="hint-text">提供监测数据报送模板，便于生成 PDD</span>
+        </div>
+      </router-link>
+
+      <!-- 询报价管理 -->
+      <router-link :to="{ path: '/trade/quotation/quote' }">
+        <div class="grid-item-div">
+          <div class="icon-text-container">
+            <img class="my-icon" src="@/assets/imgs/icon_usage_project.png" />
+            <span class="my-text">询报价管理</span>
+          </div>
+          <span class="hint-text">交易对手行情，提供意向订单的询报价服务，精准把握资产动向</span>
+        </div>
+      </router-link>
+
+      <!-- 项目开发 -->
+      <router-link :to="{ path: '/carbon/projectDevelopment' }">
+        <div class="grid-item-div">
+          <div class="icon-text-container">
+            <img class="my-icon" src="@/assets/imgs/icon_usage_dev.png" />
+            <span class="my-text">项目开发</span>
+          </div>
+          <span class="hint-text">及时查看碳信用项目开发进度，提供各阶段开</span>
+        </div>
+      </router-link>
+
+      <!-- 履约管理 -->
+      <router-link :to="{ path: '/trade/fulfillment' }">
+        <div class="grid-item-div">
+          <div class="icon-text-container">
+            <img class="my-icon" src="@/assets/imgs/icon_usage_send.png" />
+            <span class="my-text">履约管理</span>
+          </div>
+          <span class="hint-text">提供交易履约管理服务，助力交易达成</span>
+        </div>
+      </router-link>
+  </div>
   </div>
 </template>
 

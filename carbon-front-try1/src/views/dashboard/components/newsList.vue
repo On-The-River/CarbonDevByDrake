@@ -1,5 +1,5 @@
 <template>
-  <el-table height="400px" show-header="false" :data="records" style="width: 100%" @row-click="handle" :cell-style="cellStyle">
+  <el-table height="400px" :show-header="false" :data="records" style="width: 100%" @row-click="handle" :cell-style="cellStyle">
     <el-table-column width="24px" label="日期">
       <template slot-scope="scope">
         <div>
@@ -9,7 +9,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column show-overflow-tooltip="true" min-width="70%" prop="title" label="文章名称">
+    <el-table-column :show-overflow-tooltip="true" min-width="70%" prop="title" label="文章名称">
     </el-table-column>
     <el-table-column width="100px" prop="updatedTime" label="日期">
     </el-table-column>

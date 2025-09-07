@@ -45,7 +45,7 @@
               </div>
               <div class="info-line">
                 <div class="blue-point" />
-                <i class="hint-text">已备案，{{ quotation.fillingCount }} 个，{{ percentFillingCount }}%</i>
+                <i class="hint-text">已备案，{{ quotation.filingCount }} 个，{{ percentFilingCount }}%</i>
               </div>
               <div class="info-line">
                 <div class="lint-blue-point" />

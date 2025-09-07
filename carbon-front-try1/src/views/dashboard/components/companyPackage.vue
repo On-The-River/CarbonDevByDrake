@@ -16,7 +16,7 @@
         <div class="content-container">
           <div class="content-pannel">
             <div>
-              <span class="sumAmout">{{ assetsIncome.totalIncome }}</span>
+              <span class="sumAmout">{{ assetsIncome.monthIncome }}</span>
               <span class="unit">{{ assetsIncomeUnit }}</span>
             </div>
             <div class="rate-bar">
@@ -171,23 +171,24 @@
           </div>
           <img class="icon_account_flag" src="@/assets/imgs/icon_account_flag.png" />
         </div>
-        <div class="bottom-bar">
-          <div class="bottom-content-container">
-            <span class="bottom-hint">碳中和比例：</span>
-            <span class="bottom-value">{{ accountVo.carbonNeutralRatio || '--' }}</span>
-          </div>
-          <div class="bottom-content-container">
-            <span class="bottom-hint">ESG评分：</span>
-            <span class="bottom-value">{{ accountVo.esgScore || '--' }}</span>
-          </div>
-          <div class="bottom-content-container">
-            <span class="bottom-hint">账户有效期：</span>
-            <span v-if="accountVo.expired" class="account-validate-text">
-              已过期</span>
-            <span v-else class="account-validate-text">
-              {{ accountVo.accountValidity | formatData }}</span>
-          </div>
-        </div>
+
+<!--        <div class="bottom-bar">-->
+<!--          <div class="bottom-content-container">-->
+<!--            <span class="bottom-hint">碳中和比例：</span>-->
+<!--            <span class="bottom-value">{{ accountVo.carbonNeutralRatio || '&#45;&#45;' }}</span>-->
+<!--          </div>-->
+<!--          <div class="bottom-content-container">-->
+<!--            <span class="bottom-hint">ESG评分：</span>-->
+<!--            <span class="bottom-value">{{ accountVo.esgScore || '&#45;&#45;' }}</span>-->
+<!--          </div>-->
+<!--          <div class="bottom-content-container">-->
+<!--            <span class="bottom-hint">账户有效期：</span>-->
+<!--            <span v-if="accountVo.expired" class="account-validate-text">-->
+<!--              已过期</span>-->
+<!--            <span v-else class="account-validate-text">-->
+<!--              {{ formatData(accountVo.accountValidity)}}</span>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
 
     </div>
@@ -229,6 +230,14 @@ export default {
       this.$router.push({
         path: "/account/info",
       });
+    },
+    formatData(time) {
+      if (!time) return '--';
+      var datetime = new Date(time);
+      var year = datetime.getFullYear();
+      var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+      var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+      return year + "-" + month + "-" + date;
     },
   },
   created() { },
