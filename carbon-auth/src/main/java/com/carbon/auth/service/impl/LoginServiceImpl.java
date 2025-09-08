@@ -83,7 +83,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new CommonBizException(ExpCodeEnum.SYSTEM_SECURITY_USER_NULL);
 		}
 
-		if (StrUtil.isNotEmpty(password) && !account.getPassword().equals(password)) {
+		if (StrUtil.isNotEmpty(password) && !account.getPassword().equals((password))) {
 			throw new CommonBizException(ExpCodeEnum.SYSTEM_SECURITY_USER_PASSWORD_ERROR);
 		}
 		if (AccountConstant.ACCOUNT_STATUS_DISABLE.equals(account.getAccountStatus())) {
@@ -116,28 +116,81 @@ public class LoginServiceImpl implements LoginService {
 		removeLoginInfoByRedis(accountId);
 	}
 
+	//	@Override
+//	public void register(RegisterParam param) {
+//		//校验短信验证码
+//		smsService.checkValidateCode(param.getPhone(),param.getCode(),RedisKeyName.SMS_REGISTER_KEY);
+//		if (!param.getPassword().equals(param.getConfirmPassword())){
+//			throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_REGISTER_CONFIRM_PASSWORD_ERROR);
+//		}
+//		//添加账号
+//		SysAccountParam accountParam = new SysAccountParam();
+//		accountParam.setAccountName(param.getAccountName());
+//		accountParam.setPassword(param.getPassword());
+//		accountParam.setPhone(param.getPhone());
+//		accountParam.setAccountStatus(AccountConstant.ACCOUNT_STATUS_NO_OPENED);
+//		accountParam.setAccountType("0380000001");//试用账户
+//		accountParam.setProductVersion("0400000001");//试用版
+//		accountParam.setRoleIds(CollUtil.newArrayList(9L));//角色ID
+//		ApiResult<Boolean> result = systemServiceApi.addSysAccount(accountParam);
+//		log.info("register:{}",JSONUtil.toJsonPrettyStr(result));
+//		if (ApiCode.SUCCESS.getCode() != result.getCode()){
+//			throw new CommonBizException(result.getMsg());
+//		}
+//		//发送MQ消息
+//		OpenRegisterAccount registerAccount = BeanUtil.fillBean(new OpenRegisterAccount(), new ValueProvider<String>() {
+//			@Override
+//			public Object value(String s, Type type) {
+//				return "";
+//			}
+//			@Override
+//			public boolean containsKey(String s) {
+//				return true;
+//			}
+//		}, CopyOptions.create());//创建空对象，null转""
+//
+//		registerAccount.setAccountName(param.getAccountName());
+//		registerAccount.setProductVersion("试用版");
+//		registerAccount.setContactNumber(param.getPhone());
+//		registerAccount.setAccountState("未开户");
+//
+//		LocalDateTime now = LocalDateTime.now();
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//		registerAccount.setRegistrationTime(dtf.format(now));
+//
+//        Message<OpenRegisterAccount> msg= MessageBuilder
+//                .withPayload(BeanUtil.copyProperties(registerAccount,OpenRegisterAccount.class)).build();
+//        mqTemplate.syncSend(RocketMqName.OpenRegisterAccount_MSG,msg,3000, RocketDelayLevelConstant.SECOND10);
+//	}
 	@Override
 	public void register(RegisterParam param) {
-		//校验短信验证码
-		smsService.checkValidateCode(param.getPhone(),param.getCode(),RedisKeyName.SMS_REGISTER_KEY);
+//		smsService.checkEmailCode(param.getPhone(),param.getCode(),RedisKeyName.SMS_EMAIL_CODE_KEY);
+		smsService.checkEmailCode(param.getEmail(),param.getCode(),RedisKeyName.SMS_EMAIL_CODE_KEY);
 		if (!param.getPassword().equals(param.getConfirmPassword())){
 			throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_REGISTER_CONFIRM_PASSWORD_ERROR);
 		}
-		//添加账号
+		// 添加账号
 		SysAccountParam accountParam = new SysAccountParam();
 		accountParam.setAccountName(param.getAccountName());
 		accountParam.setPassword(param.getPassword());
+		accountParam.setEmail(param.getEmail()); // 设置邮箱而不是手机号
 		accountParam.setPhone(param.getPhone());
 		accountParam.setAccountStatus(AccountConstant.ACCOUNT_STATUS_NO_OPENED);
 		accountParam.setAccountType("0380000001");//试用账户
 		accountParam.setProductVersion("0400000001");//试用版
 		accountParam.setRoleIds(CollUtil.newArrayList(9L));//角色ID
+
+		log.info("准备调用系统服务添加账户: {}", JSONUtil.toJsonStr(accountParam));
 		ApiResult<Boolean> result = systemServiceApi.addSysAccount(accountParam);
-		log.info("register:{}",JSONUtil.toJsonPrettyStr(result));
+		log.info("register:{}", JSONUtil.toJsonPrettyStr(result));
+
+		// 关键修改：检查系统服务调用结果，如果失败则抛出异常
 		if (ApiCode.SUCCESS.getCode() != result.getCode()){
+			log.error("系统服务调用失败: {}", result.getMsg());
 			throw new CommonBizException(result.getMsg());
 		}
-		//发送MQ消息
+
+		// 发送MQ消息
 		OpenRegisterAccount registerAccount = BeanUtil.fillBean(new OpenRegisterAccount(), new ValueProvider<String>() {
 			@Override
 			public Object value(String s, Type type) {
@@ -151,24 +204,26 @@ public class LoginServiceImpl implements LoginService {
 
 		registerAccount.setAccountName(param.getAccountName());
 		registerAccount.setProductVersion("试用版");
-		registerAccount.setContactNumber(param.getPhone());
+		registerAccount.setContactEmail(param.getEmail());
+		registerAccount.setContactNumber(param.getPhone()); // 也保留手机号
 		registerAccount.setAccountState("未开户");
 
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		registerAccount.setRegistrationTime(dtf.format(now));
 
-        Message<OpenRegisterAccount> msg= MessageBuilder
-                .withPayload(BeanUtil.copyProperties(registerAccount,OpenRegisterAccount.class)).build();
-        mqTemplate.syncSend(RocketMqName.OpenRegisterAccount_MSG,msg,3000, RocketDelayLevelConstant.SECOND10);
+		Message<OpenRegisterAccount> msg = MessageBuilder
+				.withPayload(BeanUtil.copyProperties(registerAccount, OpenRegisterAccount.class)).build();
+		mqTemplate.syncSend(RocketMqName.OpenRegisterAccount_MSG, msg, 10000, RocketDelayLevelConstant.SECOND10);
+
 	}
 
 	@Override
 	public void forgotPassword(ForgotPasswordParam param) {
-		//校验短信验证码
-		smsService.checkValidateCode(param.getPhone(),param.getCode(),RedisKeyName.SMS_FORGOT_PASSWORD_KEY);
-		//根据手机号查询用户
-		SysAccount account = loginMapper.selectOne(Wrappers.lambdaQuery(SysAccount.class).eq(SysAccount::getPhone, param.getPhone()));
+		//校验邮箱验证码
+		smsService.checkValidateCode(param.getEmail(),param.getCode(),RedisKeyName.SMS_FORGOT_PASSWORD_EMAIL_CODE_KEY);
+		//根据邮箱查询用户
+		SysAccount account = loginMapper.selectOne(Wrappers.lambdaQuery(SysAccount.class).eq(SysAccount::getEmail, param.getEmail()));
 		if (account == null) {
 			throw new CommonBizException(ExpCodeEnum.SYSTEM_SECURITY_USER_NULL);
 		}
@@ -293,5 +348,11 @@ public class LoginServiceImpl implements LoginService {
 	private void removeLoginInfoByRedis(Long accountId){
 		redisService.remove(String.format(CommonRedisKey.LOGIN_USER, accountId));
 	}
+
+	@Override
+	public Boolean verifyEmail(String email) {
+		return loginMapper.selectOne(Wrappers.lambdaQuery(SysAccount.class).eq(SysAccount::getEmail, email)) == null;
+	}
+
 
 }

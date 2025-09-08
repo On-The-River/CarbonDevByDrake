@@ -7,8 +7,8 @@
       </div>
       <div style="margin-left: 22px;">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <!-- <el-tab-pane label="CCER" name="CCER"></el-tab-pane> -->
-          <el-tab-pane label="TCS" name="TCS"></el-tab-pane>
+<!--           <el-tab-pane label="CCER" name="CCER"></el-tab-pane>-->
+<!--          <el-tab-pane label="TCS" name="TCS"></el-tab-pane>-->
         </el-tabs>
       </div>
       <!-- <a class="more-text" @click="openMoreNews" style="position: relative;left: 70px;">查看更多 </a> -->
@@ -60,7 +60,7 @@
           <el-table-column prop="type" label="项目类型" width="180"></el-table-column>
           <el-table-column prop="singCount" label="签发量(tCO2e)" width="180"></el-table-column>
           <el-table-column prop="stockCount" label="存量(tCO2e)"></el-table-column>
-          <el-table-column prop="singCount" label="项目数量(个)"></el-table-column>
+          <el-table-column prop="count" label="项目数量(个)"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -72,25 +72,27 @@ import * as echarts from 'echarts';
 import { getHomePanelData } from '@/api/homeApi.js'
 import { getToken } from '@/utils/auth'
 export default {
-  name: 'tradeInfo',
+  name: 'tradeInfo',  //组件名称
   data() {
     return {
-      ccerCount: 0,
+      // 签发量相关数据（初始值为0，后续从后端获取后更新）
+      ccerCount: 0,//总签发量
       stockCount: 0, // 存量    integer
       writtenOffCount: 0,//  已核销
-      percentStockCount: 0,
-      percentWrittenOffCount: 0,
+      percentStockCount: 0,      //存量占比
+      percentWrittenOffCount: 0,  //已核销占比
 
-      ccerProjectCount: 0,
-      singCount: 0,//  已签发
+      // 项目量相关数据（初始值为0，后续从后端获取后更新）
+      ccerProjectCount: 0,    //总项目量
+      singCount: 0,//  已签发项目数
       filingCount: 0,//  已备案
       approvedCount: 0,//  已审定
       percentSingCount: 0,
       percentFilingCount: 0,
       percentApprovedCount: 0,
-      isTabShow: 0,
-      quotation: {},
-      activeName: "TCS"
+      isTabShow: 0,           //标签页显示状态（未用）
+      quotation: {},      // 核心数据对象（存储后端返回的所有碳交易行情数据）
+      activeName: "CCER"       // 当前选中的标签名（默认TCS）
     }
   },
 
@@ -100,8 +102,8 @@ export default {
   mounted() {
     // this.ccerCount = this.quotation.ccerCount
     // this.ccerProjectCoun = this.quotation.ccerProjectCoun
-    let str = "TCS";
-    this.caculatePercent(str)
+    let str = "CCER";
+    this.caculatePercent(str)   // 调用方法：获取后端数据 + 计算占比 + 渲染图表
     // this.drawRing()
   },
 
@@ -118,13 +120,17 @@ export default {
         for (let i = 0; i < res.quotation.length; i++) {
           if (res.quotation[i].type == str) {
             index = i;
+            break;
           }
         }
         let quotation = res.quotation[index]
         this.quotation = quotation
+
+        console.log(quotation)
         this.ccerCount = quotation.ccerCount
         this.stockCount = quotation.stockCount
         this.writtenOffCount = quotation.writtenOffCount
+
 
         this.ccerProjectCount = quotation.ccerProjectCount
         this.singCount = quotation.singCount
@@ -150,13 +156,55 @@ export default {
       var lvxin = echarts.init(lv);
       //设置数据
       var option_xunjian = {
-        color: ["#28E891", "#00A5FF ", "#009EFF", "#4EDEB7"],
+        color: ["#28E891", "#009EFF"],
+        tooltip: {
+          trigger: 'item'
+        },
+        title: {          // 图表中心标题（显示总签发量）
+          show: true,
+          text: this.ccerCount, // 当前写死
+          left: 80.08,
+          top: 66.08,
+          textAlign: 'center',
+        },
+        series: [       // 图表系列（环形图配置）
+          {
+            type: 'pie',
+            radius: ['30%', '80%'],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '12',
+              }
+            },
+            labelLine: {
+              show: true
+            },
+            data: [
+              { value: this.stockCount, name: '存量' },
+              { value: this.writtenOffCount, name: '已核销' },
+            ]
+          }
+        ]
+      };
+
+      //实例化
+      xunjian.setOption(option_xunjian);
+
+      var option_lvxin = {
+        // color: ["#28E891", "#00A5FF ", "#009EFF", "#4EDEB7"],
+        color: [ "#FFD93D", "#28E891","#009EFF"],
         tooltip: {
           trigger: 'item'
         },
         title: {
           show: true,
-          text: this.ccerCount, // 当前写死
+          text: this.ccerProjectCount, // 当前写死
           left: 80.08,
           top: 66.08,
           textAlign: 'center',
@@ -179,18 +227,15 @@ export default {
             labelLine: {
               show: true
             },
-            data: [
+            data: [   // 图表数据（来自组件状态，后端返回的项目状态数据）
               { value: this.approvedCount, name: '已审定' },
               { value: this.filingCount, name: '已备案' },
               { value: this.singCount, name: '已签发' },
             ]
-          }
+            }
+
         ]
-      };
-
-      //实例化
-      xunjian.setOption(option_xunjian);
-
+      }
       lvxin.setOption(option_lvxin);
       this.$forceUpdate();
     },

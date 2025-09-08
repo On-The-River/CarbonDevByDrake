@@ -567,6 +567,7 @@ export default {
       } else {
         this.$router.push({
           path: "/carbon/projectCreate/projectAdd",
+          query:{form: this.form},
         });
       }
     },
@@ -580,6 +581,7 @@ export default {
       } else {
         this.$router.push({
           path: "/carbon/projectCreate/projectAdd",
+          query:{form: this.form},
         });
       }
     },
@@ -593,6 +595,7 @@ export default {
       } else {
         this.$router.push({
           path: "/carbon/projectCreate/projectAdd",
+          query:{form: this.form},
         });
       }
     },

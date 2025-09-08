@@ -94,12 +94,21 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         assetsIncome.setTotalIncome(carbonCreditTotal.add(carbonQuotaTotal));
         {
             double assetsTotalLastMonth=carbonCreditLastMonth.add(carbonQuotaLastMonth).doubleValue();
-            BigDecimal monthOnMonthRatio=BigDecimal.valueOf((assetsTotalLastMonth-currentTotal)/currentTotal);
+            BigDecimal monthOnMonthRatio=BigDecimal.ZERO;
+            if(currentTotal!=0)
+            {
+                monthOnMonthRatio=BigDecimal.valueOf((assetsTotalLastMonth-currentTotal)/currentTotal);
+            }
+
             assetsIncome.setMonthOnMonthRatio(monthOnMonthRatio);
         }
         {
             BigDecimal assetsLastYearTotal=carbonCreditLastYear.add(carbonQuotaLastYear);
-            BigDecimal yearOnYearRatio=BigDecimal.valueOf(currentTotal).subtract(assetsLastYearTotal).divide(assetsLastYearTotal,2,BigDecimal.ROUND_HALF_UP);
+            BigDecimal yearOnYearRatio=BigDecimal.ZERO;
+            if(assetsLastYearTotal.doubleValue()!=0)
+            {
+                yearOnYearRatio=BigDecimal.valueOf(currentTotal).subtract(assetsLastYearTotal).divide(assetsLastYearTotal,2,BigDecimal.ROUND_HALF_UP);
+            }
             assetsIncome.setYearOnYearRatio(yearOnYearRatio);
         }
         vo.setAssetsIncome(assetsIncome);
@@ -115,9 +124,18 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         fundIncome.setMonthIncome(BigDecimal.valueOf(performanceLastMonth));
         fundIncome.setTotalIncome(BigDecimal.valueOf(performanceTotal));
 
-        double monthOnMonth=(performanceCurrent-performanceLastMonth)/performanceLastMonth;
+        double monthOnMonth=0.0;
+        if(performanceCurrent!=0)
+        {
+            monthOnMonth=(performanceCurrent-performanceLastMonth)/performanceLastMonth;
+        }
         fundIncome.setMonthOnMonthRatio(BigDecimal.valueOf(monthOnMonth));
-        double yearOnYear=(performanceCurrent-performanceLastYear)/performanceLastYear;
+
+        double yearOnYear=0.0;
+        if(performanceLastYear!=0)
+        {
+            yearOnYear=(performanceCurrent-performanceLastYear)/performanceLastYear;
+        }
         fundIncome.setYearOnYearRatio(BigDecimal.valueOf(yearOnYear));
 
 

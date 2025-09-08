@@ -91,7 +91,7 @@
 </template>
 <script>
 import * as credit from "@/api/carbonAssetApi"
-import {getTenantList} from "@/api/carbonAssetApi";
+import {getTenantInfo} from "@/api/systemadmin";
 export default {
   props:{
     dialogFormVisible: false,
@@ -208,58 +208,61 @@ export default {
     // },
     // 提交表单按钮逻辑
     async submit() {
-      try{
-      console.log("测试的tenantedId为：",this.form.tenantId);
-      // 通过租户获取联系方式、机构名称等信息
-        const res = await credit.getTenantList(this.form.tenantId);
-        console.log("租户的信息为11111：",res);
-        this.form.tenantName = res.data.tenantName;
-        this.form.contactsName = res.data.contactsName;
-        this.form.contactsPhone = res.data.contactsPhone;
-        this.form.contactsEmail = res.data.contactsEmail;
-        console.log("sod：",this.form.carbonProjectId);
-      console.log("租户的信息为11111：",this.form);
-      // 添加场外上架表单
-      // 交易角色，机构名称、联系人姓名、联系人手机、邮箱需要根据登录的时候携带？！
-      let data = {
-        projectId:this.form.carbonProjectId,
-        tradeRole: "0270000002",
-        institutionName: this.form.tenantName,
-        contactsName: this.form.contactsName,
-        contactsPhone: this.form.contactsPhone,
-        contactsEmail: this.form.contactsEmail,
-        tradeQuantity: this.form.tradeQuantity,
-        assetUnitPrice: this.form.negotiatedPrice,
-        expirationDate: this.formatDate(this.form.expirationDate),
-        deliveryTime: this.formatDate(this.form.deliveryTime),
-        deliveryMethod: this.form.deliveryMethod,
-        deliveryExchange: this.form.deliveryExchange
-      };
 
-      // 校验出售数量是否超过可用量
-      if (this.form.availableAmount < this.form.tradeQuantity) {
-        this.$message.warning("出售数量不能大于可用量");
-        return;
-      }
-      console.log("现在的传入id: ",this.form.id);
-      console.log("测试的数据222222：",data);
-      // 调用接口提交表单
-      const result = await credit.addcarbonAssetMarket(data);
-          let changeCreditData= {
-            id: this.form.id,
-            availableAmount: this.form.availableAmount - this.form.tradeQuantity
-          }
-          // 提交成功后修改信用状态
-            await credit.changeCredit(changeCreditData);
-              this.$message.success("操作成功");
-              // this.dialogFormVisible = false;
-              this.show = false;
-              this.showQuotation = true;
-              // this.loadDetail();
-    } catch (error) {
-      console.error("操作失败：", error);
-      this.$message.error("操作失败");
-    }
+
+        console.log("测试的tenantedId为：",this.form.tenantId);
+        // 通过租户获取联系方式、机构名称等信息
+        const res = await getTenantInfo(this.form.tenantId);
+
+        console.log("租户的信息为11111：",res);
+        this.form.tenantName = res.tenantName;
+        this.form.contactsName = res.contactsName;
+        this.form.contactsPhone = res.contactsPhone;
+        this.form.contactsEmail = res.contactsEmail;
+        // console.log("sod：",this.form.carbonProjectId);
+        // console.log("租户的信息为11111：",this.form);
+        // 添加场外上架表单
+        // 交易角色，机构名称、联系人姓名、联系人手机、邮箱需要根据登录的时候携带？！
+        let data = {
+          projectId:this.form.carbonProjectId,
+          tradeRole: "0270000002",
+          institutionName: this.form.tenantName,
+          contactsName: this.form.contactsName,
+          contactsPhone: this.form.contactsPhone,
+          contactsEmail: this.form.contactsEmail,
+          tradeQuantity: this.form.tradeQuantity,
+          assetUnitPrice: this.form.negotiatedPrice,
+          expirationDate: this.formatDate(this.form.expirationDate),
+          deliveryTime: this.formatDate(this.form.deliveryTime),
+          deliveryMethod: this.form.deliveryMethod,
+          deliveryExchange: this.form.deliveryExchange
+        };
+
+        // 校验出售数量是否超过可用量
+        if (this.form.availableAmount < this.form.tradeQuantity) {
+          this.$message.warning("出售数量不能大于可用量");
+          return;
+        }
+        console.log("现在的传入id: ",this.form.id);
+        console.log("测试的数据222222：",data);
+        // 调用接口提交表单
+        const result = await credit.addcarbonAssetMarket(data);
+            let changeCreditData= {
+              id: this.form.id,
+              availableAmount: this.form.availableAmount - this.form.tradeQuantity
+            }
+        // 提交成功后修改信用状态
+        await credit.changeCredit(changeCreditData);
+        this.$message.success("操作成功");
+        // this.dialogFormVisible = false;
+        this.show = false;
+        this.showQuotation = true;
+
+      // catch (error)
+      // {
+      //     console.error("操作失败：", error);
+      //     this.$message.error("操作失败");
+      // }
     }
   },
   watch: {

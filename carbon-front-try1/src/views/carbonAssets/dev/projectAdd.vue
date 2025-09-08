@@ -833,20 +833,27 @@ data.map((v) => {
 },
   },
 mounted() {
-let data = this.$route.query;
-if (data) {
-  this.form.name = data.methodName;
-  this.form.carbonMethodology = data.code;
-}
-this.formatProvince(getProvinceDict(this.$store));
-this.formatCountry(getCountryDict(this.$store));
-this.formatStatus(getCertificationCriteriaDict(this.$store));
-this.formatIndustry(getBusinessDict(this.$store));
-this.formatArea(getProjectAreaDict(this.$store));
-// this.loadCityDict();
-this.formatCity(getCityDict(this.$store));
-this.form.country = this.countryList[0].value;
-this.states = this.loadAll();
+  let data = this.$route.query;
+  if (data) {
+    if(data.form)
+    {
+      this.form=data.form;
+    }
+    else{
+      this.loadProject();
+    }
+    this.form.name = data.methodName;
+    this.form.carbonMethodology = data.code;
+  }
+  this.formatProvince(getProvinceDict(this.$store));
+  this.formatCountry(getCountryDict(this.$store));
+  this.formatStatus(getCertificationCriteriaDict(this.$store));
+  this.formatIndustry(getBusinessDict(this.$store));
+  this.formatArea(getProjectAreaDict(this.$store));
+  // this.loadCityDict();
+  this.formatCity(getCityDict(this.$store));
+  this.form.country = this.countryList[0].value;
+  this.states = this.loadAll();
 // this.list = this.states.map(item => {
 //   return { value: item, label: item };
 // });

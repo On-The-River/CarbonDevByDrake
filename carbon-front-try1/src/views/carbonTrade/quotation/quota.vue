@@ -1,7 +1,7 @@
 <template>
   <div class="newDivBox" style="position: relative;">
     <el-tabs v-model="activeName" :before-leave="moreState">
-      <el-tab-pane class="label1" label="采购行情" name="buy" :key="'buy'">
+      <el-tab-pane class="label2" label="采购行情" name="buy" :key="'buy'">
         <buy-quote-vue @changeTab="gotoSell" />
       </el-tab-pane>
       <el-tab-pane class="label2" label="供应行情" name="sell" :key="'sell'">
@@ -50,7 +50,7 @@ export default {
     },
     clickBuy() {
       this.buyAssetsDlg = true
-      
+
     },
     changeDialogFormVisible(res) {
       if (res) {
@@ -74,11 +74,7 @@ export default {
 </script>
 
 
-<!-- <style lang="scss" scoped> -->
-<!-- .label1 {
-  margin-bottom: 10px;
-  color: rgb(0, 0, 0);
-}
+ <style lang="scss" scoped>
 
 .more-btn {
   display: a;
@@ -114,6 +110,6 @@ export default {
     font-weight: 400;
     color: #5E6C84;
   }
-} -->
+}
 
-<!-- </style> -->
+ </style>

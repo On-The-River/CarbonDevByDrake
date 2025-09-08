@@ -8,11 +8,17 @@
         <div class="login-form">
           <div v-show="regShow">
             <el-form :model="regForm" ref="regForm" label-position="left">
+<!--              <div class="login-input">-->
+<!--                <span class="txt1">手&nbsp;机&nbsp;号</span>-->
+<!--                <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />-->
+<!--                <input class="user-input" ref="mobile" v-model="regForm.mobile" name="mobile" type="number"-->
+<!--                  placeholder="请输入11位手机号" />-->
+<!--              </div>-->
               <div class="login-input">
-                <span class="txt1">手&nbsp;机&nbsp;号</span>
+                <span class="txt1">邮&nbsp;箱</span>
                 <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
-                <input class="user-input" ref="mobile" v-model="regForm.mobile" name="mobile" type="number"
-                  placeholder="请输入11位手机号" />
+                <input class="user-input" ref="email" v-model="regForm.email" name="email" type="text"
+                       placeholder="请输入正确邮箱地址" />
               </div>
 
               <div class="login-input">
@@ -147,11 +153,11 @@ export default {
     getAuthCode: function () {
       this.sendAuthCode = false
       this.auth_time = 60
-      debugger
+
       var timetimer = setInterval(() => {
-        debugger
+
         this.auth_time--
-        debugger
+
         if (this.auth_time <= 0) {
           this.sendAuthCode = true
           clearInterval(timetimer)
@@ -166,28 +172,53 @@ export default {
     //   }
     // },
     // 验证码
-    verifyPhoneNumberFormat(str) {
-      var myreg = /^(((1[0-9][0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+    verifyEmailFormat(str) {
+      var myreg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return myreg.test(str);
     },
+    // 发送验证码
     handlecode() {
-      if (this.regForm.mobile !== '') {
-        let is_phone = this.verifyPhoneNumberFormat(this.regForm.mobile);
-        if (!is_phone) {
-          return this.$message.error('手机格式错误！')
+      // if (this.regForm.mobile !== '') {
+      //   let is_phone = this.verifyPhoneNumberFormat(this.regForm.mobile);
+      //   if (!is_phone) {
+      //     return this.$message.error('手机格式错误！')
+      //   }
+      //   this.getAuthCode()
+      //   regForgotPasswordCode(this.regForm.mobile).then((res, err) => {
+      //     if (err) {
+      //       this.$message.error(error)
+      //     } else {
+      //       this.$message.success(res.msg)
+      //     }
+      //   }).catch(err => {
+      //     this.$message.error(err.msg)
+      //   })
+      // } else {
+      //   this.$message.error('请输入手机号')
+      // }
+      console.log(this.regForm.email);
+      if (this.regForm.email !== '') {
+        let is_email = this.verifyEmailFormat(this.regForm.email);
+        if (!is_email) {
+          return this.$message.error('邮箱格式错误！')
         }
         this.getAuthCode()
-        regForgotPasswordCode(this.regForm.mobile).then((res, err) => {
-          if (err) {
-            this.$message.error(error)
+        regForgotPasswordCode(this.regForm.email).then(response => {
+          // 发送验证码成功
+          console.log('response:', response);
+          if (response && response.code === 200) {
+            this.$message.success('验证码发送成功，请查收邮箱');
+            this.getAuthCode(); // 启动倒计时
           } else {
-            this.$message.success(res.msg)
+            this.$message.error(response.msg || '验证码发送失败');
           }
-        }).catch(err => {
-          this.$message.error(err.msg)
         })
-      } else {
-        this.$message.error('请输入手机号')
+          .catch(error => {
+            // console.error('验证码发送失败:', error);
+            this.$message.error(error.msg || '验证码发送异常');
+          });
+      }else {
+        this.$message.error('请输入邮箱')
       }
     },
     // 下一步
@@ -195,20 +226,23 @@ export default {
       this.$refs.regForm.validate(valid => {
         if (valid) {
           var data = {
-            "confirmPassword": this.regForm.confirmPassword,
+            // "confirmPassword": this.regForm.confirmPassword,
             "code": this.regForm.verificationCode,
             "password": this.regForm.password,
-            "phone": this.regForm.mobile
+            "email": this.regForm.email
           }
+          console.log('data:', data);
           putForgotPassword(data)
-            .then((data, err) => {
-              if (err) {
-                this.$message.error(err)
-                return false
+            .then(response => {
+              console.log('response嘿嘿:', response);
+              // 成功处理
+              if (response && response.code === 200) {
+                this.$message.success('密码修改成功！');
+                setTimeout(() => {
+                  this.$router.push({ path: '/login' });
+                }, 1500);
               } else {
-                this.$message.success('恭喜您，' + data.data.msg + '!')
-                this.regShow = false
-                this.nextShow = true
+                this.$message.error(response.msg || '密码修改失败');
               }
             })
             .catch(() => { })
@@ -223,7 +257,7 @@ export default {
       this.$router.push({ path: '/login' })
     },
     setButtonClass() {
-      if (this.regForm.confirmPassword && this.regForm.password && this.regForm.verificationCode && this.regForm.mobile) {
+      if (this.regForm.confirmPassword && this.regForm.password && this.regForm.verificationCode && this.regForm.email) {
         return 'register-text'
       } else {
         return 'no-register-text'
@@ -409,7 +443,7 @@ $light_gray: #eee;
 
 .logo {
   background: transparent;
-  width: 134;
+  width: 134px;
   height: 36px;
   float: left;
   margin-left: 40px;

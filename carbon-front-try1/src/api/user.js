@@ -62,6 +62,7 @@ export function login(info) {
 
 /**
  * 验证账户是否存在
+ * @param {*} data
  * @returns {Promise}
  * @param {string} param
  */
@@ -83,7 +84,9 @@ export function getInfo(token) {
 
 /**
  * 退出登录
- * @returns {Promise}
+ * @param {*} data
+ * @returns
+ * {accountName}
  */
 export function logout() {
   let token = getToken()
@@ -99,7 +102,8 @@ export function logout() {
 }
 
 /**
- @returns {Promise}
+ * 会员管理 列表
+ * @param pram
  */
 export function userListApi(params) {
   return request({
@@ -440,37 +444,34 @@ export function updateSpreadApi(data) {
 }
 
 /**
- * 获取短信验证码
- * @returns {Promise}
- * @param phone
- */
-export function regCode(phone) {
-  return request({
-    baseURL: authURL,
-    url: `/authCenter/auth/register/code/` + phone,
-    method: 'GET',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  })
-}
-/**
- * 忘记密码 短信验证码
- * @returns {Promise}
- * @param phone
- */
-export function regForgotPasswordCode(phone) {
-  return request({
-    baseURL: authURL,
-    url: `/authCenter/auth/forgotPassword/code/` + phone,
-    method: 'GET',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  })
-}
-
-/**
- * 验证邮箱是否存在
- *
+ * 获取邮箱验证码
+ * @param {*} data
  * @returns
  */
+export function regEmailCode(email) {
+  return request({
+    baseURL:authURL,
+    url: `/authCenter/auth/register/emailCode/` + email,
+    method: 'GET',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
+}
+/**
+ * 忘记密码 邮箱验证码
+ * @param {*} data
+ */
+export function regForgotPasswordCode(email) {
+  return request({
+    baseURL: authURL,
+    url: `/authCenter/auth/forgotPassword/code/` + email,
+    method: 'GET',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+  })
+}
+  /**
+   * 验证邮箱是否存在
+   * @param {*} email
+   */
 export function verifyEmail(email) {
   return request({
     baseURL: "http://localhost:9001",

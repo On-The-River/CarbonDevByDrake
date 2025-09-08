@@ -44,8 +44,8 @@ export default {
   methods: {
     sendCode() {
       let url = this.fileUrl;
-      window.location.href = url;
-      // window.open(url);
+      // window.location.href = url;
+      window.open(url);
     }
   },
   mounted() {

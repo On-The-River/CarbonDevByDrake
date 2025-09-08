@@ -195,9 +195,7 @@ import { loadCarbonCreditPageList } from "@/api/carbonAssetApi";
 import { delCredit } from "@/api/carbonAssetApi";
 // 引用场外上架的页面~~~~~
 import carbonUpload from "./carbonUpload.vue";
-// import assetDetail from "./assetDetail.vue";
 import otcListing from "@/views/carbonAssets/otcListing";
-// import editMethod from "./method/editMethod.vue";
 import {
   getCertificationCriteriaDict,
   getProjectAreaDict,
@@ -366,7 +364,7 @@ export default {
     },
     outerShelve(row) {
       this.outerShelveRow = row;
-      console.log("传输的场外上架的数据为：",this.outerShelveRow);
+      // console.log("传输的场外上架的数据为：",this.outerShelveRow);
       this.outerShelveDlg = true;
       // this.form=row;
       // this.dialogFormVisible=true;

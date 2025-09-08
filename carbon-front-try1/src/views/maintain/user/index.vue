@@ -492,7 +492,7 @@
 <script>
 import {
   getListByTenant,
-  getFeiShuUpLoadProjectParams,
+  getFeiShuUploadProjectParams,
   putAddExchangeAccount,
   getAccoutBaseInfo,
   putAccountUpdatePassword,
@@ -667,7 +667,7 @@ export default {
     this.getBaseInfo();
     this.getListByTenantInfo();
     this.upLoadParams = getUpLoadFileParams();
-    this.upLoadParam = getFeiShuUpLoadProjectParams();
+    this.upLoadParam = getFeiShuUploadProjectParams();
     if (
       this.$route &&
       this.$route.query &&
@@ -978,7 +978,7 @@ export default {
         carbonExchangeId: Array.isArray(this.addUserFrom.carbonExchangeId) ? this.addUserFrom.carbonExchangeId[0]
           : this.addUserFrom.carbonExchangeId, //	碳交易所ID
         remarks: this.addUserFrom.remarks, //	备注
-        tenantId: parseInt(info.accountId), //	所属租户
+        tenantId: parseInt(info.tenantId), //	所属租户
         accountCredentials: this.tranFileUrl,
       };
       putAddExchangeAccount(datas).then((res) => {

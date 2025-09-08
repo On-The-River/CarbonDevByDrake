@@ -166,8 +166,8 @@ public class CarbonCreditAssetsServiceImpl extends BaseServiceImpl<CarbonCreditA
                 .proofOfPosition(handleNull(carbonCreditAssets.getIssuingCertificates()))
                 .issuingAgency(handleNull(carbonCreditAssets.getIssuingAgency()))
                 .build();
-//        Message<AssetUploadApproval> msg= MessageBuilder.withPayload(approval).build();
-//            mqTemplate.syncSend(RocketMqName.AssetUploadApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
+        Message<AssetUploadApproval> msg= MessageBuilder.withPayload(approval).build();
+            mqTemplate.syncSend(RocketMqName.AssetUploadApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
 
         //异步发送消息
         try {

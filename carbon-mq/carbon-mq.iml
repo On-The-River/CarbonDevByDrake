@@ -11,7 +11,7 @@
             <entry key="rebelXmlGenerationInvariantToken" value="PGFwcGxpY2F0aW9uIGdlbmVyYXRlZC1ieT0iaW50ZWxsaWoiPjxpZD5jYXJib24tbXE8L2lkPjxjbGFzc3BhdGg+PGRpciBuYW1lPSJEOi9RU1RfUHJvanMvQ2FyYm9uL0RldmVsb3Blci9jYXJib24wMi9jYXJib24vY2FyYm9uLW1xL3RhcmdldC9jbGFzc2VzIj48L2Rpcj48L2NsYXNzcGF0aD48L2FwcGxpY2F0aW9uPg==" />
           </map>
         </option>
-        <option name="version" value="7" />
+        <option name="version" value="8" />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">

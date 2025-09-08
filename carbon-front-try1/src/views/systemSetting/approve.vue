@@ -1,9 +1,7 @@
 <template>
   <div class="divBox">
     <div class="root">
-      <div>
-        <div id="your-mount-point"></div>
-      </div>
+      <el-link :href="fileUrl">GO TO FeiShu</el-link>
     </div>
   </div>
 </template>
@@ -39,12 +37,12 @@ export default {
 
   methods: {
     sendCode() {
-      window.location.href = this.fileUrl;
+      window.open(this.fileUrl);
     },
 
   },
   mounted() {
-    this.sendCode();
+    // this.sendCode();
   },
   created() {
     //  this.templateNum = this.$route.query.templateNum;

@@ -24,9 +24,19 @@ public class RedisKeyName {
     public static final String SMS_REGISTER_KEY = "sms:register:";
 
     /**
+     * 注册发送邮箱
+     */
+    public static final String SMS_EMAIL_CODE_KEY = "SMS:EMAIL:CODE:";
+
+
+    /**
      * 忘记密码发送短信
      */
     public static final String SMS_FORGOT_PASSWORD_KEY = "sms:forgotPassword:";
+    /**
+     * 忘记密码发送邮箱
+     */
+    public static final String SMS_FORGOT_PASSWORD_EMAIL_CODE_KEY = "FORGOT_PASSWORD:EMAIL:CODE:";
 
     /**
      * 修改手机号发送短信

@@ -12,7 +12,7 @@
                 <span class="txt1">用&nbsp;户&nbsp;名</span>
                 <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
                 <input class="user-input" ref="accountName" v-model="regForm.accountName" name="accountName" type="text"
-                  placeholder="请输入用户名" />
+                       placeholder="请输入用户名" />
               </div>
 
               <div class="login-input">
@@ -26,7 +26,7 @@
                 <span class="txt1">邮&nbsp;箱</span>
                 <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
                 <input class="user-input" ref="email" v-model="regForm.email" name="email" type="text"
-                       placeholder="请输入邮箱地址" @mouseover="verifyDefaultEmailFormat"  />
+                       placeholder="请输入邮箱地址" />
               </div>
 
 
@@ -36,32 +36,30 @@
                 <input class="user-input" ref="verificationCode" v-model="regForm.verificationCode"
                        name="verificationCode" type="text" placeholder="请输入验证码" />
                 <button v-show="sendAuthCode" style="cursor:pointer" class="codeBtn"
-                        @click.prevent="handlecode">获取验证码</button>
+                        @click.prevent="handlecode" @mouseover="verifyDefaultEmailFormat">获取验证码</button>
                 <button v-show="!sendAuthCode" class="codeBtn" disabled>{{auth_time}}s</button>
               </div>
-              <div class="verification-tip" v-if="!sendAuthCode">
-                <span style="color: #ff6600; font-size: 12px;">验证码5分钟内有效，请尽快完成注册</span>
-              </div>
+
 
 
               <div class="login-input">
                 <span class="txt1">设置密码</span>
                 <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
                 <input class="pwd-input" :key="passwordType" :type="passwordType" ref="password" clearable
-                  v-model="regForm.password" placeholder="请输入6-16位密码" name="password" />
+                       v-model="regForm.password" placeholder="请输入6-16位密码" name="password" />
               </div>
 
               <div class="login-input">
                 <span class="txt1">确认密码</span>
                 <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
                 <input class="pwd-input" :key="passwordType" ref="confirmPassword" :type="passwordType" clearable
-                  v-model="regForm.confirmPassword" placeholder="请输入确认密码" name="confirmPassword" />
+                       v-model="regForm.confirmPassword" placeholder="请输入确认密码" name="confirmPassword" />
               </div>
 
               <div class="btn_reg">
                 <el-button :class="setButtonClass()" type="success"
-                  style="width:100%;margin-top:30px;background:#2EC28B;height:50px;font-size: 15px;" :loading="loading"
-                  @click.prevent="handleNext">注册</el-button>
+                           style="width:100%;margin-top:30px;background:#2EC28B;height:50px;font-size: 15px;" :loading="loading"
+                           @click.prevent="handleNext">注册</el-button>
               </div>
               <!-- <div>
             <el-link @click="clickLogin">已有账号</el-link>
@@ -84,7 +82,6 @@
 import { register, login, logout,regEmailCode, regCode ,getAuthCenterAuthVerify,verifyEmail} from '@/api/user'
 import { MessageBox } from 'element-ui'
 import md5 from 'js-md5'
-import {msg} from "@babel/core/lib/config/validation/option-assertions";
 // import shajs from 'sha.js'
 
 export default {
@@ -134,7 +131,7 @@ export default {
         accountName: '',
         email: '',
         verifyAccountName:'',
-        emailExists: false // 改为 regForm 的属性
+        verifyEmailName:''
       },
       loginRules: {
         // mobile: [{ required: true, trigger: 'blur', validator: checkPhone }],
@@ -168,7 +165,7 @@ export default {
 
     getAuthCode: function() {
       this.sendAuthCode = false
-      this.auth_time = 300
+      this.auth_time = 60
       var timetimer = setInterval(() => {
         this.auth_time--
         if (this.auth_time <= 0) {
@@ -184,9 +181,9 @@ export default {
     //     this.passwordType = 'password'
     //   }
     // },
-    // 验证码
+    // 手机号格式
     verifyPhoneNumberFormat(str){
-      var myreg = /^(((1[0-9][0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+      var myreg = /^1[3-9]\d{9}$/;   //1开头，第二位3-9，供11位
       return myreg.test(str);
     },
     // 验证邮箱格式
@@ -194,8 +191,22 @@ export default {
       const emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return emailReg.test(email);
     },
+    // verifyDefaultEmailFormat() {
+    //   return this.verifyEmailFormat(this.regForm.email);
+    // },
     verifyDefaultEmailFormat() {
-      return this.verifyEmailFormat(this.regForm.email);
+      // 验证邮箱的
+      if(!this.regForm.email || (this.regForm.email == this.verifyEmailName)){
+        return
+      }
+      let param = this.regForm.email;
+      verifyEmail(param).then((res)=>{
+        if(res && res.code == 200){
+          this.$message.error("邮箱已被注册，请重新输入邮箱")
+        }else{
+          this.verifyEmailName = this.regForm.email
+        }
+      })
     },
     getIsAccountName(){
       // 验证用户名的
@@ -203,111 +214,60 @@ export default {
         return
       }
       let param = this.regForm.accountName;
-      getAuthCenterAuthVerify(param).then(res =>{
+      getAuthCenterAuthVerify(param).then((res)=>{
         if(res && res.code == 200){
           this.$message.error("用户名已被注册，请重新输入用户名")
-        } else{
+        }else{
           this.verifyAccountName = this.regForm.accountName
         }
       })
     },
-    // 验证邮箱唯一性
-    checkEmailAvailable() {
-      let emailResponse={
-        msg:"",
-        data:true
-      };
-
-      if (!this.regForm.email)
-      {
-        emailResponse.data = false;
-        emailResponse.msg="请输入邮箱"
-        return emailResponse;
-        // return Promise.resolve();
-      } // 无邮箱时返回 resolved
-
-      // 先校验格式，格式错误直接返回
-      else if (!this.verifyEmailFormat(this.regForm.email)) {
-        emailResponse.data = false;
-        emailResponse.msg="请输入正确的邮箱格式"
-        return emailResponse;
-      }
-
-      verifyEmail(this.regForm.email).then(
-        (res) => {
-          const response=res;
-          // const data = response.data;
-          // console.log('response:', response); // 调试信息
-          // 明确判断：只有返回 data: false 才是“邮箱已注册”
-          if (response && response.data === false) {
-            // this.$message.error("该邮箱已被注册，请使用其他邮箱或直接登录");
-            // this.regForm.emailExists = true; // 标记为已注册
-            emailResponse.data = false;
-            emailResponse.msg="该邮箱已被注册，请使用其他邮箱或直接登录"
-          }
-          else if (response && response.data === true) {
-            // this.regForm.emailExists = false; // 标记为未注册
-            emailResponse.data = true;
-            emailResponse.msg="验证码已发送，请注意查收"
-
-          }
-          else {
-            // console.log('邮箱验证返回结果:', response); // 调试信息
-            // 处理接口返回非预期格式（如后端报错）
-            // this.$message.error("检查邮箱失败，请稍后重试");
-            // this.regForm.emailExists = true; // 暂标记为已注册，阻止后续请求
-            emailResponse.data = false;
-            emailResponse.msg="检查邮箱失败，请稍后重试"
-          }
-          return emailResponse;
-
-        },
-        (err)=>{
-
-        }
-      );
-    },
     handlecode() {
-      if (!this.regForm.email) {
-        return this.$message.error('请输入邮箱');
-      }
 
-      let is_email = this.verifyEmailFormat(this.regForm.email);
-      if (!is_email) {
-        return this.$message.error('邮箱格式错误！');
-      }
-
-      // 检查邮箱是否已存在
-      var emailCheckedResult = this.checkEmailAvailable();
-      console.log('emailCheckedResult:', emailCheckedResult);
-      var emailAvailable=emailCheckedResult.data;
-      var emailMsg=emailCheckedResult.msg;
-
-      //
-      this.regForm.emailExists = !emailAvailable;
-
-      // 只有邮箱不存在时才发送验证码
-      if (emailAvailable) {
-        this.getAuthCode();
-        // this.$message.success(emailMsg);
+      if (this.regForm.mobile !== '') {
+        let is_phone = this.verifyPhoneNumberFormat(this.regForm.mobile);
+        let is_email = this.verifyEmailFormat(this.regForm.email);
+        if (!is_phone) {
+          return this.$message.error('手机格式错误！')
+        }
+        if (!is_email) {
+          return this.$message.error('邮箱格式错误！')
+        }
+        this.getAuthCode()
+        //   regCode(this.regForm.email).then((res, err) => {
+        //     debugger
+        //     if (err) {
+        //        this.$message.error(error)
+        //     } else {
+        //       this.$message.success(res.msg)
+        //     }
+        //   }).catch(err => {
+        //     this.$message.error(err.msg)
+        //   })
+        // } else {
+        //   return this.$message.error('请输入手机号')
+        // }
         regEmailCode(this.regForm.email).then((res) => {
           if (res && res.code === 200) {
-            this.$message.success(emailMsg);
+            this.$message.success('验证码发送成功，请查收邮箱');
+            this.getAuthCode(); // 启动倒计时
+            // this.$message.success(res.msg || '验证码已发送至您的邮箱')
           } else {
-            this.$message.error(res.msg || '验证码发送失败');
-            this.sendAuthCode = true;
-            this.auth_time = 0;
+            this.$message.error(res.msg || '验证码发送失败')
+            // 发送失败时重置按钮状态
+            this.sendAuthCode = true
+            this.auth_time = 0
           }
         }).catch(err => {
-          this.$message.error(err.msg || '验证码发送失败');
-          this.sendAuthCode = true;
-          this.auth_time = 0;
-        });
+          this.$message.error(err.msg || '验证码发送失败')
+          // 发送失败时重置按钮状态
+          this.sendAuthCode = true
+          this.auth_time = 0
+        })
       }else{
-        this.$message.error(emailMsg);
+        return this.$message.error('请输入邮箱')
       }
     },
-
     // 下一步
     handleNext() {
 
@@ -317,54 +277,43 @@ export default {
             this.$message.error("两次输入的密码不一致，请重新输入！")
             return
           }
-          if (!this.getIsAccountName()) {
-            this.$message.error("用户名已存在")
-            return
-          }
           var data = {
-                      "accountName": this.regForm.accountName,
-                      "code":this.regForm.verificationCode,
-                      "password": this.regForm.password,
-                      "confirmPassword": this.regForm.confirmPassword,
-                      "phone": this.regForm.mobile,
-                      "email":this.regForm.email,
-                      }
-          this.loading = true;
+            "accountName": this.regForm.accountName,
+            "code":this.regForm.verificationCode,
+            "password": this.regForm.password,
+            "confirmPassword": this.regForm.confirmPassword,
+            "phone": this.regForm.mobile,
+            "email":this.regForm.email,
+          }
           register(data)
-            .then((res) => {  // 修复变量名，原来是 (data, err)
-              if (res && res.code === 200) {  // 修复判断逻辑
+            .then((data, err) => {
+              if (err) {
+                this.$message.error(error)
+                return false
+              } else {
                 MessageBox.alert('', '提示', {
                   message: '恭喜您注册成功，请直接登录。',
                   confirmButtonText: '确定',
                 }).then(() => {
-                  this.$router.push({ path: '/login' });
-                });
-              } else {
-                let errorMsg = res.msg || '注册失败';
-                // 特别处理邮箱已被注册的情况
-                if (res.code === 5000 && errorMsg.includes('邮箱已被注册')) {
-                  errorMsg = '该邮箱已被注册，请使用其他邮箱或直接登录';
-                }
-                this.$message.error(errorMsg);
+                  this.$router.push({ path: '/login' })
+                })
+                // this.regShow = false
+                // this.nextShow = true
               }
-              this.loading = false;
             })
-            .catch((err) => {  // 修复变量名
-              this.$message.error(err.msg || '注册失败，请稍后重试');
-              this.loading = false;
-            });
+            .catch(() => {})
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     setButtonClass(){
-      if(this.regForm.accountName && this.regForm.confirmPassword && this.regForm.password && this.regForm.verificationCode && this.regForm.mobile&&!this.regForm.emailExists){
-          return 'register-text'
+      if(this.regForm.accountName && this.regForm.confirmPassword && this.regForm.password && this.regForm.verificationCode && this.regForm.mobile){
+        return 'register-text'
       }else{
         return 'no-register-text'
-    }
+      }
     },
     fullWidth(){},
 

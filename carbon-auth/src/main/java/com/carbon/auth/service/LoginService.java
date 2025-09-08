@@ -68,4 +68,12 @@ public interface LoginService {
 	 * @return ApiResult
 	 */
     Boolean verify(String accountName);
+
+	/**
+	 * 校验邮箱
+	 * @param email
+	 * @return ApiResult
+	 */
+	Boolean verifyEmail(String email);
+
 }

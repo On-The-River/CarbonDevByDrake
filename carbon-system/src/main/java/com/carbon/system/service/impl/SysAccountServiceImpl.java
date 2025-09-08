@@ -113,7 +113,7 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
             throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_PHONE_ALREADY_EXISTS);
         }
         //加密密码，保存账户
-        param.setPassword(DigestUtils.md5Hex(param.getPassword()));
+//        param.setPassword(DigestUtils.md5Hex(param.getPassword()));
         account = new SysAccount();
         BeanUtil.copyProperties(param,account);
         if (!param.getAccountStatus().equals("0390000004")){

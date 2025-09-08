@@ -32,6 +32,21 @@ spring:
       #允许出现单引号
       allow_single_quotes: true
 
+  mail:
+    host: smtp.qq.com
+    username: 2557355806@qq.com
+    password: mtfwhtnrwqaaecci
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+
 # Sa-Token配置
 sa-token:
   # token名称 (同时也是cookie名称)

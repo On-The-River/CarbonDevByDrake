@@ -2,73 +2,65 @@
   <div class="root">
     <div>
       <a class="nav-title" href="/carbon/projectDo">项目统计</a>
-      <!-- <a class="nav-subtitle">{{ quotation.statDate }}</a> -->
     </div>
     <div class="card-container">
-      <div class="chart-container" style="width: 300px">
-        <div class="bdl9 flex-col">
-          <div class="mod20 flex-row">
-            <div class="TextGroup11 flex-col">
-              <div class="mod51 flex-col justify-between">
-                <span class="word78">{{ projectStat.reductionTotal }}</span>
-                <span class="txt35">tCO2e</span>
-              </div>
+      <!-- 树形布局容器 -->
+      <div class="tree-container">
+        <!-- 树干 -->
+        <div class="tree-trunk"></div>
+
+        <!-- 树冠及数据项 -->
+        <div class="tree-canopy">
+          <!-- 顶部主数据项 - 预计减排量 -->
+          <div class="tree-node main-node">
+            <div class="reduction-item">
+              <span class="reduction-num">{{ projectStat.reductionTotal }}</span>
+              <span class="unit">tCO2e</span>
+              <span class="reduction-label">预计减排量</span>
             </div>
           </div>
-          <!-- <div class="TextGroup1 flex-col">
-            <div class="mod51 flex-col justify-between">
-              <span class="word78">50,000</span>
-              <span class="txt35">tCO2e</span>
+
+          <!-- 左侧树枝及节点 -->
+          <div class="tree-branch left-branch"></div>
+          <div class="tree-node left-node">
+            <div class="stat-item approved">
+              <span class="stat-num">{{ projectStat.approvedCount }}</span>
+              <span class="stat-label">累计审定项目</span>
             </div>
-          </div> -->
-        </div>
-        <div class="mod21 flex-row">
-          <span class="word79">{{ projectStat.approvedCount }}</span>个
-          <span class="word80">预计减排量</span>
-        </div>
-        <div class="mod22 flex-row">
-          <span class="word81">累计审定项目</span>
-          <span class="word82">{{ projectStat.filingCount }}</span>个
-        </div>
-        <div class="mod23 flex-row">
-          <span class="word83">{{ projectStat.singCount }}</span>个
-          <span class="info40">累计备案项目</span>
-        </div>
-        <div class="TextGroup12 flex-col">
-          <span class="info41">累计签发项目</span>
+          </div>
+
+          <!-- 右侧上树枝及节点 -->
+          <div class="tree-branch right-top-branch"></div>
+          <div class="tree-node right-top-node">
+            <div class="stat-item filing">
+              <span class="stat-num">{{ projectStat.filingCount }}</span>
+              <span class="stat-label">累计备案项目</span>
+            </div>
+          </div>
+
+          <!-- 右侧下树枝及节点 -->
+          <div class="tree-branch right-bottom-branch"></div>
+          <div class="tree-node right-bottom-node">
+            <div class="stat-item sing">
+              <span class="stat-num">{{ projectStat.singCount }}</span>
+              <span class="stat-label">累计签发项目</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <el-table
         :header-cell-style="{ textAlign: 'center' }"
         class="table-div"
-        :cell-styles="{ 'text-align': 'center' }"
-        :data="projectStat.projectList"
-        stripe
-        style="width: 100%"
+        :cell-style="{ 'text-align': 'center' }"
+        :data="projectList"
+        stripe style="width: 100%"
         max-height="368"
       >
-        <el-table-column label="项目名称" width="120">
-          <template slot-scope="scope">
-            <span class="word79">{{ scope.row.projectId }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="预计减排量(tCO2e)">
-          <template slot-scope="scope">
-            <span class="word79">{{ scope.row.projectName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="碳资产估值(￥)">
-          <template slot-scope="scope">
-            <span class="word79">{{ scope.row.projectType }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="项目状态">
-          <template slot-scope="scope">
-            <span class="word79">{{ scope.row.status }}</span>
-          </template>
-        </el-table-column>
-        <!-- 表格列定义 -->
+        <el-table-column prop="projectName" label="项目名称" width="280"></el-table-column>
+        <el-table-column prop="reduction" label="预计减排量(tCO2e)" width="160"></el-table-column>
+        <el-table-column prop="carbonValuation" label="碳资产估值(￥)" width="160"></el-table-column>
+        <el-table-column prop="developmentState" label="项目状态" width="140"></el-table-column>
       </el-table>
     </div>
   </div>
@@ -80,68 +72,20 @@ import { getHomePanelData } from "@/api/homeApi.js";
 import { getToken } from "@/utils/auth";
 
 export default {
-  name: 'ProjectStatistical',
+  name: "projectStatistical",
   data() {
     return {
-      // 初始化 projectStat 对象
-      projectStat: {
-        reductionTotal: 0,
-        approvedCount: 0,
-        filingCount: 0,
-        singCount: 0,
-        projectList: []
-      }
-    }
+      projectList : this.projectStat.projectList
+    };
+  },
+  props: {
+    projectStat: {}
   },
   mounted() {
-    this.fetchProjectStatData()
-  },
-  methods: {
-    async fetchProjectStatData() {
-      try {
-        // 这里调用获取数据的 API
-        const response = await getHomePanelData()
-        this.projectStat = response.data || this.defaultProjectStat()
-      } catch (error) {
-        console.error('获取项目统计数据失败:', error)
-      }
-    },
-    // 默认数据结构
-    defaultProjectStat() {
-      return {
-        reductionTotal: 0,
-        approvedCount: 0,
-        filingCount: 0,
-        singCount: 0,
-        projectList: []
-      }
-    }
+    this.projectList = this.projectStat.projectList
   }
-}
+};
 </script>
-<!--<script>-->
-<!--import * as echarts from "echarts";-->
-<!--import { getHomePanelData } from "@/api/homeApi.js";-->
-<!--import { getToken } from "@/utils/auth";-->
-
-<!--export default {-->
-<!--  name: "projectStatistical",-->
-<!--  data() {-->
-<!--    return {-->
-<!--      projectList: this.projectStat.projectList-->
-<!--    };-->
-<!--  },-->
-<!--  props: {-->
-<!--    projectStat: {},-->
-<!--  },-->
-<!--  mounted() {-->
-<!--    this.projectList = this.projectStat.projectList-->
-<!--  },-->
-<!--  computed: {},-->
-<!--  methods: {},-->
-<!--  created() {},-->
-<!--};-->
-<!--</script>-->
 
 <style lang="scss" scoped>
 .root {
@@ -164,342 +108,193 @@ export default {
 
 .nav-title {
   margin-top: 20px;
-
   font-weight: 500;
   color: #080b0d;
   cursor: default;
 }
 
-.nav-subtitle {
-  margin-left: 12px;
-
-  font-weight: 400;
-  color: #5e6c84;
+/* 树形布局样式 */
+.tree-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 30px 20px;
 }
 
-.chart-container {
-  display: flex;
-  flex-direction: column;
-  margin-left: 80px;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  width: 180px;
+/* 树干样式 */
+.tree-trunk {
+  position: absolute;
+  width: 8px;
+  height: 220px;
+  background: linear-gradient(0deg, #8B4513 0%, #A0522D 100%);
+  left: 120px; /* 调整树干位置更靠左 */
+  bottom: 0;
+  border-radius: 4px 4px 0 0;
 }
 
-.chart-top-text {
+/* 树枝样式 */
+.tree-branch {
+  position: absolute;
+  background: linear-gradient(0deg, #8B4513 0%, #A0522D 100%);
+  height: 6px;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+/* 左侧树枝 - 向左延伸更长 */
+.left-branch {
+  width: 100px;
+  top: 160px;
+  left: 120px;
+  transform-origin: left center;
+  transform: rotate(-40deg);
+}
+
+/* 右侧上树枝 */
+.right-top-branch {
+  width: 80px;
+  top: 100px;
+  left: 120px;
+  transform-origin: left center;
+  transform: rotate(30deg);
+}
+
+/* 右侧下树枝 */
+.right-bottom-branch {
+  width: 80px;
+  top: 200px;
+  left: 120px;
+  transform-origin: left center;
+  transform: rotate(20deg);
+}
+
+/* 节点位置调整 */
+.tree-node {
+  position: absolute;
+  z-index: 2; /* 确保节点在树枝上方 */
+}
+
+/* 顶部节点 */
+.main-node {
+  top: 0;
+  left: 50px; /* 左移使顶部节点居中 */
+}
+
+/* 左侧节点 - 左移并调整垂直位置 */
+.left-node {
+  top: 130px;
+  left: 10px;
+}
+
+/* 右侧上节点 */
+.right-top-node {
+  top: 80px;
+  left: 160px;
+}
+
+/* 右侧下节点 */
+.right-bottom-node {
+  top: 180px;
+  left: 160px;
+}
+
+/* 左侧项目文字右对齐 */
+.left-node .stat-label {
+  text-align: right;
+  margin-left: 5px;
+}
+
+/* 右侧项目文字左对齐 */
+.right-top-node .stat-label,
+.right-bottom-node .stat-label {
+  text-align: left;
+  margin-left: 10px;
+}
+
+/* 数据项样式优化 */
+.reduction-item {
+  background: linear-gradient(135deg, #74d88c 0%, #26b581 100%);
+  border-radius: 8px;
+  padding: 10px;
+  color: #fff;
   text-align: center;
-
-  font-weight: 500;
-  color: #424c5c;
+  width: 140px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
 }
 
-.chart-unit {
-  text-align: center;
-
-  font-weight: 400;
-  color: #5e6c84;
-  // margin-left: 60px;
+.reduction-item:hover {
+  transform: translateY(-2px);
 }
 
-.chart-info-bg {
+.reduction-num {
+  font-size: 24px;
+  font-weight: bold;
+  display: block;
+}
+
+.unit {
+  font-size: 14px;
+}
+
+.reduction-label {
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.stat-item {
   display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  width: 201px;
-  height: 111px;
-  background-image: url("../../../assets/imgs/bg_chart_info.png");
-  background-repeat: no-repeat;
+  align-items: center;
 }
 
-.green-point {
-  border-radius: 5px;
-  width: 10px;
-  height: 10px;
-  margin-top: 5px;
-  // margin-left: 20px;
-  margin-right: 10px;
-  background: linear-gradient(180deg, #4edb77 0%, #26b581 100%);
-}
-
-.blue-point {
-  border-radius: 5px;
-  width: 10px;
-  height: 10px;
-  margin-top: 5px;
-  // margin-left: 20px;
-  margin-right: 10px;
-  background: linear-gradient(180deg, #009eff 0%, #0065ff 100%);
-}
-
-.lint-blue-point {
-  border-radius: 5px;
-  width: 10px;
-  height: 10px;
-  margin-top: 5px;
-  // margin-left: 20px;
-  margin-right: 10px;
-  background: linear-gradient(180deg, #2fd5e1 0%, #15aabf 100%);
-}
-
-.info-line {
-  // margin-top: 10px;
+.stat-num {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
 }
 
-.hint-text {
-  font-weight: 400;
+.stat-num:hover {
+  transform: scale(1.05);
+}
+
+/* 左侧节点数字在右，文字在左 */
+.left-node .stat-item {
+  flex-direction: row-reverse;
+}
+
+.left-node .stat-num {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.approved .stat-num {
+  background: linear-gradient(135deg, #74d88c 0%, #26b581 100%);
+}
+
+.filing .stat-num,
+.sing .stat-num {
+  background: linear-gradient(135deg, #00a5ff 0%, #0065ff 100%);
+}
+
+.stat-label {
+  font-size: 14px;
   color: #424c5c;
+  white-space: nowrap;
 }
 
 .table-div {
-  margin-left: 10px;
+  margin-left: 20px;
   margin-right: 24px;
   margin-top: 30px;
   margin-bottom: 30px;
+  flex: 1;
 }
-
-.wrap-div {
-  margin: auto;
-}
-
-.bdl9 {
-  height: 293px;
-  background: url("../../../assets/imgs/bg_project_stati.png") 100% no-repeat;
-  width: 239px;
-
-  .mod20 {
-    width: 68px;
-    height: 39px;
-    margin: 30px 0 0 156px;
-
-    .TextGroup11 {
-      height: 39px;
-      width: 68px;
-
-      .mod51 {
-        width: 68px;
-        height: 39px;
-
-        .word78 {
-          width: 68px;
-          height: 22px;
-          overflow-wrap: break-word;
-          color: rgba(255, 255, 255, 1);
-
-          text-align: center;
-          white-space: nowrap;
-
-          display: block;
-        }
-
-        .txt35 {
-          width: 35px;
-          height: 13px;
-          overflow-wrap: break-word;
-          color: rgba(255, 255, 255, 1);
-
-          text-align: left;
-          white-space: nowrap;
-
-          display: block;
-          margin: 4px 0 0 17px;
-        }
-      }
-    }
-  }
-
-  .TextGroup11 {
-    height: 39px;
-    width: 68px;
-
-    .mod51 {
-      width: 68px;
-      height: 39px;
-
-      .word78 {
-        width: 68px;
-        height: 22px;
-        overflow-wrap: break-word;
-        color: rgba(255, 255, 255, 1);
-
-        text-align: center;
-        white-space: nowrap;
-
-        display: block;
-      }
-
-      .txt35 {
-        width: 35px;
-        height: 13px;
-        overflow-wrap: break-word;
-        color: rgba(255, 255, 255, 1);
-
-        text-align: left;
-        white-space: nowrap;
-
-        display: block;
-        margin: 4px 0 0 17px;
-      }
-    }
-  }
-
-  .mod21 {
-    width: 186px;
-    height: 22px;
-    margin: 31px 0 0 25px;
-
-    .word79 {
-      width: 33px;
-      height: 22px;
-      overflow-wrap: break-word;
-      color: rgba(255, 255, 255, 1);
-
-      text-align: center;
-      white-space: nowrap;
-
-      display: block;
-    }
-
-    .info38 {
-      width: 12px;
-      height: 12px;
-      overflow-wrap: break-word;
-      color: rgba(255, 255, 255, 1);
-
-      text-align: left;
-      white-space: nowrap;
-
-      display: block;
-      margin: 9px 0 0 4px;
-    }
-
-    .word80 {
-      width: 70px;
-      height: 14px;
-      overflow-wrap: break-word;
-      color: rgba(66, 76, 92, 1);
-
-      text-align: left;
-      white-space: nowrap;
-
-      display: block;
-      position: relative;
-      bottom: 25px;
-      left: 50px;
-      margin: 4px 0 0 67px;
-    }
-  }
-
-  .mod22 {
-    width: 197px;
-    height: 24px;
-    margin: 46px 0 0 14px;
-
-    .word81 {
-      width: 84px;
-      height: 14px;
-      overflow-wrap: break-word;
-      color: rgba(66, 76, 92, 1);
-
-      text-align: left;
-      white-space: nowrap;
-
-      display: block;
-    }
-
-    .word82 {
-      width: 24px;
-      height: 22px;
-      overflow-wrap: break-word;
-      color: rgba(255, 255, 255, 1);
-
-      text-align: center;
-      white-space: nowrap;
-
-      display: block;
-      position: relative;
-      left: 152px;
-      bottom: 10px;
-      // margin: 2px 0 0 72px;
-    }
-
-    .info39 {
-      width: 13px;
-      height: 13px;
-      overflow-wrap: break-word;
-      color: rgba(255, 255, 255, 1);
-
-      text-align: left;
-      white-space: nowrap;
-
-      display: block;
-      margin: 10px 0 0 4px;
-    }
-  }
-
-  .mod23 {
-    width: 197px;
-    height: 22px;
-    margin: 43px 0 30px 28px;
-
-    .word83 {
-      width: 25px;
-      height: 22px;
-      overflow-wrap: break-word;
-      color: rgba(255, 255, 255, 1);
-
-      text-align: center;
-      white-space: nowrap;
-
-      display: block;
-      position: relative;
-      right: 5px;
-    }
-
-    .txt36 {
-      width: 13px;
-      height: 13px;
-      overflow-wrap: break-word;
-      color: rgba(255, 255, 255, 1);
-
-      text-align: left;
-      white-space: nowrap;
-
-      display: block;
-      margin: 7px 0 0 4px;
-    }
-
-    .info40 {
-      width: 84px;
-      height: 14px;
-      overflow-wrap: break-word;
-      color: rgba(66, 76, 92, 1);
-
-      text-align: left;
-      white-space: nowrap;
-
-      display: block;
-      position: relative;
-      left: 40px;
-      bottom: 25px;
-      margin: 3px 0 0 71px;
-    }
-  }
-}
-  .info41 {
-    width: 84px;
-    height: 14px;
-    overflow-wrap: break-word;
-    color: rgba(66, 76, 92, 1);
-
-    text-align: left;
-    white-space: nowrap;
-
-    display: block;
-    position: relative;
-    right: 55px;
-    top: 10px;
-    margin: 3px 0 0 71px;
-  }
 </style>
