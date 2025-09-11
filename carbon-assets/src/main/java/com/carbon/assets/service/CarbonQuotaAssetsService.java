@@ -8,6 +8,7 @@ import com.carbon.assets.vo.CarbonQuotaAssetsQueryVo;
 import com.carbon.common.api.Paging;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -18,7 +19,7 @@ import java.io.Serializable;
  * @since 2022-04-24
  */
 public interface CarbonQuotaAssetsService extends BaseService<CarbonQuotaAssets> {
-
+    void triggerSyncToFeishu();
     /**
      * 根据ID获取查询对象
      * @param id 主键id
@@ -36,5 +37,9 @@ public interface CarbonQuotaAssetsService extends BaseService<CarbonQuotaAssets>
     CarbonAssetsTotalVo getCarbonAssetsTotal();
 
     void SendFeishuApprove(CarbonQuotaAssets carbonQuotaAssets);
+
+    void onAddQuote(Integer assetId, BigDecimal delta);
+
+    void toFrozen(Integer assetId ,BigDecimal quoteQuantity ,BigDecimal actualQuantity);
 
 }

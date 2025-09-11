@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RocketMQMessageListener(topic = RocketMqName.DATABASE_TO_FEISHU_SYNC, consumerGroup = RocketMqName.DATABASE_TO_FEISHU_SYNC)
-public class DatabaseToFeishuSyncReceiver implements RocketMQListener<Long> {
+public class DatabaseToFeishuSyncReceiver implements RocketMQListener<String> {
     @Autowired
     private SystemServiceApi systemServiceApi;
 
     @Override
-    public void onMessage(Long projectId) {
+    public void onMessage(String configId) {
         try {
-            log.info("收到数据库变更同步请求, projectId={}", projectId);
-            systemServiceApi.syncProjectToFeishu(projectId);
-            log.info("数据库到飞书同步完成, projectId={}", projectId);
+            log.info("收到数据库变更同步请求, configId={}", configId);
+            systemServiceApi.syncDatabaseToFeishu(configId);
+            log.info("数据库到飞书同步完成, configId={}", configId);
         } catch (Exception e) {
-            log.error("数据库到飞书同步失败, projectId={}", projectId, e);
+            log.error("数据库到飞书同步失败, configId={}", configId, e);
         }
     }
 }

@@ -25,8 +25,8 @@ export function register(data) {
  * @returns {Promise}
  */
 export function putForgotPassword(data) {
-  data.confirmPassword = md5(data.confirmPassword)
-  data.password = md5(data.password)
+  // data.confirmPassword = md5(data.confirmPassword)
+  // data.password = md5(data.password)暂时注释
   return request({
     baseURL: authURL,
     url: '/authCenter/auth/forgotPassword',

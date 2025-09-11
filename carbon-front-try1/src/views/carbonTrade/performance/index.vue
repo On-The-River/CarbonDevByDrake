@@ -471,10 +471,10 @@ export default {
       this.dialogFormVisible = false;
     },
     handle(row) {
-      this.$router.push({
-        path: "/trade/performance/orderDetail",
-        query: { id: row.id }
-      });
+      // this.$router.push({
+      //   path: "/trade/performance/detail",
+      //   query: { id: row.id }
+      // });
     },
     handleSizeChange(val) {
       this.pageSize = val;

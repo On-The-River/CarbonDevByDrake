@@ -8,6 +8,7 @@ import com.carbon.domain.system.param.SysAccountParam;
 import com.carbon.domain.system.vo.SysAccountModelVo;
 import com.carbon.system.entity.SysAccount;
 import com.carbon.system.param.*;
+import com.carbon.common.utils.HttpContextUtils;
 import com.carbon.system.vo.SysAccountQueryVo;
 import com.carbon.system.common.BaseController;
 import com.carbon.system.service.SysAccountService;
@@ -105,15 +106,44 @@ public class SysAccountController extends BaseController {
     @PutMapping("/update/phone")
     @ApiOperation(value = "账户-修改手机号",notes = "修改手机号")
     public ApiResult<Boolean> updatePhone(@Valid @RequestBody ChangePhoneParam param) {
+//        log.info("开始处理修改手机号请求，参数: {}", JSONUtil.toJsonStr(param));
+        // 自动填充当前用户ID（如果未提供）
+        if (param.getId() == null) {
+            Long currentAccountId = getCurrentAccountId();
+            log.info("参数中未提供账户ID，自动获取当前用户ID: {}", currentAccountId);
+            if (currentAccountId == null) {
+                log.warn("无法获取当前用户ID，用户可能未登录");
+                return ApiResult.fail("用户未登录");
+            }
+            param.setId(currentAccountId);
+        }
         sysAccountService.updatePhone(param);
         return ApiResult.ok();
     }
 
-    @GetMapping("/update/code/{phone}")
+    // 在 SysAccountController 类中添加获取账户id方法
+    private Long getCurrentAccountId() {
+        try {
+            // 使用 HttpContextUtils 获取当前账户ID
+            Long accountId = HttpContextUtils.getAccountId();
+            log.info("通过HttpContextUtils获取到的accountId: {}", accountId);
+            return accountId;
+        } catch (Exception e) {
+            log.error("获取当前账户ID异常: ", e);
+            return null;
+        }
+    }
+    @GetMapping("/update/code")
     @ApiOperation(value = "验证码-获取修改手机号验证码", notes = "获取修改验证码")
-    public ApiResult<Boolean> sendRegisterCode(@PathVariable String phone) {
-        sysAccountService.sendUpdateCode(phone);
-        return ApiResult.ok("发送成功");
+    public ApiResult<Boolean> sendUpdatePhoneCodeByEmail() {
+        log.info("开始处理发送验证码请求");
+        Long currentAccountId = getCurrentAccountId();
+        log.info("当前用户ID: {}", currentAccountId);
+        if (currentAccountId == null) {
+            return ApiResult.fail("用户未登录");
+        }
+        sysAccountService.sendUpdatePhoneCodeByEmail(currentAccountId);
+        return ApiResult.ok("发送成功，验证码已发送到您的邮箱");
     }
 
     @PostMapping("/send/email")

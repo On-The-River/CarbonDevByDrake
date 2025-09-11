@@ -40,24 +40,25 @@
     </select>
 
     <select id="getCarbonMetaregistryPageList" resultType="com.carbon.assets.vo.CarbonMetaregistryQueryVo">
-        select
-        cm.id,
-        cm.ref_id,
-        cm.project_code,
-        cm.project_name,
-        cm.project_scope_code,
-        cm.project_scope,
-        cm.project_owner,
-        cm.project_verifier,
-        cm.certified_standard_code,
-        s1.item_ch certified_Standard,
-        cm.methodology_name,
-        cm.project_status_code,
-        s2.item_ch project_status,
-        cm.record_filing_date,
-        cm.certified_date,
-        cm.issuing_date,
-        cm.estimated_annual_reduction
+        select distinct <include refid="Base_Column_List_AS"/>
+        --         cm.id,
+--         cm.ref_id,
+--         cm.project_code,
+--         cm.project_name,
+--         cm.project_scope_code,
+--         cm.project_scope,
+--         cm.project_owner,
+--         cm.project_verifier,
+--         cm.certified_standard_code,
+--         s1.item_ch certified_Standard,
+--         cm.methodology_name,
+--         cm.project_status_code,
+--         s2.item_ch project_status,
+--         cm.record_filing_date,
+--         cm.certified_date,
+--         cm.issuing_date,
+--         cm.estimated_annual_reduction,
+--         cm.project_scope_type_code,
         from carbon_metaregistry cm
         left join sys_dict_item s1 on cm.certified_standard_code=s1.item_value
         left join sys_dict_item s2 on cm.project_status_code=s2.item_value

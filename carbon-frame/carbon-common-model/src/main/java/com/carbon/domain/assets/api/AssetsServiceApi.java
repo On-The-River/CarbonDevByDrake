@@ -39,5 +39,7 @@ public interface AssetsServiceApi {
 
 	@PostMapping("/methodoloySyn/synContent")
 	ApiResult uploadContent(@RequestBody MethodologyUploadParam param);
+
+
 }
 

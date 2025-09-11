@@ -44,4 +44,6 @@ public interface CarbonTradePriceService extends BaseService<CarbonTradePrice> {
      * @param id 询报价ID
      */
     void intendedTransaction(IntendedTransactionParam param);
+
+    void removeByQuoteId(Integer quoteId);
 }

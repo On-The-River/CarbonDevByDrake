@@ -196,7 +196,7 @@
                 >
                 <a
                   style="margin-left: 10px"
-                  class="afterSubmitOffline"
+                  :class="publishDeleteButtonStyleChange(scope.row.statusCode)"
                   @click="onClickDelete(scope.row.id)"
                   >删除</a
                 >
@@ -451,6 +451,7 @@ export default {
     };
   },
   methods: {
+
     cellStyle({ row, column, rowIndex, columnIndex }) {},
     //判断是否发布，若发布了则修改样式
     editStyleChange(status) {
@@ -462,17 +463,25 @@ export default {
       }
     },
     publishStyleChange(status) {
-      if (status == "0450000002") {
+      if (status === "0450000002") {
         return "afterSubmitPublish";
       } else {
         return "list-blue-text";
       }
     },
     offlineStyleChange(status) {
-      if (status == "0450000002") {
+      if (status === "0450000002") {
         return "list-red-text";
       } else {
         return "afterSubmitOffline";
+      }
+    },
+    publishDeleteButtonStyleChange(status)
+    {
+      if (status === "0450000002") {
+        return "afterSubmitOffline";
+      } else {
+        return "list-red-text";
       }
     },
     onclickAdd() {
@@ -648,9 +657,8 @@ export default {
             if (res && res.code === 200) {
               this.$message.success("添加成功！");
               this.addMethodFormVisible = false;
-              // if (this.methodForm["wordUrl"]) {
-              //   this.syncContentCarbonMethodology(this.methodForm)
-              // }
+              this.update();
+
             }
           })
           .catch(err => {

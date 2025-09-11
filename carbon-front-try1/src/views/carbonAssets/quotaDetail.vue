@@ -107,7 +107,7 @@
             <div class="item-div">
               <span class="item-title">交割场所</span> <br /><span
                 class="item-content"
-                >{{ assetDetail["carbonExchangeId"] }}</span
+                >{{ assetDetail["carbonExchangeName"] }}</span
               >
             </div>
             <div class="item-div">

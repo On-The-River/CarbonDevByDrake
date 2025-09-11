@@ -319,7 +319,7 @@ export default {
       pageCount: 1,
       pageSize: 10,
       projectTypeList: [],
-      projectTypeDict: [],
+
       Certification: [],
       IndustryList: [],
       ProjectAreaDict: [],
@@ -349,7 +349,7 @@ export default {
             let typeCode = v.value.substring(3, 5);
             console.log(code, typeCode);
             if (code === typeCode) {
-              typeList.push({ label: v.label, value: v.value });
+              typeList.push({label: v.label, value: v.value});
             }
           });
         }
@@ -358,7 +358,7 @@ export default {
     },
   },
   methods: {
-    cellStyle({ row, column, rowIndex, columnIndex }) {
+    cellStyle({row, column, rowIndex, columnIndex}) {
       if (column.label !== '操作') {
         return 'cursor:pointer;';
       }
@@ -380,14 +380,14 @@ export default {
     toDetail(row) {
       let routeData = this.$router.resolve({
         path: '/sys/projectDetail',
-        query: { refId: row.refId, typeCode: row.projectScopeTypeCode },
+        query: {refId: row.refId, typeCode: row.projectScopeTypeCode},
       });
       window.open(routeData.href, '_blank');
     },
     toFile(registryId) {
       let routeData = this.$router.resolve({
         path: '/sys/metaregistrydoc',
-        query: { id: registryId },
+        query: {id: registryId},
       });
       window.open(routeData.href, '_blank');
     },
@@ -414,25 +414,25 @@ export default {
         status: 1,
       };
       editMethod(data).then(
-          (res) => {
-            this.$message.success('发布成功');
-            this.getList(this.current);
-          },
-          (err) => {
-            this.$message.success('发布失败');
-          }
+        (res) => {
+          this.$message.success('发布成功');
+          this.getList(this.current);
+        },
+        (err) => {
+          this.$message.success('发布失败');
+        }
       );
     },
     onClickDelete(id) {
       this.$confirm('删除内容不可复原，请谨慎操作').then(() => {
         delCarbonExchanger(id).then(
-            (res) => {
-              this.$message.success('删除成功');
-              this.getList(this.current);
-            },
-            (err) => {
-              this.$message.success('删除失败');
-            }
+          (res) => {
+            this.$message.success('删除成功');
+            this.getList(this.current);
+          },
+          (err) => {
+            this.$message.success('删除失败');
+          }
         );
       });
     },
@@ -442,13 +442,13 @@ export default {
         status: 2,
       };
       editMethod(data).then(
-          (res) => {
-            this.$message.success('下架成功');
-            this.getList(this.current);
-          },
-          (err) => {
-            this.$message.success('下架失败');
-          }
+        (res) => {
+          this.$message.success('下架成功');
+          this.getList(this.current);
+        },
+        (err) => {
+          this.$message.success('下架失败');
+        }
       );
     },
     toWork(data) {
@@ -479,11 +479,11 @@ export default {
         issueDateEnd: this.selectIssueDate[1],
         projectName: null,
         projectTypeCode: null,
-        certifiedStandardCode:null,
-        fieldCode:null,
-        projectIndustryCode:null,
-        projectStatusCode:null,
-        methodologyName:null,
+        certifiedStandardCode: null,
+        fieldCode: null,
+        projectIndustryCode: null,
+        projectStatusCode: null,
+        methodologyName: null,
       };
       if (this.searchProjectName) {
         data.projectName = this.searchProjectName;
@@ -506,7 +506,7 @@ export default {
 
       if (this.searchByType) {
         if (this.searchProjectName) {
-          data.projectName=null;
+          data.projectName = null;
           this.searchProjectName = '';
         }
         if (this.searchMethodName) {
@@ -570,11 +570,11 @@ export default {
         issueDateEnd: this.selectIssueDate[1],
         projectName: null,
         projectTypeCode: null,
-        certifiedStandardCode:null,
-        fieldCode:null,
-        projectIndustryCode:null,
-        projectStatusCode:null,
-        methodologyName:null,
+        certifiedStandardCode: null,
+        fieldCode: null,
+        projectIndustryCode: null,
+        projectStatusCode: null,
+        methodologyName: null,
       };
       if (this.searchProjectName) {
         data.projectName = this.searchProjectName;
@@ -597,7 +597,7 @@ export default {
 
       if (this.searchByType) {
         if (this.searchProjectName) {
-          data.projectName=null;
+          data.projectName = null;
           this.searchProjectName = '';
         }
         if (this.searchMethodName) {
@@ -610,49 +610,50 @@ export default {
     getByEscarbonMetaregistryList(data) {
       let n = this.$message.success('查询中...');
       getEscarbonMetaregistryList(data)
-          .then((res) => {
-            n.close();
-            console.log("records",res.data.records);
-            this.list = res.data.records;
-            this.total = Number(res.data.total);
-            this.current = Number(res.data.current);
-            this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
-            this.list.map((v, i) => {
-              v.order = i + 1;
-              for (const i in v) {
-                v[i] = v[i] && v[i] !== '0000-00-00 00:00:00' &&
-                    v[i] !== '0000-00-00' ? v[i] : '';
-                if (v[i] === '') {
-                  v[i] = '--';
-                }
+        .then((res) => {
+          n.close();
+          console.log("records", res.data.records);
+          this.list = res.data.records;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
+          this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
+          this.list.map((v, i) => {
+            v.order = i + 1;
+            for (const i in v) {
+              v[i] = v[i] && v[i] !== '0000-00-00 00:00:00' &&
+              v[i] !== '0000-00-00' ? v[i] : '';
+              if (v[i] === '') {
+                v[i] = '--';
               }
-            });
-          })
-          .catch((error) => {
-            n.close();
-            // console.log("records",error);
-            this.$message.error(error);
+            }
           });
+        })
+        .catch((error) => {
+          n.close();
+          // console.log("records",error);
+          this.$message.error(error);
+        });
     },
     getByCarbonMetaregistryList(data) {
-      console.log("keywordData",data);
+      console.log("keywordData", data);
       getCarbonMetaregistryList(data)
-          .then((res) => {
-            this.list = res.data.records;
-            this.total = Number(res.data.total);
-            this.current = Number(res.data.current);
-            this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
-            this.list.map((v, i) => {
-              v.order = i + 1;
-              for (const i in v) {
-                v[i] = v[i] ? v[i] : '--';
-                if (v[i] === '') {
-                  v[i] = '--';
-                }
+        .then((res) => {
+          this.list = res.data.records;
+          this.total = Number(res.data.total);
+          this.current = Number(res.data.current);
+          this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
+          this.list.map((v, i) => {
+            v.order = i + 1;
+            for (const i in v) {
+              v[i] = v[i] ? v[i] : '--';
+              if (v[i] === '') {
+                v[i] = '--';
               }
-            });
-          })
-          .catch((error) => {});
+            }
+          });
+        })
+        .catch((error) => {
+        });
     },
     onEdit(url) {
       openUrlInNewWindow(url);
@@ -750,7 +751,7 @@ export default {
         });
       }
     },
-    renderCheckHeader(h, { column, $index }) {
+    renderCheckHeader(h, {column, $index}) {
       return h('span', {}, [
         h('el-checkbox', {
           props: {
@@ -822,29 +823,34 @@ export default {
     isProject(status) {
       return "afterSubmitPublish";
     },
+    loadProjectTypeDict() {
+      let data = getProjectTypeDict(this.$store);
+      data.map((v) => {
+        let CertificationItem = {
+          label: "",
+          value: "",
+        };
+        CertificationItem.value = v.value;
+        CertificationItem.label = v.name;
+        this.projectTypeList.push(CertificationItem);
+      });
+      this.projectTypeList[0].value = "";
+    },
   },
-  created() {},
+
+  created() {
+  },
   mounted() {
     this.getList(1);
     this.formatCertification(getCertificationCriteriaDict(this.$store));
     this.formatIndustry(getBusinessDict(this.$store));
     this.formatArea(getProjectAreaDict(this.$store));
     this.formatStatus(getProjectStatusDict(this.$store));
-    let data = getProjectTypeDict(this.$store);
-    console.log("data",data);
+    this.loadProjectTypeDict();
 
-    data.map((v) => {
-      let CertificationItem = {
-        label: "",
-        value: "",
-      };
-      CertificationItem.value = v.value;
-      CertificationItem.label = v.name;
-      this.projectTypeDict.push(CertificationItem);
-    });
-    this.projectTypeList = this.projectTypeDict;
-  }
-}
+
+  },
+};
 </script>
 
 <style lang="scss" scoped>

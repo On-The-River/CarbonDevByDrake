@@ -42,7 +42,7 @@ public class CarbonTradeQuoteController extends BaseController {
     @PostMapping("/add")
     @ApiOperation(value = "添加供需行情",notes = "添加碳交易供需行情")
     public ApiResult<Boolean> addCarbonTradeQuote(@RequestBody CarbonTradeQuote carbonTradeQuote) {
-        carbonTradeQuoteService.addTradeQuote(carbonTradeQuote);
+        carbonTradeQuoteService.addTradeQuoteWithLink(carbonTradeQuote);
         return ApiResult.ok();
     }
 
@@ -107,6 +107,12 @@ public class CarbonTradeQuoteController extends BaseController {
     @ApiOperation(value = "同步所有行情到ES")
     public ApiResult<Integer> importAll() {
         return ApiResult.ok(carbonTradeQuoteService.importAll());
+    }
+
+    @GetMapping("/delete/{id}")
+    public ApiResult<Boolean> deleteQuote(@PathVariable Integer id) {
+        carbonTradeQuoteService.deleteQuote(id);
+        return ApiResult.ok();
     }
 }
 

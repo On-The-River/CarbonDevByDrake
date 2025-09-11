@@ -125,7 +125,7 @@
             />
             <el-table-column
               align="left"
-              prop="projectScope"
+              prop="projectScopeCodeName"
               label="项目领域"
               min-width="15%"
             />
@@ -166,7 +166,13 @@
                   style="margin-left: 10px"
                   v-on:click.stop="clickSell(scope.row)"
                   class="list-green-text"
-                  >{{ btnText }}</a
+                  >询价</a
+                >
+                <a
+                  style="margin-left: 10px"
+                  v-on:click.stop="clickDelete(scope.row)"
+                  class="list-green-text"
+                >删除</a
                 >
               </template>
             </el-table-column>
@@ -217,7 +223,7 @@
 </template>
 
 <script>
-import { getCarbonTradeQuoteList, searchKeyword } from "@/api/carbonAssetApi";
+import {deleteQuote, getCarbonTradeQuoteList, searchKeyword} from "@/api/carbonAssetApi";
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
 import { cursor } from "@/libs/element-table";
 import {
@@ -293,7 +299,7 @@ export default {
         "https://carbonmsger.feishu.cn/drive/folder/fldor66yo6D40oXwZgEMHL600Sg?from=space_personal_filelist",
       title: "",
       form: {},
-      btnText: "询价",
+
       tipTitle: "询价提示",
       // tipConetent: "您的询价已提交，可在采购行情中查看，确定为您跳转供需行情",
       tipConetent:
@@ -454,6 +460,16 @@ export default {
       this.comformDialogFormVisible = false;
       debugger;
     },
+    clickDelete(row)
+    {
+      deleteQuote(row.id).then(res => {
+        this.$message.success("删除成功");
+        this.update();
+      }).catch(err=>{
+
+      })
+      ;
+    },
     handleSizeChange(val) {
       this.pageSize = val;
       if (this.isSearch) {
@@ -551,6 +567,7 @@ export default {
           item.label = v.name;
           this.projectField.push(item);
         });
+        this.projectField[0].value="";
       }
     }
     // checkbox end
@@ -564,11 +581,8 @@ export default {
 
     //*Drake 初始化资产类型列表
     let data = getAssetTypeDict(this.$store);
-    // log("============================");
-    // log(data);
-    // log("============================");
+
     this.assetStatusList = [];
-    // data=[{value:"0140000000",name:"全部"},{value:"0140000001",name:"碳信用"},{value:"0140000002",name:"碳配额"}];
     data.map(v => {
       let item = {
         value: "",
@@ -591,6 +605,7 @@ export default {
       item.label = v.name;
       this.projectList.push(item);
     });
+    this.projectList[0].value = "";
   }
 };
 </script>

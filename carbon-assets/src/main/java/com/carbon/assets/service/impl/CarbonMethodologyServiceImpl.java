@@ -115,5 +115,18 @@ public class CarbonMethodologyServiceImpl extends BaseServiceImpl<CarbonMethodol
         }
     }
 
+    @Override
+    public boolean updateRefCount(Long id, Integer delta) {
+        CarbonMethodology carbonMethodology=carbonMethodologyMapper.selectById(id);
+        if(carbonMethodology==null)
+        {
+            return false;
+        }
+        Integer previousRefCount = carbonMethodology.getRefCount();
+        carbonMethodology.setRefCount(previousRefCount+delta);
+        save(carbonMethodology);
+        return true;
+    }
+
 
 }

@@ -113,7 +113,7 @@
             <el-col :span="8">
               <el-input v-model="addForm.phone" autocomplete="off" size="medium" disabled></el-input>
             </el-col>
-            <el-col :span="4"><span style="margin-left: 10px" class="table-text">电子邮箱:</span></el-col>
+            <el-col :span="4"><span style="margin-left: 10px" class="table-text">电子邮箱:<span style="color: red">*</span></span></el-col>
             <el-col :span="8">
               <el-input v-model="addForm.email" autocomplete="off" disabled size="medium"></el-input>
             </el-col>
@@ -220,7 +220,7 @@
             <el-col :span="8">
               <el-input v-model="addForm.phone" autocomplete="off" size="medium"></el-input>
             </el-col>
-            <el-col :span="4"><span style="margin-left: 10px" class="table-text">电子邮箱:</span></el-col>
+            <el-col :span="4"><span style="margin-left: 10px" class="table-text">电子邮箱:<span style="color: red">*</span></span></el-col>
             <el-col :span="8">
               <el-input v-model="addForm.email" autocomplete="off" size="medium"></el-input>
             </el-col>
@@ -330,7 +330,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="邮箱">
-              <span class="require" v-show="false">*</span>
+              <span class="require" v-show="true">*</span>
               <el-input v-model="form.email" autocomplete="off" style="width: 80%; margin-left: 10px" size="medium"></el-input>
             </el-form-item>
             <el-form-item label="账户角色">
@@ -373,7 +373,6 @@ import {
 } from "@/api/systemadmin";
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
-import md5 from "js-md5";
 import Cookies from "js-cookie";
 import {
   getProductVerssionDict,
@@ -588,8 +587,10 @@ export default {
           this.form.password &&
           this.form.accountName &&
           this.form.accountStatus &&
-          this.form.phone
-      ) {
+          this.form.phone &&
+          this.form.email
+      )
+      {
         addAccount(this.form).then(
             (res) => {
               this.$message.success("添加成功");
@@ -598,9 +599,11 @@ export default {
             },
             (err) => {
               this.$message.error(err.msg);
+
             }
         );
-      } else {
+      }
+      else {
         this.$message.warning("必填项不能为空");
       }
     },
@@ -654,7 +657,7 @@ export default {
           createdTime: this.addForm.createdTime,
           email: this.addForm.email,
           id: this.addForm.id,
-          password: this.addForm.password? md5(this.addForm.password) : "",
+          password: this.addForm.password? this.addForm.password: "",
           phone: this.addForm.phone,
           productVersion: this.addForm.productVersion,
           remarks: this.addForm.remarks,
@@ -841,7 +844,7 @@ export default {
         }
         this.productVersionDict.push(CertificationItem);
       });
-      
+
     },
     // 格式化状态字典
     formatStatus(data) {
@@ -884,12 +887,12 @@ export default {
     this.getList(1);
     this.getRoleList();
     this.getTenantList(); // 单独调用，避免重复
-    
+
     this.formatProduct(getProductVerssionDict(this.$store));
     this.formatStatus(getAccountStatusDict(this.$store));
     this.formatType(getAccountTypeDict(this.$store));
-    
-    
+
+
   },
 };
 </script>

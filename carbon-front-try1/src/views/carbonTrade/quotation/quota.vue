@@ -59,7 +59,7 @@ export default {
         this.buyAssetsDlg = false
       }
       // if (res) {
-        this.$router.push('/trade/offer')
+      //   this.$router.push('/trade/offer')
       // }
       // this.$emit('changeTab', "sell");
     },
@@ -74,7 +74,11 @@ export default {
 </script>
 
 
- <style lang="scss" scoped>
+<!-- <style lang="scss" scoped> -->
+<!-- .label1 {
+  margin-bottom: 10px;
+  color: rgb(0, 0, 0);
+}
 
 .more-btn {
   display: a;
@@ -110,6 +114,6 @@ export default {
     font-weight: 400;
     color: #5E6C84;
   }
-}
+} -->
 
- </style>
+<!-- </style> -->

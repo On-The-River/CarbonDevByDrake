@@ -1,24 +1,30 @@
 <template>
   <div class="carbon-credit-page">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" style="margin: 10px 20px">
-      <el-breadcrumb-item>首页</el-breadcrumb-item>
-      <el-breadcrumb-item>碳信用</el-breadcrumb-item>
-    </el-breadcrumb>
-
     <!-- 资产概览 -->
-    <el-card class="asset-overview-card">
-      <div slot="header">
-        <i class="el-icon-menu"></i>
+    <!--        <i class="el-icon-menu"></i>-->
+<!--    持仓总量 {{ totalHold }}(tCO2e) | 可用数量 {{ available }}(tCO2e) |-->
+<!--    锁定数量 {{ locked }}(tCO2e) | 冻结数量 {{ frozen }}(tCO2e)-->
+    <el-card class="asset-overview-card" >
+      <div slot="header" class="title">
+        <i class="icon">📊</i>
         我的碳信用资产
       </div>
+      <div class="asset-content-row">
       <div class="asset-info">
-        持仓总量 {{ totalHold }}(tCO2e) | 可用数量 {{ available }}(tCO2e) |
-        锁定数量 {{ locked }}(tCO2e) | 冻结数量 {{ frozen }}(tCO2e)
+        <!-- 左侧：资产信息 -->
+        <span class="item">持仓总量 <strong>{{ totalHold }}(tCO2e)</strong></span>
+        <span class="divider">|</span>
+        <span class="item">可用数量 <strong>{{ available }}(tCO2e)</strong></span>
+        <span class="divider">|</span>
+        <span class="item">锁定数量 <strong>{{ locked }}(tCO2e)</strong></span>
+        <span class="divider">|</span>
+        <span class="item">冻结数量 <strong>{{ frozen }}(tCO2e)</strong></span>
       </div>
+        <!-- 右侧：操作按钮 -->
       <div class="operation-btns">
-        <el-button type="success" plain @click="onUpload">上传</el-button>
-        <el-button type="primary" @click="onBuyClick">我想买</el-button>
+        <el-button type="success" class="btn-upload" plain @click="onUpload">上传</el-button>
+        <el-button type="primary" class="btn-buy" @click="onBuyClick">我想买</el-button>
+      </div>
       </div>
     </el-card>
 
@@ -106,7 +112,7 @@
         :data="list"
         border
         style="width: 100%"
-        :header-cell-style="{ background: '#f2f5f7' }"
+        :header-cell-style="{ background: '#e6f7e6' }"
         :row-key="row => row.id"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
@@ -116,19 +122,20 @@
           </template>
           <!-- 自定义的import里面的名字作为标签 -->
         </el-table-column>
-        <el-table-column prop="projectName" label="项目名称"> </el-table-column>
-        <el-table-column prop="certificationCriteriaName" label="核证标准">
+        <el-table-column prop="projectName" label="项目名称" width="236"> </el-table-column>
+        <el-table-column prop="certificationCriteriaName" label="核证标准" width="200">
         </el-table-column>
-        <el-table-column prop="holdAmount" label="持仓量(tCO2e)">
+        <el-table-column prop="total" label="持仓量(tCO2e)" width="100">
         </el-table-column>
-        <el-table-column prop="assetValue" label="资产估值(¥)">
+        <el-table-column prop="valuation" label="资产估值(¥)" width="100">
         </el-table-column>
-        <el-table-column prop="type" label="类型"> </el-table-column>
-        <el-table-column prop="assetsStatusName" label="资产状态">
+        <el-table-column prop="projectScopeType" label="类型" width="100"> </el-table-column>
+        <el-table-column prop="assetsStatusName" label="资产状态" width="80">
         </el-table-column>
-        <el-table-column prop="issuingDate" label="签发日期"> </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column prop="issuingDate" label="签发日期" width="160"> </el-table-column>
+        <el-table-column label="操作" align="center" width="500">
           <template v-slot="scope">
+            <div class="operation-buttons">
             <el-button type="text" @click="viewDetail(scope.row)"
             >查看</el-button
             >
@@ -145,6 +152,7 @@
               style="color: red"
             >删除</el-button
             >
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -179,31 +187,46 @@
       :selData="outerShelveRow"
       @changeVisible="changeOuterShelveVisible"
     ></otc-listing>
-    <!-- 编辑方法学弹出页面 -->
+    <!-- 编辑方法学弹出页面
+    :selData="editMethodRow"-->
+    <carbon-edit
+      :dialogFormVisible="editMethodDlg"
+      :row="editMethodRow"
+      title="碳信用项目修改"
+      @changeVisible="changeCarbonEditVisible"
+    ></carbon-edit>
     <!-- @submit="editMethodSubmit" 暂时注释掉这个方法，后续调用 -->
 <!--    <edit-method-->
 <!--      :dialogFormVisible="editMethodDlg"-->
 <!--      :selData="editMethodRow"-->
 <!--      @changeVisible="changeEditMethodVisible"-->
 <!--    ></edit-method>-->
+    <buy-assets
+      :dialog-form-visible="buyAssetsDlgVisible"
+      @changeBuyAssetsDialogFormVisible="changeDialogFormVisible"
+    >
+    </buy-assets>
   </div>
 </template>
 
 <script>
 // 确保接口方法正确引入
-import { loadCarbonCreditPageList } from "@/api/carbonAssetApi";
+import { loadCarbonCreditPageList, getCreditTotal } from "@/api/carbonAssetApi";
 import { delCredit } from "@/api/carbonAssetApi";
 // 引用场外上架的页面~~~~~
 import carbonUpload from "./carbonUpload.vue";
+// import assetDetail from "./assetDetail.vue";
 import otcListing from "@/views/carbonAssets/otcListing";
+// import editMethod from "./method/editMethod.vue";
+import carbonEdit from "./carbonEdit.vue";
+import buyAssets from "@/views/carbonTrade/quotation/buyAssets";
+
 import {
   getCertificationCriteriaDict,
   getProjectAreaDict,
   getAssetTradeStatusDict,
   getAssetStatusDict
 } from "@/config/dictHelper";
-import AssetDetail from "./assetDetail.vue";
-import Edit from "@/components/Category/edit.vue";
 
 export default {
   name: "CarbonCredit",
@@ -214,7 +237,8 @@ export default {
     carbonUpload,
     otcListing,
     // editMethod,
-    Edit
+    carbonEdit,
+    buyAssets,
   },
   data() {
     return {
@@ -224,6 +248,7 @@ export default {
       pageSize: 10,
       dateRange: [],
       carbonUploadDlg: false, // 控制上传弹窗显示
+      buyAssetsDlgVisible: false,
       onUploadRow: null, // 存储点击“上传”的表格行数据（用于弹窗回显）
       outerShelveDlg: false, //控制场外上架的弹窗显示，自加
       outerShelveRow: null, // 存储点击“场外上架”的表格行数据（用于弹窗回显），自加
@@ -246,13 +271,24 @@ export default {
       optionsIndustry: [],
       optionsOnlines: [],
       optionsAssetStatus: [],
-      totalHold: 200,
-      available: 200,
-      locked: 0,
-      frozen: 0
+      totalHold: -1,
+      available: -1,
+      locked: -1,
+      frozen: -1,
     };
   },
   methods: {
+
+    loadStatisticData()
+    {
+      getCreditTotal().then(res => {
+        this.totalHold=res.data.total;
+        this.available=res.data.availableAmount;
+        this.locked=res.data.lockedAmount;
+        this.frozen=res.data.frozenAmount;
+      })
+    },
+
     formatTableData(list) {
       // 格式化表格数据
       return list.map(item => ({
@@ -285,6 +321,7 @@ export default {
     onEdit(row) {
       this.editMethodRow = row;
       this.editMethodDlg = true;
+
     },
     onClickDelete(row) {
       this.$confirm("确认删除该碳资产记录吗？", "提示", {
@@ -293,23 +330,44 @@ export default {
         type: "warning"
       })
         .then(() => {
-          try {
-            const res = delCredit(row.id);
-            if (res.code === 200) {
-              this.$message.success("删除成功");
-              this.getList(); // 刷新列表
-            } else {
-              this.$message.error(res.msg || "删除失败");
+          // 使用异步请求
+          const deleteAsync = async () => {
+            try {
+              console.log("row:", row);
+              console.log("row.id:", row.id);
+              const res = await delCredit(row.id);
+              if (res) {
+                this.$message.success("删除成功");
+                await this.getList(); // 刷新列表
+              } else {
+                this.$message.error(res.msg || "删除失败");
+              }
+            } catch (error) {
+              console.error("删除失败:", error);
+              this.$awaitmessage.error("删除失败：" + (error.message || "未知错误"));
             }
-          } catch (error) {
-            console.error("删除失败:", error);
-            this.$message.error("删除失败：" + (error.message || "未知错误"));
-          }
+          };
+          deleteAsync();
         })
         .catch(() => {
           this.$message.info("已取消删除");
         });
     },
+
+    showBuyAssetsDlg(){
+      this.buyAssetsDlgVisible=true;
+    },
+
+    closeBuyAssetsDlg() {
+      this.buyAssetsDlgVisible=false;
+    },
+    changeDialogFormVisible(res)
+    {
+      this.buyAssetsDlgVisible=res;
+    },
+
+
+
     handleSizeChange(val) {
       this.pageSize = val;
       this.getList();
@@ -339,6 +397,7 @@ export default {
           this.list = res.data.records;
           console.log("上传的数据为：", this.list);
           this.total = Number(res.data.total);
+          console.log("持仓总量：",this.total);
         } else {
           this.$message.error(res.msg || "获取列表失败");
         }
@@ -358,7 +417,7 @@ export default {
     viewDetail(row) {
       // 跳转到碳资产详情页面
       this.$router.push({
-        path: "/carbonAssets/assetDetail",
+        path: "/assets/creditDetail",
         query: { id: row.id }
       });
     },
@@ -378,22 +437,23 @@ export default {
       // });
     },
     onBuyClick() {
-      // 跳转到交易页面
-      this.$router.push({
-        path: "/carbonTrade/quotation/buyAssets"
-      });
+      this.showBuyAssetsDlg();
     },
 
     changeCarbonVisible(res) {
+      // console.log("res11111111:",res);
       this.carbonUploadDlg = res;
+      if(res==false){
+        this.getList();
+      }
+    },
+    // 自加，修改
+    changeCarbonEditVisible(res) {
+      this.editMethodDlg = res;
     },
     // 自加
     changeOuterShelveVisible(res) {
       this.outerShelveDlg = res;
-    },
-    // 自加，编辑
-    changeEditMethodVisible(res) {
-      this.editMethodDlg = res;
     },
     onUpload() {
       this.carbonUploadDlg = true;
@@ -444,6 +504,7 @@ export default {
     this.formatIndustry(getProjectAreaDict(this.$store));
     this.formatStatus(getAssetTradeStatusDict(this.$store));
     this.formatAssetStatus(getAssetStatusDict(this.$store));
+    this.loadStatisticData();
   }
 };
 </script>
@@ -451,6 +512,89 @@ export default {
 <style lang="scss" scoped>
 .root {
   background: #f2f5f7;
+}
+.asset-overview-card {
+  //background-color: #e6f7e6; /* 浅绿色背景 */
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.asset-overview-card .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #5FB878;
+  margin: 0;
+  background-color: #FFFFFF;
+  justify-content: flex-start; /* 强制左对齐 */
+}
+.asset-content-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #e6f7e6;
+}
+::v-deep(.el-card__header) {
+  padding: 0 !important; /* 移除默认 padding */
+  background-color: white;
+  border-bottom: 1px solid #e6e6e6;
+}
+.asset-overview-card ::v-deep(.el-card__body) {
+  padding: 0 !important;
+}
+.asset-info {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+  display: flex;
+  gap: 12px;
+}
+
+.asset-info .item {
+  display: inline-block;
+}
+
+.asset-info .divider {
+  color: #999;
+  margin: 0 4px;
+}
+
+.operation-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-upload {
+  border: 1px solid #007bff;
+  background-color: white;
+  color: #007bff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-buy {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.operation-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 12px;
 }
 
 .container {
@@ -569,7 +713,7 @@ export default {
   margin-left: 10px;
   margin-right: 10px;
   width: 1px;
-  height: 16px;
+  height: 18px;
   border: 1px solid rgba(38, 181, 129, 0.5);
 }
 

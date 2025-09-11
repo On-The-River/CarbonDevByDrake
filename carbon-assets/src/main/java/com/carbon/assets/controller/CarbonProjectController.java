@@ -1,5 +1,6 @@
 package com.carbon.assets.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.carbon.assets.entity.CarbonProject;
 import com.carbon.assets.param.CarbonDataSubmissionQueryParam;
 import com.carbon.assets.param.CarbonProjectAddParam;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static com.carbon.common.feishu.FeiShuAPI.handleSheetString;
 
 
 /**
@@ -76,7 +79,7 @@ public class CarbonProjectController extends BaseController {
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "删除碳减排项目",notes = "删除碳减排项目")
     public ApiResult<Boolean> deleteCarbonProject(@PathVariable String id) {
-        boolean flag = carbonProjectService.removeById(id);
+        boolean flag = carbonProjectService.deleteProject(Long.parseLong(id));
         return ApiResult.result(flag);
     }
 
@@ -91,7 +94,63 @@ public class CarbonProjectController extends BaseController {
 
     @PostMapping("/sync/batch")
     public ApiResult<Boolean> batchUpdateProjectList(@RequestBody List<CarbonProject> projects) {
-        return ApiResult.ok(carbonProjectService.updateBatchById(projects));
+        boolean allSuccess = true;
+        for (CarbonProject project : projects) {
+            UpdateWrapper<CarbonProject> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", project.getId());
+
+            updateWrapper.set("project_name", handleSheetString(project.getProjectName()));
+            updateWrapper.set("project_scope", handleSheetString(project.getProjectScope()));
+            updateWrapper.set("project_scope_code", handleSheetString(project.getProjectScopeCode()));
+            updateWrapper.set("owner_name", handleSheetString(project.getOwnerName()));
+            updateWrapper.set("project_introduction", handleSheetString(project.getProjectIntroduction()));
+            updateWrapper.set("design_document", handleSheetString(project.getDesignDocument()));
+            updateWrapper.set("principal_name", handleSheetString(project.getPrincipalName()));
+            updateWrapper.set("principal_phone", handleSheetString(project.getPrincipalPhone()));
+            updateWrapper.set("legal_person_name", handleSheetString(project.getLegalPersonName()));
+            updateWrapper.set("legal_person_phone", handleSheetString(project.getLegalPersonPhone()));
+            updateWrapper.set("project_type", handleSheetString(project.getProjectType()));
+            updateWrapper.set("project_type_code", handleSheetString(project.getProjectTypeCode()));
+            updateWrapper.set("project_status", handleSheetString(project.getProjectStatus()));
+            updateWrapper.set("data_submission_status", handleSheetString(project.getDataSubmissionStatus()));
+            updateWrapper.set("country", handleSheetString(project.getCountry()));
+            updateWrapper.set("province", handleSheetString(project.getProvince()));
+            updateWrapper.set("city", handleSheetString(project.getCity()));
+            updateWrapper.set("address", handleSheetString(project.getAddress()));
+            updateWrapper.set("assets_develop_agency", handleSheetString(project.getAssetsDevelopAgency()));
+            updateWrapper.set("carbon_methodology", handleSheetString(project.getCarbonMethodology()));
+            updateWrapper.set("ref_id", handleSheetString(project.getRefId()));
+            updateWrapper.set("development_follower", handleSheetString(project.getDevelopmentFollower()));
+            updateWrapper.set("project_msg", handleSheetString(project.getProjectMsg()));
+            updateWrapper.set("remarks", handleSheetString(project.getRemarks()));
+            updateWrapper.set("estimated_reduction", handleSheetString(project.getEstimatedReduction()));
+
+            if (project.getTenantId() != null) {
+                updateWrapper.set("tenant_id", project.getTenantId());
+            }
+
+            if (project.getInitiationDate() != null) {
+                updateWrapper.set("initiation_date", project.getInitiationDate());
+            }
+            if (project.getApprovalDate() != null) {
+                updateWrapper.set("approval_date", project.getApprovalDate());
+            }
+            if (project.getRecordFilingDate() != null) {
+                updateWrapper.set("record_filing_date", project.getRecordFilingDate());
+            }
+            if (project.getCertifiedDate() != null) {
+                updateWrapper.set("certified_date", project.getCertifiedDate());
+            }
+            if (project.getIssuingDate() != null) {
+                updateWrapper.set("issuing_date", project.getIssuingDate());
+            }
+
+            boolean success = carbonProjectService.update(updateWrapper);
+            if (!success) {
+                allSuccess = false;
+            }
+        }
+        return ApiResult.ok(allSuccess);
     }
 
     @GetMapping("/sync")
@@ -183,7 +242,7 @@ public class CarbonProjectController extends BaseController {
         return ApiResult.ok();
     }
 
-    @GetMapping("/rowCount")
+    @GetMapping("/sync/rowCount")
     public Long rowCount() {
         System.out.println("Project rowCount Called");
         return (long) carbonProjectService.count();

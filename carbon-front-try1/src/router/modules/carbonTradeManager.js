@@ -26,8 +26,15 @@ let carbonNewsManager = {
         component: () => import('@/views/carbonTrade/performance/index.vue'),
         name: 'trade',
         meta: { title: '碳履约', icon: 'clipboard' }
+    },
+    {
+      path:'/trade/performance/detail',
+      component:()=>import ('@/views/carbonTrade/performance/detail.vue'),
+      name: 'performanceDetail',
+      meta: { title: '碳履约详情', icon: 'clipboard' },
     }
   ]
+
 };
 
 export default carbonNewsManager;

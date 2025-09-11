@@ -197,7 +197,7 @@ export default {
         projectType: "",
         projectScopeCode: "",
         tradeQuantity: "",
-
+        assetUnitPrice: ""
       },
       subTitle: "",
       show: false,

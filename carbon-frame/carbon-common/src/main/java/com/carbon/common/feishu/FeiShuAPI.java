@@ -18,6 +18,7 @@ import com.carbon.common.entity.Message;
 import com.carbon.common.entity.Test;
 import com.carbon.common.enums.ApprovalCodeEnum;
 import com.carbon.domain.common.ApiResult;
+import com.carbon.domain.common.constant.RocketMqName;
 import com.carbon.domain.mq.entity.AddTradingAccountApproval;
 import com.carbon.domain.mq.entity.AssetUploadApproval;
 import com.carbon.domain.mq.entity.ProjectApproval;
@@ -31,22 +32,24 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.carbon.common.entity.SyncConfig;
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Bae
  * @version 1.0
  * @date 2022/4/29 10:27
  */
+@Service
 @Slf4j
 public class FeiShuAPI {
     private static RestTemplate restTemplate = new RestTemplate();
@@ -58,6 +61,17 @@ public class FeiShuAPI {
     public static final String app_secret = "v7w02GXyirLViZn8djEscdgZIper1lHE";
     public static final String open_id = "ou_77eeb6ad144d6e8b4f652866a351bfd4";
     public static final String parent_node = "TNFWfyZbPlM9KedSbnyc8hBYnmd";
+
+    @Autowired
+    private RocketMQTemplate rocketMQTemplateInstance;
+
+    private static RocketMQTemplate rocketMQTemplate;
+
+    @PostConstruct
+    public void initStaticTemplate() {
+        rocketMQTemplate = this.rocketMQTemplateInstance;
+    }
+
 
     /**
      * 跟进服务表
@@ -867,17 +881,19 @@ public class FeiShuAPI {
         return null;
     }
 
-    public static List<List<String>> getSheetData(String spreadsheetToken) {
-        return getSheetData(spreadsheetToken, sheet_id_2_1);
-    }
+//    public static List<List<String>> getSheetData(String spreadsheetToken) {
+//        return getSheetData(spreadsheetToken, sheet_id_2_1);
+//    }
 
     /**
      * 获取指定工作表的数据
-     * @param spreadsheetToken 飞书表格的token
-     * @param sheetId 工作表的id，如果为null则获取第一个工作表
+     * @param syncConfig 飞书表格的设置
      * @return 二维列表，每一行是一个字符串列表
      */
-    public static List<List<String>> getSheetData(String spreadsheetToken, String sheetId) {
+    public static List<List<String>> getSheetData(final SyncConfig syncConfig) {
+        String sheetId = syncConfig.getSheetId();
+        String spreadsheetToken = syncConfig.getFeishuFileToken();
+        String endpoint = syncConfig.getControllerEndpoint();
         List<List<String>> dataList = new ArrayList<>();
 
         String tenantToken = getTenantToken();
@@ -885,15 +901,16 @@ public class FeiShuAPI {
             sheetId = getFirstSheetId(spreadsheetToken);
         }
 
-        Long size = restTemplate.getForObject("http://localhost:9003/assets/carbonProject/rowCount", Long.class);
+        Long rowCount = restTemplate.getForObject(endpoint + "/rowCount", Long.class);
+        Integer columnCount = syncConfig.getFieldMappingSize();
 
-        if (size == null) {
-            log.warn("project表无数据");
+        if (rowCount == null) {
+            log.warn("表无数据, config: {}", syncConfig);
             return dataList;
         }
-        size++;
+        rowCount += 2;
         String url = "https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/" +
-                spreadsheetToken + "/values/" + sheetId + "!A1:AW" + size;
+                spreadsheetToken + "/values/" + sheetId + "!A1:" + getColumnLetter(columnCount) + rowCount;
 
         String result = HttpUtil.createRequest(Method.GET, url)
                 .header(Header.AUTHORIZATION, tenantToken)
@@ -914,13 +931,33 @@ public class FeiShuAPI {
             return dataList;
         }
 
+        // int buyCertificateColumnIndex = -1;
         for (int i = 0; i < values.size(); i++) {
             com.alibaba.fastjson.JSONArray row = values.getJSONArray(i);
             List<String> rowList = new ArrayList<>();
-            if (row != null) {
-                for (int j = 0; j < row.size(); j++) {
-                    rowList.add(row.getString(j));
+            if (row == null) continue;
+            for (int j = 0; j < row.size(); j++) {
+                String str = row.getString(j);
+                if (str != null && str.startsWith("[{\"link\":")) {
+                    com.alibaba.fastjson.JSONArray richTextArray = row.getJSONArray(j);
+                    if (richTextArray != null) {
+                        StringBuilder originalJson = new StringBuilder();
+                        for (int k = 0; k < richTextArray.size(); k++) {
+                            JSONObject fragment = richTextArray.getJSONObject(k);
+                            String fragmentText = fragment.getString("text");
+                            if (fragmentText != null) {
+                                originalJson.append(fragmentText);
+                            }
+                        }
+                        str = originalJson.toString();
+                    }
                 }
+//                else if (i == 0) {
+//                    if (Objects.equals(str, "购入凭证")) {
+//                        buyCertificateColumnIndex = j;
+//                    }
+//                }
+                rowList.add(str);
             }
             dataList.add(rowList);
         }
@@ -933,9 +970,9 @@ public class FeiShuAPI {
      * @param data 二维列表，每一行是一个字符串列表
      * @return 是否成功
      */
-    public static Boolean updateSheetData(String spreadsheetToken, List<List<String>> data) {
-        return updateSheetData(spreadsheetToken, sheet_id_2_1, data);
-    }
+//    public static Boolean updateSheetData(String spreadsheetToken, List<List<String>> data) {
+//        return updateSheetData(spreadsheetToken, sheet_id_2_1, data);
+//    }
 
     /**
      * 更新指定工作表的数据
@@ -944,7 +981,7 @@ public class FeiShuAPI {
      * @param data 二维列表，每一行是一个字符串列表
      * @return 是否成功
      */
-    public static Boolean updateSheetData(String spreadsheetToken, String sheetId, List<List<String>> data) {
+    public static void updateSheetData(String spreadsheetToken, String sheetId, List<List<String>> data) {
         String tenantToken = getTenantToken();
 
         // 如果未指定sheetId，获取第一个工作表
@@ -952,14 +989,14 @@ public class FeiShuAPI {
             sheetId = getFirstSheetId(spreadsheetToken);
         }
 
-        Long maxCols = (long) data.stream().mapToInt(List::size).max().orElse(0);
-        String endCol = getColumnLetter(maxCols);
-        String range = sheetId + "!A1:" + endCol + data.size();
+        Integer maxCols = data.stream().mapToInt(List::size).max().orElse(0);
+        String range = sheetId + "!A1:" + getColumnLetter(maxCols) + data.size();
 
-        String url = "https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/" + spreadsheetToken + "/values_batch_update";
+        String url = "https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/"
+                + spreadsheetToken + "/values_batch_update";
 
         cn.hutool.json.JSONObject body = new cn.hutool.json.JSONObject();
-        cn.hutool.json.JSONArray valueRanges = new cn.hutool.json.JSONArray();
+        JSONArray valueRanges = new JSONArray();
 
         cn.hutool.json.JSONObject valueRange = new cn.hutool.json.JSONObject();
         valueRange.set("range", range);
@@ -978,9 +1015,7 @@ public class FeiShuAPI {
         JSONObject object = JSON.parseObject(result);
         if (object.getInteger("code") != 0) {
             log.error("更新表格数据失败: {}", object.getString("msg"));
-            return false;
         }
-        return true;
     }
 
     public static String getSpreadsheetToken(String nodeToken) {
@@ -1028,7 +1063,7 @@ public class FeiShuAPI {
     /**
      * 将列数转换为列字母（A, B, C, ..., AA, AB, ...）
      */
-    private static String getColumnLetter(Long columnNumber) {
+    private static String getColumnLetter(Integer columnNumber) {
         StringBuilder result = new StringBuilder();
         while (columnNumber > 0) {
             columnNumber--;
@@ -1036,5 +1071,18 @@ public class FeiShuAPI {
             columnNumber /= 26;
         }
         return result.toString();
+    }
+
+    public static void sendToMQTemplate(String dbName) {
+        String configId = ((ApiResult<String>) Objects.requireNonNull(restTemplate.getForObject(
+                "http://localhost:9002/system/syncConfig/dbToId/" + dbName, ApiResult.class
+        ))).getData();
+        if (configId == null) return;
+        org.springframework.messaging.Message<String> message = MessageBuilder.withPayload(configId).build();
+        rocketMQTemplate.syncSend(RocketMqName.DATABASE_TO_FEISHU_SYNC, message, 5000L);
+    }
+
+    public static String handleSheetString(String string) {
+        return string == null ? "" : string;
     }
 }

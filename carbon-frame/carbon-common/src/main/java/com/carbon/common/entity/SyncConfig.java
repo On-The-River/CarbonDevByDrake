@@ -1,4 +1,4 @@
-package com.carbon.system.entity;
+package com.carbon.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -26,6 +26,11 @@ public class SyncConfig {
     private String feishuFileToken;
 
     /**
+     * 飞书表格工作表id
+     */
+    private String sheetId;
+
+    /**
      * 数据库表名
      */
     private String databaseTable;
@@ -41,9 +46,9 @@ public class SyncConfig {
     private String fieldMapping;
 
     /**
-     * 项目ID（可选，用于关联具体项目）
+     * 字段映射JSON字符串字段数
      */
-    private String projectId;
+    private Integer fieldMappingSize;
 
     /**
      * 是否启用同步

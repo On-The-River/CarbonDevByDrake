@@ -4,7 +4,7 @@
       <!-- <img class="head-icon" src="@/assets/imgs/icon_accoun_logo.jpg" /> -->
       <img v-if="baseInfo.avatar" class="head-icon" :src="baseInfo.avatar" />
       <span class="baseInfo">基本信息</span>
-      <div class="div-holder"></div>
+      <div class="div-holder" />
       <button class="light-green-btn btn-modify-psw" @click="editBaseInfo(1)">
         修改密码
       </button>
@@ -55,7 +55,7 @@
             <div class="card-div">
               <img class="icon" src="@/assets/imgs/icon_user.png" />
               <span class="tap-secon-line-hint-f ml10" style="text-align: left"
-                >账号</span
+              >账号</span
               >
               <input class="input-css" v-model="baseInfo.accountName" disabled />
               <span class="second-line-final-hint">系统自动生成，可用于登录</span>
@@ -64,11 +64,11 @@
             <div class="card-div">
               <img class="icon" src="@/assets/imgs/icon_mobile.png" />
               <span class="tap-secon-line-hint-f ml10" style="text-align: left"
-                >手机号</span
+              >手机号</span
               >
               <input class="input-css" v-model="baseInfo.phone" disabled />
               <span class="second-line-final-hint"
-                >绑定手机号，可用于登录、重置密码或其他安</span
+              >绑定手机号，可用于登录、重置密码或其他安</span
               >
               <div class="div-holder" />
               <button
@@ -81,11 +81,11 @@
             <div class="card-div">
               <img class="icon" src="@/assets/imgs/icon_email.png" />
               <span class="tap-secon-line-hint-f ml10" style="text-align: left"
-                >邮箱</span
+              >邮箱</span
               >
               <input class="input-css" v-model="baseInfo.email" disabled />
               <span class="second-line-final-hint"
-                >绑定邮箱，可用于登录、重置密码或其他安全</span
+              >绑定邮箱，可用于登录、重置密码或其他安全</span
               >
               <div class="div-holder" />
               <button
@@ -145,8 +145,8 @@
               >
                 <template slot-scope="scope">
                   <span seachFrom.startDate>{{
-                    scope.row.accountName || "--"
-                  }}</span>
+                      scope.row.accountName || "--"
+                    }}</span>
                 </template>
               </el-table-column>
 
@@ -160,8 +160,8 @@
                 <template slot-scope="scope">
                   <div slot="empty" class="name-wrapper">
                     <span seachFrom.startDate>{{
-                      scope.row.accountStatusName || "--"
-                    }}</span>
+                        scope.row.accountStatusName || "--"
+                      }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -176,8 +176,8 @@
                 <template slot-scope="scope">
                   <div slot="empty" class="name-wrapper">
                     <span size="medium">{{
-                      scope.row.loginTime || "--"
-                    }}</span>
+                        scope.row.loginTime || "--"
+                      }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -192,8 +192,8 @@
                 <template slot-scope="scope">
                   <div slot="empty" class="name-wrapper">
                     <span size="medium">{{
-                      scope.row.bindingTime || "--"
-                    }}</span>
+                        scope.row.bindingTime || "--"
+                      }}</span>
                   </div>
                 </template>
               </el-table-column>
@@ -218,7 +218,7 @@
                     class="list-blue-text"
                     style="margin-left: 10px"
                     @click="copy(scope.row.accountName)"
-                    >复制账号</a
+                  >复制账号</a
                   >
                   <a
                     v-if="scope.row.is_disable == 0"
@@ -226,7 +226,7 @@
                     class="list-red-text mgn-r-16"
                     :class="{ afterSubmitOffline: scope.row.is_disable }"
                     @click="unboundWeChat(scope.row, scope.row.id, scope.$index)"
-                    >解绑</a
+                  >解绑</a
                   >
                 </template>
               </el-table-column>
@@ -310,7 +310,7 @@
               type="primary"
               slot="append"
               :cell-style="cellStyle"
-              >{{
+            >{{
                 times == 0
                   ? "发送验证码"
                   : (times < 10 ? "0" + times : times) + "秒"
@@ -323,7 +323,7 @@
               @click="sendCodeSet(60)"
               :cell-style="cellStyle"
               slot="append"
-              >{{
+            >{{
                 times == 0
                   ? "发送验证码"
                   : (times < 10 ? "0" + times : times) + "秒"
@@ -392,7 +392,7 @@
           >
             <el-form-item prop="carbonExchangeId" label-width="20%">
               <label slot="label"
-                >交易所<span style="color: red">*</span></label
+              >交易所<span style="color: red">*</span></label
               >
               <el-cascader
                 class="selectbox-root half"
@@ -415,7 +415,7 @@
           >
             <el-form-item prop="carbonExchangeName" label-width="20%">
               <label slot="label"
-                >账号名<span style="color: red">*</span></label
+              >账号名<span style="color: red">*</span></label
               >
               <el-input
                 v-model="addUserFrom.accountName"
@@ -436,7 +436,7 @@
           >
             <el-form-item label-width="20%">
               <label slot="label"
-                >账户凭证<span style="color: red">*</span></label
+              >账户凭证<span style="color: red">*</span></label
               >
               <el-upload
                 class="upload-demo"
@@ -735,23 +735,42 @@ export default {
       if (this.phoForm.newPhone == this.baseInfo.phone) {
         return this.$message("新手机号与当前绑定的手机号一致!");
       }
-      let r = setInterval(() => {
-        if (num > 0) {
-          num -= 1;
-          this.times = num;
+      // let r = setInterval(() => {
+      //   if (num > 0) {
+      //     num -= 1;
+      //     this.times = num;
+      //   } else {
+      //     this.times = 0;
+      //     clearInterval(r);
+      //   }
+      // }, 1000);
+      // getAccoutUpdateCode();
+      getAccoutUpdateCode().then((res) => {
+        if (res.code == 200) {
+          this.$message.success("验证码已发送到您的邮箱");
+          let r = setInterval(() => {
+            if (num > 0) {
+              num -= 1;
+              this.times = num;
+            } else {
+              this.times = 0;
+              clearInterval(r);
+            }
+          }, 1000);
         } else {
-          this.times = 0;
-          clearInterval(r);
+          this.$message.error(res.msg || "发送失败");
         }
-      }, 1000);
-      getAccoutUpdateCode(this.phoForm.newPhone);
+      })
+        .catch((err) => {
+          this.$message.error("发送验证码失败");
+        });
     },
     getBaseInfo() {
       let info = JSON.parse(Cookies.get("JavaInfo"));
       getAccoutBaseInfo(parseInt(info.accountId))
         .then((res) => {
           this.baseInfo = res;
-          if (!this.baseInfo.avatar || this.baseInfo.avatar === "" || (this.baseInfo.avatar).match(/^[ ]*$/)) {
+          if (!this.baseInfo.avatar || this.baseInfo.avatar == "" || (this.baseInfo.avatar).match(/^[ ]*$/)) {
             this.baseInfo.avatar = "/static/img/icon_accoun_logo.e4db51e4.jpg";
           }
           this.baseInfo.email = res.email || "--";
@@ -843,8 +862,8 @@ export default {
       }
       let datas = {
         id: this.baseInfo.id,
-        newPassword: md5(this.ruleForm.newPassword),
-        oldPassword: md5(this.ruleForm.oldPassword),
+        newPassword: (this.ruleForm.newPassword),
+        oldPassword: (this.ruleForm.oldPassword),
       };
       putAccountUpdatePassword(datas).then((res) => {
         this.$message({
@@ -859,19 +878,32 @@ export default {
       //修改手机号
       // this.$refs[phoForm].validate((valid) => {
       // if (valid) {
+      // 参数验证
+      if (!this.phoForm.newPhone) {
+        return this.$message.error("请输入新手机号");
+      }
+      if (!this.phoForm.checkCode) {
+        return this.$message.error("请输入验证码");
+      }
       let phoDatas = {
-        id: this.baseInfo.id,
+        // id: this.baseInfo.id,
         phone: this.phoForm.newPhone,
         code: this.phoForm.checkCode,
       };
       putAccountUpdatePhone(phoDatas)
         .then((res) => {
           if (res.code == 200) {
-            this.getBaseInfo();
+            this.$message.success("手机号修改成功");
+            this.getBaseInfo();  //刷新用户信息
+
+          }else{
+            this.$message.success("手机号修改失败");
           }
-          this.editBaseInfo(3);
+          this.editBaseInfo(3);  //关闭对话框
         })
-        .catch((err) => {});
+        .catch((err) => {
+          this.$message.error("手机号修改失败");
+        });
       // } else {
       //   return false;
       // }
@@ -881,7 +913,7 @@ export default {
       let datas = {
         email: this.emailForm.email,
         id: this.baseInfo.id,
-        password: md5(this.emailForm.emailFormPassword),
+        password: (this.emailForm.emailFormPassword),
       };
       putAccountSend(datas).then((res) => {
         if (res.code == 200) {
@@ -978,7 +1010,7 @@ export default {
         carbonExchangeId: Array.isArray(this.addUserFrom.carbonExchangeId) ? this.addUserFrom.carbonExchangeId[0]
           : this.addUserFrom.carbonExchangeId, //	碳交易所ID
         remarks: this.addUserFrom.remarks, //	备注
-        tenantId: parseInt(info.tenantId), //	所属租户
+        tenantId: parseInt(info.accountId), //	所属租户
         accountCredentials: this.tranFileUrl,
       };
       putAddExchangeAccount(datas).then((res) => {
@@ -1249,7 +1281,7 @@ export default {
 }
 
 .more-btn {
-  display: a;
+  display: flex;
   text-align: right;
 }
 .select-pic {
@@ -1335,7 +1367,7 @@ export default {
   }
   ::v-deep .el-tabs__item {
     font-size: 16px;
-    font-family: PingFangSC-Regular, PingFang SC, serif;
+    font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #5e6c84;
   }

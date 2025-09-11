@@ -31,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -59,6 +62,7 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
     @Autowired
     private ChainMakerServiceApi chainMakerServiceApi;
 
+    private RestTemplate restTemplate = new RestTemplate();
 
 
     @Override
@@ -118,8 +122,10 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
             throw new CommonBizException(ExpCodeEnum.OPERATE_FAIL_ERROR);
         }
 
+        //update quote status
         targetQuote.setStatus(TradeStatusEnum.TRADED.getStatus());
         carbonTradeQuoteService.updateById(targetQuote);
+        postQuotePerformance(targetQuote.getId().intValue(),tradeContract);
 
 
         CarbonExchangeQueryVo exchange = assetsServiceApi.getExchangeInfoByDict(tradeContract.getDeliveryExchange()).getData();
@@ -128,13 +134,38 @@ public class CarbonTradeContractServiceImpl extends BaseServiceImpl<CarbonTradeC
 
 
         //长安链-上链
-        try {
-            chainMakerServiceApi.addContract(BeanUtil.copyProperties(tradeContract, CarbonTradeContractParam.class));
-        }catch (Exception e){
-            log.error("调用区块链异常！！");
-            log.error(e.getMessage());
-        }
+//        try {
+//            chainMakerServiceApi.addContract(BeanUtil.copyProperties(tradeContract, CarbonTradeContractParam.class));
+//        }catch (Exception e){
+//            log.error("调用区块链异常！！");
+//            log.error(e.getMessage());
+//        }
         return spawnedPfmVo;
+    }
+
+    private void postQuotePerformance(Integer quoteId,CarbonTradeContract tradeContract)
+    {
+        CarbonTradeQuote targetQuote = carbonTradeQuoteService.getById(quoteId);
+        if(targetQuote == null){
+            throw new CommonBizException("供需行情不存在");
+        }
+
+        String assetType=targetQuote.getAssetType();
+        Integer assetId=targetQuote.getAssetId();
+        BigDecimal quoteQuantity=targetQuote.getTradeQuantity();
+        BigDecimal actualQuantity=tradeContract.getTradeQuantity();
+
+        String url="";
+        if(assetType.equals("0140000001"))
+        {
+            url="http://localhost:9003/assets/carbonCreditAssets/toFrozen/"+assetId+"/"+ quoteQuantity +"/"+ actualQuantity;
+        }
+        else if(assetType.equals("0140000002"))
+        {
+            url="http://localhost:9003/assets/carbonQuotaAssets/toFrozen/"+assetId+"/"+ quoteQuantity +"/"+ actualQuantity;
+        }
+        restTemplate.getForEntity(url,ApiResult.class);
+
     }
 
 }

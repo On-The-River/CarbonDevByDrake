@@ -43,35 +43,51 @@
         </el-form-item>
 
         <el-form-item label="期望交割方式" prop="deliveryMethod">
-          <el-select
-            v-model="form.deliveryMethod"
-            placeholder="选择期望交割方式"
-            size="medium"
+<!--          <el-select-->
+<!--            v-model="deliveryMethodField"-->
+<!--            placeholder="选择期望交割方式"-->
+<!--            size="medium"-->
+<!--            style="width: 536px; top: -5px"-->
+<!--          >-->
+<!--            <el-option-->
+<!--              v-for="(item, index) in tradeMethods"-->
+<!--              :key="index"-->
+<!--              :label="item.name"-->
+<!--              :value="item.value"-->
+<!--            ></el-option>-->
+<!--          </el-select>-->
+          <el-cascader
             style="width: 536px; top: -5px"
+            placeholder="选择期望交割方式"
+            v-model="deliveryMethodField"
+            :options="deliveryMethods"
+            clearable
           >
-            <el-option
-              v-for="(item, index) in tradeMethods"
-              :key="index"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+          </el-cascader>
         </el-form-item>
 
         <el-form-item label="期望交割场所" prop="deliveryExchange">
-          <el-select
-            v-model="form.deliveryExchange"
-            placeholder="选择期望交割场所"
-            size="medium"
+<!--          <el-select-->
+<!--            v-model="form.deliveryExchange"-->
+<!--            placeholder="选择期望交割场所"-->
+<!--            size="medium"-->
+<!--            style="width: 536px; top: -5px"-->
+<!--          >-->
+<!--            <el-option-->
+<!--              v-for="(item, index) in exchangeList"-->
+<!--              :key="index"-->
+<!--              :label="item.name"-->
+<!--              :value="item.value"-->
+<!--            ></el-option>-->
+<!--          </el-select>-->
+          <el-cascader
             style="width: 536px; top: -5px"
+            placeholder="选择期望交割场所"
+            v-model="deliveryExchangeField"
+            :options="deliveryExchanges"
+            clearable
           >
-            <el-option
-              v-for="(item, index) in exchangeList"
-              :key="index"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+          </el-cascader>
         </el-form-item>
       </el-form>
 
@@ -92,6 +108,9 @@
 <script>
 import * as credit from "@/api/carbonAssetApi"
 import {getTenantInfo} from "@/api/systemadmin";
+import {getCarbonMetaregistryInfo} from "@/api/carbonAssetApi";
+import {getDeliveryMethodDict,getExchangeDict} from "@/config/dictHelper";
+
 export default {
   props:{
     dialogFormVisible: false,
@@ -111,11 +130,11 @@ export default {
         { value: "北京环境交易所", label: "北京环境交易所" },
         { value: "上海环境能源交易所", label: "上海环境能源交易所" }
       ], // 交割场所列表
-      tradeMethods: [
-        { value: "协议转入", label: "协议转入" },
-        { value: "竞价交易", label: "竞价交易" },
-        { value: "定价交易", label: "定价交易" }
-      ],
+      deliveryMethods: [],
+      deliveryMethodField: null,
+      deliveryExchanges: [],
+      deliveryExchangeField: null,
+
       form: {
         id: "",
         tradeQuantity: "", //出售数量
@@ -125,11 +144,12 @@ export default {
         deliveryMethod: "", //期望交割方式
         deliveryExchange: "", //期望交割场所
         projectType: "", //项目类型
+        projectScopeCode:  "",
         carbonProjectId: null,
         direction: "0200000002", //方向
         status: "",
         assetType: "0140000001", //资产类型
-        tenantName: "",
+        institutionName: "",
         availableAmount:"" , //可用数量
         tenantId:"", //租户的id
         contactsName:"", //从租户中获取的
@@ -178,12 +198,46 @@ export default {
   },
   methods: {
     toQuotation() {
-
+      // 跳转到碳资产详情页面
+      this.$router.push({
+        path: "/quota",
+      });
     },
     // 自加close方法
     clickClose() {
       this.$emit("changeVisible", false);
       this.show = false;
+    },
+    formatDeliveryMethodDict()
+    {
+      let data=getDeliveryMethodDict(this.$store);
+      if (data) {
+        data.map(v => {
+          let item = {
+            value: "",
+            label: ""
+          };
+          item.value = v.value;
+          item.label = v.name;
+          this.deliveryMethods.push(item);
+        });
+      }
+    },
+
+    formatDeliveryExchangeDict()
+    {
+      let data=getExchangeDict(this.$store);
+      if (data) {
+        data.map(v => {
+          let item = {
+            value: "",
+            label: ""
+          };
+          item.value = v.value;
+          item.label = v.name;
+          this.deliveryExchanges.push(item);
+        });
+      }
     },
     // 格式化日期（提取日期部分），这里先检查一下是否为null
     formatDate(date) {
@@ -208,61 +262,76 @@ export default {
     // },
     // 提交表单按钮逻辑
     async submit() {
+      try{
+      // console.log("测试的tenantedId为：",this.form.tenantId);
+        // console.log("项目的信息为11111：",res);
+        // this.form.institutionName = res.data.institutionName;
 
-
-        console.log("测试的tenantedId为：",this.form.tenantId);
         // 通过租户获取联系方式、机构名称等信息
-        const res = await getTenantInfo(this.form.tenantId);
+        const tenantRes=await getTenantInfo(this.form.tenantId);
+        this.form.institutionName = tenantRes.tenant_name;
+        this.form.contactsName = tenantRes.contactsName;
+        this.form.contactsPhone = tenantRes.contactsPhone;
+        this.form.contactsEmail = tenantRes.contactsEmail;
 
-        console.log("租户的信息为11111：",res);
-        this.form.tenantName = res.tenantName;
-        this.form.contactsName = res.contactsName;
-        this.form.contactsPhone = res.contactsPhone;
-        this.form.contactsEmail = res.contactsEmail;
-        // console.log("sod：",this.form.carbonProjectId);
-        // console.log("租户的信息为11111：",this.form);
-        // 添加场外上架表单
-        // 交易角色，机构名称、联系人姓名、联系人手机、邮箱需要根据登录的时候携带？！
-        let data = {
-          projectId:this.form.carbonProjectId,
-          tradeRole: "0270000002",
-          institutionName: this.form.tenantName,
-          contactsName: this.form.contactsName,
-          contactsPhone: this.form.contactsPhone,
-          contactsEmail: this.form.contactsEmail,
-          tradeQuantity: this.form.tradeQuantity,
-          assetUnitPrice: this.form.negotiatedPrice,
-          expirationDate: this.formatDate(this.form.expirationDate),
-          deliveryTime: this.formatDate(this.form.deliveryTime),
-          deliveryMethod: this.form.deliveryMethod,
-          deliveryExchange: this.form.deliveryExchange
-        };
+        console.log("diliveryMethod",this.deliveryMethodField);
+        this.form.deliveryMethod=this.deliveryMethodField[0];
+        this.form.deliveryExchange=this.deliveryExchangeField[0];
 
-        // 校验出售数量是否超过可用量
-        if (this.form.availableAmount < this.form.tradeQuantity) {
-          this.$message.warning("出售数量不能大于可用量");
-          return;
-        }
-        console.log("现在的传入id: ",this.form.id);
-        console.log("测试的数据222222：",data);
-        // 调用接口提交表单
-        const result = await credit.addcarbonAssetMarket(data);
-            let changeCreditData= {
-              id: this.form.id,
-              availableAmount: this.form.availableAmount - this.form.tradeQuantity
-            }
-        // 提交成功后修改信用状态
-        await credit.changeCredit(changeCreditData);
-        this.$message.success("操作成功");
-        // this.dialogFormVisible = false;
-        this.show = false;
-        this.showQuotation = true;
 
-      // catch (error)
-      // {
-      //     console.error("操作失败：", error);
-      //     this.$message.error("操作失败");
-      // }
+        const metaRegistryRes = await credit.getCarbonMetaregistryInfo(this.form.carbonProjectId);
+        this.form.projectType = metaRegistryRes.data.projectScopeTypeCode;
+        this.form.projectScopeCode = metaRegistryRes.data.projectScopeCode;
+
+        //default values
+        this.form.status = "0160000001";
+        this.form.assetType = "0140000001";//碳信用
+
+      // 交易角色，机构名称、联系人姓名、联系人手机、邮箱需要根据登录的时候携带？！
+      let data = {
+        projectId:this.form.carbonProjectId,
+        tradeRole: "0270000002",
+        institutionName: this.form.institutionName,
+        contactsName: this.form.contactsName,
+        contactsPhone: this.form.contactsPhone,
+        contactsEmail: this.form.contactsEmail,
+        tradeQuantity: this.form.tradeQuantity,
+        assetUnitPrice: this.form.negotiatedPrice,
+        expirationDate: this.form.expirationDate,
+        deliveryTime: this.form.deliveryTime,
+        deliveryMethod: this.form.deliveryMethod,
+        deliveryExchange: this.form.deliveryExchange,
+        projectType: this.form.projectType,
+        projectScopeCode: this.form.projectScopeCode,
+        status: this.form.status,
+        assetType: this.form.assetType,
+        publisherId: this.form.tenantId,
+        assetId: this.form.id,
+      };
+
+      // 校验出售数量是否超过可用量
+      if (this.form.availableAmount < this.form.tradeQuantity) {
+        this.$message.warning("出售数量不能大于可用量");
+        return;
+      }
+
+      // 调用接口提交表单
+      const result = await credit.addcarbonAssetMarket(data);
+          let changeCreditData= {
+            id: this.form.id,
+            availableAmount: this.form.availableAmount - this.form.tradeQuantity
+          }
+          // 提交成功后修改信用状态
+          //   await credit.changeCredit(changeCreditData);
+              this.$message.success("操作成功");
+              // this.dialogFormVisible = false;
+              this.show = false;
+              this.showQuotation = true;
+              // this.loadDetail();
+    } catch (error) {
+      console.error("操作失败：", error);
+      this.$message.error("操作失败");
+    }
     }
   },
   watch: {
@@ -282,7 +351,11 @@ export default {
         }
       }
     }
-  }
+  },
+  mounted() {
+    this.formatDeliveryMethodDict();
+    this.formatDeliveryExchangeDict();
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -121,4 +121,7 @@ public class CarbonProject extends BaseEntity {
 
     @ApiModelProperty(value = "预计减排量")
     private String estimatedReduction;
+
+    @ApiModelProperty(value = "在meta仓库内")
+    private Integer inMeta;
 }

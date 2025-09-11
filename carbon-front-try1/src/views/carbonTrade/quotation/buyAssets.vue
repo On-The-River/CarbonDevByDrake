@@ -339,6 +339,13 @@ export default {
       // dialogFormVisible=false;
     },
     clickSubmit() {
+      let info = JSON.parse(Cookies.get("JavaInfo"));
+      let tenantId=0;
+      if(info)
+      {
+        tenantId = info.tenantId;
+      }
+
       let data = {
         assetType: this.subForm.assetType[0],
         assetUnit: "tCO2e",
@@ -356,7 +363,7 @@ export default {
         id: 0,
         institutionName: this.subForm.institutionName,
         projectType: this.subForm.projectType[0],
-        publisherId: 0,
+        publisherId: tenantId,
         tradeQuantity: this.subForm.tradeQuantity,
         tradeRole: "0270000001"
       };
@@ -377,57 +384,90 @@ export default {
       } else {
         this.$message.warning("必填项不能为空");
       }
-    }
+    },
+    loadAssetTypeDict()
+    {
+      let data= getAssetTypeDict(this.$store);
+      this.assetsTypeList = [];
+      data.map(v => {
+        let item = {
+          value: "",
+          label: ""
+        };
+        item.value = v.value;
+        item.label = v.name;
+        this.assetsTypeList.push(item);
+      });
+    },
+    loadProjectTypeDict()
+    {
+      let data= getProjectTypeDict(this.$store);
+      this.projectTypeList = [];
+      data.map(v => {
+        let item = {
+          value: "",
+          label: ""
+        };
+        item.value = v.value;
+        item.label = v.name;
+        this.projectTypeList.push(item);
+      });
+    },
+    loadExchangeDict()
+    {
+      let data= getExchangeDict(this.$store);
+      this.exchangeList = [];
+      data.map(v => {
+        let item = {
+          value: "",
+          label: ""
+        };
+        item.value = v.value;
+        item.label = v.name;
+        this.exchangeList.push(item);
+      });
+    },
+    loadProjectAreaDict()
+    {
+      let data= getProjectAreaDict(this.$store);
+      this.projectAreaList = [];
+      data.map(v => {
+        let item = {
+          value: "",
+          label: ""
+        };
+        item.value = v.value;
+        item.label = v.name;
+        this.projectAreaList.push(item);
+      });
+    },
+    loadDeliveryMethodDict()
+    {
+      let data= getDeliveryMethodDict(this.$store);
+      this.deliverMethodList = [];
+      data.map(v => {
+        let item = {
+          value: "",
+          label: ""
+        };
+        item.value = v.value;
+        item.label = v.name;
+        this.deliverMethodList.push(item);
+      });
+    },
+
+
   },
   created() { },
   mounted() {
     this.initParams();
     this.show = this.dialogFormVisible;
-    let data = getDeliveryMethodDict(this.$store);
-    this.deliverMethodList = [];
-    data.map(v => {
-      let item = {
-        value: "",
-        label: ""
-      };
-      item.value = v.value;
-      item.label = v.name;
-      this.deliverMethodList.push(item);
-    });
-    this.projectAreaList = [];
-    data = getProjectAreaDict(this.$store);
-    data.map(v => {
-      let item = {
-        value: "",
-        label: ""
-      };
-      item.value = v.value;
-      item.label = v.name;
-      this.projectAreaList.push(item);
-    });
-    data = getExchangeDict(this.$store);
-    this.exchangeList = [];
-    data.map(v => {
-      let item = {
-        value: "",
-        label: ""
-      };
-      item.value = v.value;
-      item.label = v.name;
-      this.assetsTypeList.push(item);
-    });
+    this.loadAssetTypeDict();
+    this.loadProjectTypeDict();
+    this.loadExchangeDict();
+    this.loadProjectAreaDict();
+    this.loadDeliveryMethodDict();
 
-    data = getProjectTypeDict(this.$store);
-    this.projectTypeList = [];
-    data.map(v => {
-      let item = {
-        value: "",
-        label: ""
-      };
-      item.value = v.value;
-      item.label = v.name;
-      this.projectTypeList.push(item);
-    });
   }
 };
 </script>

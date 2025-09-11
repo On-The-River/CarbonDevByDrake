@@ -166,22 +166,31 @@
             />
             <el-table-column
               align="left"
-              prop="buyerDeliveryTime"
+              prop="expirationDate"
               label="截止日期"
               min-width="110"
             />
-            <el-table-column
-              align="left"
-              prop="sellerDeliveryMethodName"
-              label="拟交割方式"
-              min-width="80"
-            />
-            <el-table-column
-              align="left"
-              prop="sellerDeliveryTime"
-              label="拟交割时间"
-              min-width="110"
-            />
+<!--            <el-table-column-->
+
+<!--              align="left"-->
+<!--              prop="sellerDeliveryMethodName"-->
+<!--              label="拟交割方式"-->
+<!--              min-width="80"-->
+<!--            />-->
+            <el-table-column label="拟交割方式">
+              <template slot-scope="scope">
+                <span v-if="scope.row.tradeRoleName==='买方'">{{ scope.row.buyerDeliveryMethodName }}</span>
+
+                <span v-else>{{ scope.row.sellerDeliveryMethodName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="拟交割时间">
+              <template slot-scope="scope">
+                <span v-if="scope.row.tradeRoleName==='买方'">{{ scope.row.buyerDeliveryTime }}</span>
+                <span v-else>{{ scope.row.sellerDeliveryTime }}</span>
+              </template>
+            </el-table-column>
+
             <el-table-column label="操作" min-width="180" align="center">
               <template slot-scope="scope">
                 <a
@@ -590,6 +599,7 @@ export default {
           this.current = Number(res.data.current);
           this.pageCount = Math.ceil(parseInt(res.data.total) / this.pageSize);
           this.list.map(element => {
+
             element.assetTypeName =
               element.assetTypeName !== "" ? element.assetTypeName : "--";
             element.buyerUnitPrice =
@@ -614,6 +624,11 @@ export default {
               element.buyerDeliveryMethodName !== "" &&
               element.buyerDeliveryMethodName !== null
                 ? element.buyerDeliveryMethodName
+                : "--";
+            element.sellerDeliveryMethodName =
+              element.sellerDeliveryMethodName !== "" &&
+              element.sellerDeliveryMethodName !== null
+                ? element.sellerDeliveryMethodName
                 : "--";
           });
         })

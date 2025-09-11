@@ -107,7 +107,8 @@ export default {
     return {
       loginLogo: require("@/assets/imgs/login_logo.png"),
       captchatImg: require("@/assets/imgs/no.png"),
-      loginLeftPic: require("@/assets/imgs/login_left_pic.png"),
+      // loginLeftPic: require("@/assets/imgs/login_left_pic.png"),
+      loginLeftPic: require("@/assets/imgs/login_left_pic_revise.png"),
       loginCompanyIcon: require("@/assets/imgs/icon_login_company.png"),
       swiperList: [],
       fullWidth: document.body.clientWidth,
@@ -509,9 +510,18 @@ $subsidiary-color: #808695;
     background-size: cover;
   }
 
+  //.page-account-container {
+  //  padding: 32px 0 24px 0;
+  //  position: relative;
+  //}zanshizhushi
   .page-account-container {
-    padding: 32px 0 24px 0;
-    position: relative;
+    flex: 1; /* 优先用 flex:1，自动填充父容器可用空间 */
+    padding: 32px 0;
+    text-align: center;
+    width: 384px;
+    margin: 0 auto;
+    box-sizing: border-box; /* 防止 padding 撑高元素，破坏高度一致性 */
+    /* 保留原有 border-radius 等样式 */
   }
 }
 
@@ -596,9 +606,6 @@ $subsidiary-color: #808695;
   margin-right: 5px;
   border: #00ee76;
 }
-</style>
-
-<style lang="scss">
 .captcha {
   display: flex;
   align-items: flex-start;
@@ -681,17 +688,19 @@ $light_gray: #eee;
   width: 100%;
   display: flex;
   flex-flow: row;
+  //zijia
+  align-items: stretch; /* 关键：强制两个子元素高度一致 */
 }
 
 .loginLeftPic {
   flex-grow: 1;
-  height: 705px;
+  height: 400px;
 }
 
 .loginInputContainer {
   margin-top: 84px;
   margin-right: 90px;
-  height: 419px !important;
+  //height: 419px !important;zijiyichu
   padding: 0 !important;
   /*overflow: hidden;*/
   border-radius: 6px;
@@ -706,8 +715,8 @@ $light_gray: #eee;
 
 .info1 {
   background-image: linear-gradient(135deg,
-      rgba(46, 194, 139, 1) 0,
-      rgba(0, 101, 255, 1) 100%);
+    rgba(46, 194, 139, 1) 0,
+    rgba(0, 101, 255, 1) 100%);
   width: 290px;
   height: 30px;
   overflow-wrap: break-word;
@@ -724,8 +733,8 @@ $light_gray: #eee;
 
 .word1 {
   background-image: linear-gradient(135deg,
-      rgba(46, 194, 139, 1) 0,
-      rgba(0, 101, 255, 1) 100%);
+    rgba(46, 194, 139, 1) 0,
+    rgba(0, 101, 255, 1) 100%);
   // width: 273px;
   height: 14px;
   overflow-wrap: break-word;

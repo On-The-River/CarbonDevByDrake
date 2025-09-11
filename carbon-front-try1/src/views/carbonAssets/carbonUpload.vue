@@ -36,7 +36,7 @@
         <el-form-item style="margin-left: 40px">
           <span class="label">类型</span>
           <el-input
-            v-model="form.projectScopeType"
+            v-model="form.projectScopeTypeName"
             size="medium"
             style="width: 180px"
             disabled
@@ -74,7 +74,7 @@
         <el-form-item style="margin-left: 40px">
           <span class="label">核证机构</span>
           <el-input
-            v-model="form.certifiedAgencyName"
+            v-model="form.certifiedAgency"
             style="width: 180px"
             size="medium"
             disabled
@@ -104,7 +104,7 @@
         <el-form-item>
           <span class="label">交易所</span>
           <el-select
-            v-model="form.carbonExchangeName"
+            v-model="form.carbonExchangeId"
             placeholder="请选择"
             style="width: 180px"
             size="medium"
@@ -398,7 +398,7 @@
         />
         <el-table-column
           align="left"
-          prop="projectScope"
+          prop="projectScopeCodeName"
           label="领域"
           min-width="120"
         />
@@ -485,7 +485,7 @@ export default {
         carbonProjectId: null,
         buyTotalPrice: null,
         buyDate: null,
-        carbonExchangeName:"" //交易所名称
+        // carbonExchangeName:"" //交易所名称
         // certifiedAgency: null //核证机构
       },
       localForm:JSON.parse(localStorage.getItem("carbonUpload")),
@@ -545,7 +545,6 @@ export default {
     },
     handleError2(){
       console.warn("handleError2");
-
     },
     setFormValuation(event) {
       this.quotaForm.valuation = event * 50;
@@ -652,7 +651,7 @@ export default {
       };
     },
     /*
-     *@Description: 保存表单到sessionStorage
+     *@Description: 保存表单到localStorage
      *@MethodAuthor: liuboting
      *@Date: 2022-06-19 11:29:14
      */
@@ -689,14 +688,16 @@ export default {
      * 功能: 选择方法学后执行的操作
      */
     pickProjectDone(row) {
+      console.log("ROW：",row);
       this.form.projectName = row.projectName;
       this.form.carbonMethodologyName = row.methodologyName;
-      this.form.projectScopeType = row.projectScope;
+
+      this.form.projectScopeTypeName = row.projectScopeTypeCodeName;
       this.form.carbonProjectId = row.id;
       this.form.issuingDate = row.issuingDate;
-      this.form.certifiedAgency = row.projectVerifierCode;
-      // console.log("核证机构111111111111111111111：",row.projectVerifier);
-      this.form.certifiedAgencyName = row.projectVerifier;
+      // this.form.certifiedAgency = row.projectVerifierCode;
+      // console
+      this.form.certifiedAgency = row.projectVerifier;
       this.dialogTableVisible = false;
       this.havePickProject = true;
     },
@@ -753,7 +754,6 @@ export default {
       this.quotaForm.agencyCode = item.label;
     },
     submitCredit() {
-
       for (let i in this.form) {
         if (this.form[i] === "--") {
           this.form[i] = "";
@@ -945,9 +945,6 @@ export default {
       this.dialogTableVisible = true;
       this.getProjectList(1);
     }
-  },
-  created() {
-
   },
   watch: {
     dialogFormVisible() {

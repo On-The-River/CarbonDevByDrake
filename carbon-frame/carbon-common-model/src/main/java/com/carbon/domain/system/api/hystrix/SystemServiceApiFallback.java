@@ -33,15 +33,17 @@ public class SystemServiceApiFallback implements FallbackFactory<SystemServiceAp
 		ApiResult result = ApiResult.fail("系统服务不可用");
 
 		return new SystemServiceApi() {
+
+
 			@Override
-			public ApiResult syncProjectToFeishu(@Valid @PathVariable Long projectId) {
+			public ApiResult syncDatabaseToFeishu(@Valid @PathVariable String configId) {
 				System.out.println("syncProjectToFeishu Dispatched");
 				return restTemplate.postForObject(
-						systemURL + "/feishu/syncProjectToFeishu/" + projectId, null, ApiResult.class
+						systemURL + "/feishu/syncToFeishu/" + configId, null, ApiResult.class
 				);
 			}
 
-			@Override
+            @Override
 			public ApiResult syncFeishuToDatabase(@Valid @PathVariable  String syncConfigId) {
 				System.out.println("syncFeishuToDatabase Dispatched");
 				return restTemplate.postForObject(

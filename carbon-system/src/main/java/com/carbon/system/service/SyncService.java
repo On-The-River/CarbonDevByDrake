@@ -4,10 +4,11 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.carbon.common.feishu.FeiShuAPI;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.carbon.domain.common.ApiResult;
 import com.carbon.domain.common.constant.RocketMqName;
-import com.carbon.system.entity.SyncConfig;
+import com.carbon.common.entity.SyncConfig;
+import com.carbon.common.feishu.FeiShuAPI;
 import com.carbon.system.param.FeiShuSheetChangeEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -19,8 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.carbon.common.feishu.FeiShuAPI.getSpreadsheetToken;
@@ -41,19 +40,24 @@ public class SyncService {
     /**
      * 初始化同步配置
      */
-    public void initializeSync(String feishuFileToken, String databaseTable,
+    public void initializeSync(String feishuFileToken, String sheetId, String databaseTable,
                                String controllerEndpoint, LinkedHashMap<String, Object> fieldMapping) {
         SyncConfig config = new SyncConfig();
         config.setFeishuFileToken(getSpreadsheetToken(feishuFileToken));
+        config.setSheetId(sheetId);
         config.setDatabaseTable(databaseTable);
         config.setControllerEndpoint(controllerEndpoint);
+
         JSONObject orderedJson = new JSONObject(true);
         orderedJson.putAll(fieldMapping);
-        String fieldMappingJSON = orderedJson.toString();
-        config.setFieldMapping(fieldMappingJSON);
+        config.setFieldMapping(orderedJson.toString());
+
+        Map<String, String> realMapping = (Map<String, String>) fieldMapping.get("fieldMapping");
+        config.setFieldMappingSize(realMapping.size());
+
         config.setEnabled(true);
         config.setLastSyncTime(new Date());
-        
+
         try {
             syncConfigService.save(config);
         }
@@ -61,64 +65,37 @@ public class SyncService {
             log.error(e.getMessage());
             return;
         }
-        syncDatabaseToFeishu(config.getId());
-    }
-
-    public void syncProjectToFeishu(Long projectId) {
-        List<SyncConfig> configs = syncConfigService.list();
-
-        for (SyncConfig config : configs) {
-            if (config.getSyncDirection() == 1 || config.getSyncDirection() == 2) {
-                syncDatabaseToFeishu(config.getId());
-            }
+        if (!syncDatabaseToFeishu(config)) {
+            syncConfigService.remove(
+                    new QueryWrapper<SyncConfig>().eq("sheet_id", config.getSheetId())
+            );
         }
     }
 
-    /**
-     * 获取项目数据的端点
-     */
-    private List<Map<String, Object>> fetchProjectData(String endpoint, Long projectId) {
-        try {
-            String url = "http://localhost:8080" + endpoint;
-            if (projectId != null) {
-                url += "/" + projectId;
-            }
-
-            ResponseEntity<ApiResult> response = restTemplate.getForEntity(url, ApiResult.class);
-            ApiResult result = response.getBody();
-
-            if (result != null && result.getCode() == 200) {
-                Object data = result.getData();
-                if (data instanceof List) {
-                    return (List<Map<String, Object>>) data;
-                } else {
-                    // 单个对象包装成列表
-                    return Collections.singletonList((Map<String, Object>) data);
-                }
-            }
-            return new ArrayList<>();
-        } catch (Exception e) {
-            log.error("获取项目数据失败: ", e);
-            throw new RuntimeException("获取数据失败: " + e.getMessage());
-        }
+    public Boolean syncDatabaseToFeishu(String syncConfigId) {
+        SyncConfig config = syncConfigService.getById(syncConfigId);
+        return syncDatabaseToFeishu(config);
     }
 
     /**
      * 数据库数据同步到飞书
      */
-    public void syncDatabaseToFeishu(String syncConfigId) {
-        SyncConfig config = syncConfigService.getById(syncConfigId);
-        if (!config.getEnabled()) return;
+    public Boolean syncDatabaseToFeishu(SyncConfig config) {
+        if (config == null || !config.getEnabled()) {
+            log.warn("配置已禁用, config: {}", config);
+            return false;
+        }
 
         try {
             List<Map<String, Object>> databaseData = fetchDatabaseData(config.getControllerEndpoint());
             List<List<String>> feishuData = convertToFeishuFormat(databaseData, config.getFieldMapping());
 
-            FeiShuAPI.updateSheetData(config.getFeishuFileToken(), feishuData);
+            FeiShuAPI.updateSheetData(config.getFeishuFileToken(), config.getSheetId(), feishuData);
             config.setLastSyncTime(new Date());
             syncConfigService.updateById(config);
 
-            log.info("数据库到飞书同步完成，配置ID: {}", syncConfigId);
+            log.info("数据库到飞书同步完成，配置ID: {}", config.getId());
+            return true;
         } catch (Exception e) {
             log.error("数据库到飞书同步失败: ", e);
             throw new RuntimeException("同步失败: " + e.getMessage());
@@ -128,11 +105,11 @@ public class SyncService {
     /**
      * 飞书数据同步到数据库
      */
-    public void syncFeishuToDatabase(String syncConfigId) {
+    public Boolean syncFeishuToDatabase(String syncConfigId) {
         SyncConfig config = syncConfigService.getById(syncConfigId);
         if (config == null || !config.getEnabled()) {
             log.warn("配置不存在, configId: {}", syncConfigId);
-            return;
+            return false;
         }
 
         if (config.getLastSyncTime() != null) {
@@ -141,21 +118,47 @@ public class SyncService {
             long timeDiff = currentMills - lastSyncMills;
             if (timeDiff < 3000) {
                 log.info("3秒内已同步，跳过本次同步，configId={}", syncConfigId);
-                return;
+                return true;
             }
         }
 
         try {
-            List<List<String>> feishuData = FeiShuAPI.getSheetData(config.getFeishuFileToken());
+            List<List<String>> feishuData = FeiShuAPI.getSheetData(config);
+            int inMetaIdx = feishuData.get(0).indexOf("在meta仓库内");
             List<Map<String, Object>> databaseData = convertToDatabaseFormat(feishuData, config.getFieldMapping());
+
+            if (config.getDatabaseTable().equals("carbon_project")) {
+                int idx = 1;
+                for (Map<String, Object> map : databaseData) {
+                    String status = (String) map.get("projectStatus");
+                    String inMeta = (String) map.get("inMeta");
+                    if (inMeta == null) {
+                        inMeta = "0";
+                    }
+                    if (status != null && status.equals("0100000019") && inMeta.equals("0")) {
+                        Map<String, Object> params = new HashMap<>(map);
+
+                        ResponseEntity<ApiResult> res = restTemplate.postForEntity(
+                                "http://localhost:9003/assets/carbonMetaregistry/add",
+                                params, ApiResult.class
+                        );
+                        if(res.getBody().getCode() == 200){
+                            map.put("inMeta", "1");
+                            feishuData.get(idx).set(inMetaIdx, "1");
+                        }
+                    }
+                    idx++;
+                }
+            }
+
             updateDatabaseData(config.getControllerEndpoint(), databaseData);
+            FeiShuAPI.updateSheetData(config.getFeishuFileToken(), config.getSheetId(), feishuData);
 
             config.setLastSyncTime(new Date());
             syncConfigService.updateById(config);
 
-
             log.info("飞书到数据库同步完成，配置ID: {}", syncConfigId);
-
+            return true;
         } catch (Exception e) {
             log.error("飞书到数据库同步失败: ", e);
             throw new RuntimeException("同步失败: " + e.getMessage());
@@ -166,8 +169,8 @@ public class SyncService {
      * 处理飞书表格变更事件
      */
     public void handleFeishuSheetChange(FeiShuSheetChangeEvent event) {
-        String token = event.getEvent().getFile_token();
-        SyncConfig config = syncConfigService.getByFeishuToken(token);
+        String sheetId = event.getEvent().getSheet_id();
+        SyncConfig config = syncConfigService.getBySheetId(sheetId);
         if (config != null && config.getEnabled()) {
             Message<String> message = MessageBuilder
                     .withPayload(config.getId())
@@ -178,57 +181,11 @@ public class SyncService {
 
     private List<Map<String, Object>> fetchDatabaseData(String endpoint) {
         ResponseEntity<ApiResult> response = restTemplate.getForEntity(endpoint, ApiResult.class);
-        return (List<Map<String, Object>>) response.getBody().getData();
+        return (List<Map<String, Object>>) Objects.requireNonNull(response.getBody()).getData();
     }
 
     private void updateDatabaseData(String endpoint, List<Map<String, Object>> data) {
         restTemplate.postForEntity(endpoint + "/batch", data, ApiResult.class);
-    }
-
-    public void syncByProjectId(String projectId) {
-        SyncConfig config = syncConfigService.getByProjectId(projectId);
-        if (config != null && config.getEnabled()) {
-            switch (config.getSyncDirection()) {
-                case 1: // 双向同步，这里选了数据库到飞书
-                case 2: // 数据库到飞书
-                    syncDatabaseToFeishu(config.getId());
-                    break;
-                case 3: // 飞书到数据库
-                    syncFeishuToDatabase(config.getId());
-                    break;
-            }
-        }
-    }
-
-//    public List<List<String>> convertToFeishuFormat(List<CarbonProject> databaseData, String fieldMappingJson) {
-//        Map<String, String> fieldMapping = JSONUtil.toBean(fieldMappingJson, Map.class);
-//        List<String> headers = new ArrayList<>(fieldMapping.values());
-//        List<List<String>> sheetData = new ArrayList<>();
-//        sheetData.add(headers);
-//
-//        for (CarbonProject record : databaseData) {
-//            List<String> row = new ArrayList<>();
-//            for (Map.Entry<String, String> entry : fieldMapping.entrySet()) {
-//                String dbField = entry.getKey();
-//                Object value = record.getFromField(dbField);
-//                row.add(value == null ? "" : value.toString());
-//            }
-//            sheetData.add(row);
-//        }
-//
-//        return sheetData;
-//    }
-
-    private static <K, V> V getValueByKey(Set<Map.Entry<K, V>> entrySet, K targetKey) {
-        if (entrySet == null || entrySet.isEmpty()) {
-            return null;
-        }
-        for (Map.Entry<K, V> entry : entrySet) {
-            if (targetKey.equals(entry.getKey())) {
-                return entry.getValue();
-            }
-        }
-        return null;
     }
 
     /**
@@ -261,25 +218,12 @@ public class SyncService {
             }
             sheetData.add(row);
         }
-        return sheetData;
-    }
-
-    private Object getFieldValue(Object obj, String fieldName) {
-        try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (Exception e) {
-            // 如果直接字段访问失败，尝试getter方法
-            try {
-                String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                Method getter = obj.getClass().getMethod(getterName);
-                return getter.invoke(obj);
-            } catch (Exception ex) {
-                log.warn("无法获取字段值: {} from {}", fieldName, obj.getClass().getSimpleName());
-                return null;
-            }
+        List<String> emptyOne = new ArrayList<>();
+        for (int i = 0; i < databaseData.size(); i++) {
+            emptyOne.add("");
         }
+        sheetData.add(emptyOne);
+        return sheetData;
     }
 
     /**
@@ -293,21 +237,18 @@ public class SyncService {
             return new ArrayList<>();
         }
 
-        Map<String, Object> fieldMappingRaw = JSONUtil.toBean(fieldMappingJson, Map.class);
+        Map<String, Object> fieldMappingRaw = (Map<String, Object>) JSONUtil.toBean(fieldMappingJson, Map.class);
         Map<String, String> fieldMapping = (Map<String, String>) fieldMappingRaw.get("fieldMapping");
 
-        // 反转映射：飞书表头 -> 数据库字段
+        // 反转映射
         Map<String, String> reverseMapping = new HashMap<>();
         for (Map.Entry<String, String> entry : fieldMapping.entrySet()) {
             reverseMapping.put(entry.getValue(), entry.getKey());
         }
 
-        // 提取表头（第一行）
         List<String> headers = sheetData.get(0);
-
-        // 构建数据库记录列表
         List<Map<String, Object>> databaseData = new ArrayList<>();
-        // 从第二行开始是数据
+
         for (int i = 1; i < sheetData.size(); i++) {
             List<String> row = sheetData.get(i);
             Map<String, Object> record = new HashMap<>();
@@ -320,7 +261,6 @@ public class SyncService {
             }
             databaseData.add(record);
         }
-
         return databaseData;
     }
 }

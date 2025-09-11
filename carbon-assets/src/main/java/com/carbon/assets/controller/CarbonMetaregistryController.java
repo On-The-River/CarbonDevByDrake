@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 /**
@@ -41,6 +42,13 @@ public class CarbonMetaregistryController extends BaseController {
     @ApiOperation(value = "添加CarbonMetaregistry对象",notes = "添加项目仓库")
     public ApiResult<Boolean> addCarbonMetaregistry(@Valid @RequestBody CarbonMetaregistry carbonMetaregistry) {
         boolean flag = carbonMetaregistryService.save(carbonMetaregistry);
+        return ApiResult.result(flag);
+    }
+
+    @PostMapping("/batch")
+    @ApiOperation(value = "添加CarbonMetaregistry对象",notes = "添加项目仓库")
+    public ApiResult<Boolean> addCarbonMetaregistryBatch(@Valid @RequestBody List<CarbonMetaregistry> metaregistries) {
+        boolean flag = carbonMetaregistryService.saveBatch(metaregistries);
         return ApiResult.result(flag);
     }
 

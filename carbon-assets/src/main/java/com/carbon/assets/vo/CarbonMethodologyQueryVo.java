@@ -27,6 +27,9 @@ public class CarbonMethodologyQueryVo implements Serializable{
     @ApiModelProperty(value = "方法学名称")
     private String name;
 
+    @ApiModelProperty(value = "引用计数")
+    private Integer refCount;
+
     @ApiModelProperty(value = "方法学状态（字典）")
     private String status;
 

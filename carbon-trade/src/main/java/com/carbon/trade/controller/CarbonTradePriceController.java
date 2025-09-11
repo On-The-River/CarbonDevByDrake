@@ -80,18 +80,8 @@ public class CarbonTradePriceController extends BaseController {
         return ApiResult.ok(paging);
     }
 
-    /**
-     * 当回应一个询报价时调用
-     * @author: Wang
-     * @Tip: equals update
-     *      call then refresh on database
-     * */
-    @PostMapping("/answer")
-    @ApiOperation(value = "回应询报价",notes = "回应一个询报价")
-    public ApiResult<Boolean> answerCarbonTradePrice(@RequestBody CarbonTradePrice carbonTradePrice){
-        carbonTradePriceService.addTradePrice(carbonTradePrice);
-        return ApiResult.ok(true);
-    }
+
+
 
 }
 

@@ -308,8 +308,10 @@ export default {
       }
       let datas = {
         id: this.JavaInfo.accountId,
-        newPassword: md5(this.ruleForm.newPassword),
-        oldPassword: md5(this.ruleForm.oldPassword)
+        // newPassword: md5(this.ruleForm.newPassword),
+        newPassword: this.ruleForm.newPassword,
+        // oldPassword: md5(this.ruleForm.oldPassword)
+        oldPassword: this.ruleForm.oldPassword
       };
       putAccountUpdatePassword(datas).then(res => {
         this.$message({

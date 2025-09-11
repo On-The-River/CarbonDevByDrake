@@ -66,7 +66,7 @@
                 <a :class="editStyleChange(scope.row.statusName)" @click="onEdit(scope.row.url)" style="margin-left: 10px">编辑</a>
                 <a style="margin-left: 10px" :class="publishStyleChange(scope.row.statusName)" @click="onClickPublish(scope.row.id)">发布</a>
                 <a style="margin-left: 10px" @click="onClickOffline(scope.row.id)" :class="offlineStyleChange(scope.row.statusName)">下线</a>
-                <a style="margin-left: 10px" class="list-red-text" @click="onClickDelete(scope.row.id)">删除</a>
+                <a style="margin-left: 10px" :class="publishDeleteButtonStyleChange(scope.row.statusName)" @click="onClickDelete(scope.row.id)">删除</a>
               </template>
             </el-table-column>
           </el-table>
@@ -79,6 +79,26 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogCreateArticleVisible"
+      @close="onCreateDialogClose"
+    >
+      <el-input
+        v-model="articalTitle"
+        size="medium"
+        class="contentItem"
+        placeholder="请输入文章标题"
+      ></el-input>
+      <el-divider></el-divider>
+
+      <el-button
+        @click="onCreateArticle"
+        style="{width: auto}"
+      >
+        创建至飞书
+      </el-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,6 +113,9 @@ export default {
   components: { selectDropDownBox },
   data() {
     return {
+      dialogTitle: "创建至飞书",
+      dialogCreateArticleVisible: false,
+      articalTitle: "",
       indeterminateFlag: false, //表头复选框状态
       reRender: true, // 重新渲染列表使用
       allchecked: false,
@@ -185,301 +208,327 @@ export default {
         .catch((reason) => {
           this.$message.error("连接超时，请重新连接");
         });
+
       // this.$message.success("该功能尚未实现，敬请期待");
+    },
+    onCreateArticle()
+    {
+      this.doAdd();
     },
     /*
 *@Description: 添加文章
 *@MethodAuthor: liuboting
 *@Date: 2022-05-22 22:08:01
 */
-onAdd() {
-  this.$message({
-    type: "success",
-    duration: 5000,
-    message: "正在连接飞书...",
-  });
-  artical
-    .AddArticle()
-    .then((res) => {
-      this.addToken = res.token;
-      this.addUrl = res.url;
-      if (this.addUrl) {
-        openUrlInNewWindow(this.addUrl);
-      }
-    })
-    .catch((reason) => {
-      this.$message.error("连接超时，请重新连接");
-    });
-},
-// cellStyle(data) {
-//   return "cursor:pointer;"
-// },
-handle(row, column) {
-  if (column.label != "操作") {
-    openUrlInNewWindow(row.url);
-  }
-},
-//判断是否发布，若发布了则修改样式
-editStyleChange(status) {
-  if (status === "已发布") {
-    return "afterSubmitEdit";
-  } else {
-    return "list-green-text";
-  }
-},
-publishStyleChange(status) {
-  if (status === "已发布") {
-    return "afterSubmitPublish";
-  } else {
-    return "list-blue-text";
-  }
-},
-offlineStyleChange(status) {
-  if (status === "已发布") {
-    return "list-red-text";
-  } else {
-    return "afterSubmitOffline";
-  }
-},
-//当前选择的文章类型
-articalCategorySelected() {
-  const data = {
-    asc: true,
-    categoryId: this.catagoryValue[0],
-    current: 0,
-    size: 0,
-    sortField: "",
-  };
-  artical
-    .getCarbonArticles(data)
-    .then((res) => {
-      this.articals = res.records;
-      this.total = res.total;
-      this.current = res.current;
-      this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
-      this.articals.map((v) => {
-        //遍历表格数据
-        v.checked = false;
-        v.author = v.author ? v.author : "--";
-        let time = v.updatedTime.split(" ");
-        v.updatedTime = time[0];
+    onAdd()
+    {
+      this.dialogCreateArticleVisible=true;
+    },
+    onCreateDialogClose()
+    {
+      this.dialogCreateArticleVisible=false;
+    },
+    doAdd() {
+      this.$message({
+        type: "success",
+        duration: 5000,
+        message: "正在连接飞书...",
       });
-    })
-    .catch((error) => ({}));
-},
-//当前选择的文章状态
-// articleStatusSelected(value) {
-//   this.statusValue = value;
-// },
-onClickSearch() {
-  const data = {
-    asc: true,
-    categoryId: this.catagoryValue[0],
-    current: 0,
-    searchKeywords: this.searchKeyword,
-    size: 0,
-    sortField: "",
-    status: this.statusValue[0],
-  };
-  artical
-    .getCarbonArticles(data)
-    .then((res) => {
-      this.articals = res.records;
-      this.total = res.total;
-      this.current = res.current;
-      this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
-      this.articals.map((v) => {
-        //遍历表格数据
-        v.checked = false;
-        // v.categoryName = this.categoryName(v.categoryId);
-        // v.status = this.articleStatusSelect(v.status);
-        let time = v.updatedTime.split(" ");
-        v.updatedTime = time[0];
-        for (var i in v) {
-          v[i] = v[i] ? v[i] : "--";
-          if (v[i] === "") {
-            v[i] = "--";
+      let title=this.articalTitle;
+      this.$message({
+        type: "info",
+        duration: 1000,
+        message: title,
+      });
+      artical
+        .AddArticle(title)
+        .then((res) => {
+          this.addToken = res.token;
+          this.addUrl = res.url;
+          if (this.addUrl) {
+            openUrlInNewWindow(this.addUrl);
           }
+        })
+        .catch((reason) => {
+          this.$message.error("连接超时，请重新连接");
+        });
+    },
+
+
+    handle(row, column) {
+      if (column.label != "操作") {
+        openUrlInNewWindow(row.url);
+      }
+    },
+    //判断是否发布，若发布了则修改样式
+    editStyleChange(status) {
+      if (status === "已发布") {
+        return "afterSubmitEdit";
+      } else {
+        return "list-green-text";
+      }
+    },
+    publishStyleChange(status) {
+      if (status === "已发布") {
+        return "afterSubmitPublish";
+      } else {
+        return "list-blue-text";
+      }
+    },
+    offlineStyleChange(status) {
+      if (status === "已发布") {
+        return "list-red-text";
+      } else {
+        return "afterSubmitOffline";
+      }
+    },
+    publishDeleteButtonStyleChange(status)
+    {
+      if (status === "已发布") {
+        return "afterSubmitPublish";
+      } else {
+        return "list-red-text";
+      }
+    },
+    //当前选择的文章类型
+    articalCategorySelected() {
+      const data = {
+        asc: true,
+        categoryId: this.catagoryValue[0],
+        current: 0,
+        size: 0,
+        sortField: "",
+      };
+      artical
+        .getCarbonArticles(data)
+        .then((res) => {
+          this.articals = res.records;
+          this.total = res.total;
+          this.current = res.current;
+          this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
+          this.articals.map((v) => {
+            //遍历表格数据
+            v.checked = false;
+            v.author = v.author ? v.author : "--";
+            let time = v.updatedTime.split(" ");
+            v.updatedTime = time[0];
+          });
+        })
+        .catch((error) => ({}));
+    },
+    //当前选择的文章状态
+    // articleStatusSelected(value) {
+    //   this.statusValue = value;
+    // },
+    onClickSearch() {
+      const data = {
+        asc: true,
+        categoryId: this.catagoryValue[0],
+        current: 0,
+        searchKeywords: this.searchKeyword,
+        size: 0,
+        sortField: "",
+        status: this.statusValue[0],
+      };
+      artical
+        .getCarbonArticles(data)
+        .then((res) => {
+          this.articals = res.records;
+          this.total = res.total;
+          this.current = res.current;
+          this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
+          this.articals.map((v) => {
+            //遍历表格数据
+            v.checked = false;
+            // v.categoryName = this.categoryName(v.categoryId);
+            // v.status = this.articleStatusSelect(v.status);
+            let time = v.updatedTime.split(" ");
+            v.updatedTime = time[0];
+            for (var i in v) {
+              v[i] = v[i] ? v[i] : "--";
+              if (v[i] === "") {
+                v[i] = "--";
+              }
+            }
+          });
+        })
+        .catch((error) => ({}));
+    },
+    onEdit(url) {
+      openUrlInNewWindow(url);
+    },
+    //发布碳文章
+    onClickPublish(id) {
+      const data = {
+        id: id,
+        status: "0260000002",
+      };
+      artical.changeCarbonStatusById(data).then(
+        (res) => {
+          this.$message.success("发布成功");
+          this.loadArticals();
+        },
+        (error) => {
+          this.$message.success("发布失败");
+        }
+      );
+    },
+    onClickDelete(id) {
+      var id = parseInt(id);
+      this.$confirm("删除内容不可复原，请谨慎操作").then(() => {
+        artical.DelArticle(id).then(
+          (res) => {
+            this.$message.success("删除成功");
+            this.loadArticals();
+          },
+          (err) => {
+            this.$message.success("删除失败");
+          }
+        );
+      });
+    },
+    onClickOffline(id) {
+      const data = {
+        id: id,
+        status: "0260000003",
+      };
+      artical.changeCarbonStatusById(data).then(
+        (res) => {
+          this.$message.success("下线成功");
+          this.loadArticals();
+        },
+        (error) => {
+          this.$message.success("下线失败");
+        }
+      );
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.loadArticals();
+    },
+    handleCurrentChange(val) {
+      this.current = val;
+      this.loadArticals();
+    },
+    // 监听页面宽度变化，刷新表格
+    handleResize() {
+      if (this.infoList) this.$refs.visitChart.handleResize();
+    },
+    // 加载碳文章列表
+    loadArticals() {
+      const data = {
+        asc: true,
+        current: this.current,
+        size: this.pageSize,
+        sortfield: "",
+      };
+      artical
+      .getCarbonArticles(data)
+      .then((res) => {
+        this.articals = res.records;
+        this.total = res.total;
+        this.current = res.current;
+        this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
+        this.articals.map((v) => {
+          //遍历表格数据
+          v.checked = false;
+          // v.categoryName = this.categoryName(v.categoryId);
+          // v.status = this.articleStatusSelect(v.status);
+          let time = v.updatedTime.split(" ");
+          v.updatedTime = time[0];
+          for (var i in v) {
+            v[i] = v[i] ? v[i] : "--";
+            if (v[i] === "") {
+              v[i] = "--";
+            }
+          }
+        });
+      })
+      .catch((error) => ({}));
+    },
+    categoryName(id) {
+      switch (id) {
+        case 1:
+          return "行业资讯";
+        case 2:
+          return "行业知识";
+        case 4:
+          return "常见问题";
+        case 3:
+          return "公告";
+      }
+    },
+    // articleStatusSelect(status) {
+    //   switch (status) {
+    //     case 1:
+    //       return "未发布";
+    //     case 2:
+    //       return "已发布";
+    //     case 3:
+    //       return "已下线";
+    //     case 4:
+    //       return "编辑中";
+    //     case 5:
+    //       return "已推送";
+    //   }
+    // },
+    // checkbox start
+    signCheckChange() {
+      let allCheckedFlag = true;
+      let allReset = true;
+      this.articals.forEach((item) => {
+        if (item.checked == true) {
+          allReset = false;
+        } else {
+          allCheckedFlag = false;
         }
       });
-    })
-    .catch((error) => ({}));
-},
-onEdit(url) {
-  openUrlInNewWindow(url);
-},
-//发布碳文章
-onClickPublish(id) {
-  const data = {
-    id: id,
-    status: "0260000002",
-  };
-  artical.changeCarbonStatusById(data).then(
-    (res) => {
-      this.$message.success("发布成功");
-      this.loadArticals();
-    },
-    (error) => {
-      this.$message.success("发布失败");
-    }
-  );
-},
-onClickDelete(id) {
-  var id = parseInt(id);
-  this.$confirm("删除内容不可复原，请谨慎操作").then(() => {
-    artical.DelArticle(id).then(
-      (res) => {
-        this.$message.success("删除成功");
-        this.loadArticals();
-      },
-      (err) => {
-        this.$message.success("删除失败");
-      }
-    );
-  });
-},
-onClickOffline(id) {
-  const data = {
-    id: id,
-    status: "0260000003",
-  };
-  artical.changeCarbonStatusById(data).then(
-    (res) => {
-      this.$message.success("下线成功");
-      this.loadArticals();
-    },
-    (error) => {
-      this.$message.success("下线失败");
-    }
-  );
-},
-handleSizeChange(val) {
-  this.pageSize = val;
-  this.loadArticals();
-},
-handleCurrentChange(val) {
-  this.current = val;
-  this.loadArticals();
-},
-// 监听页面宽度变化，刷新表格
-handleResize() {
-  if (this.infoList) this.$refs.visitChart.handleResize();
-},
-// 加载碳文章列表
-loadArticals() {
-  const data = {
-    asc: true,
-    current: this.current,
-    size: this.pageSize,
-    sortfield: "",
-  };
-  artical
-  .getCarbonArticles(data)
-  .then((res) => {
-    this.articals = res.records;
-    this.total = res.total;
-    this.current = res.current;
-    this.pageCount = Math.ceil(parseInt(res.total) / this.pageSize);
-    this.articals.map((v) => {
-      //遍历表格数据
-      v.checked = false;
-      // v.categoryName = this.categoryName(v.categoryId);
-      // v.status = this.articleStatusSelect(v.status);
-      let time = v.updatedTime.split(" ");
-      v.updatedTime = time[0];
-      for (var i in v) {
-        v[i] = v[i] ? v[i] : "--";
-        if (v[i] === "") {
-          v[i] = "--";
+      if (allCheckedFlag || allReset) {
+        this.indeterminateFlag = false;
+        if (allCheckedFlag) {
+          this.allchecked = true;
+        } else {
+          this.allchecked = false;
         }
+      } else {
+        this.indeterminateFlag = true;
       }
-    });
-  })
-  .catch((error) => ({}));
-},
-categoryName(id) {
-  switch (id) {
-    case 1:
-      return "行业资讯";
-    case 2:
-      return "行业知识";
-    case 4:
-      return "常见问题";
-    case 3:
-      return "公告";
-  }
-},
-// articleStatusSelect(status) {
-//   switch (status) {
-//     case 1:
-//       return "未发布";
-//     case 2:
-//       return "已发布";
-//     case 3:
-//       return "已下线";
-//     case 4:
-//       return "编辑中";
-//     case 5:
-//       return "已推送";
-//   }
-// },
-// checkbox start
-signCheckChange() {
-  let allCheckedFlag = true;
-  let allReset = true;
-  this.articals.forEach((item) => {
-    if (item.checked == true) {
-      allReset = false;
-    } else {
-      allCheckedFlag = false;
-    }
-  });
-  if (allCheckedFlag || allReset) {
-    this.indeterminateFlag = false;
-    if (allCheckedFlag) {
-      this.allchecked = true;
-    } else {
-      this.allchecked = false;
-    }
-  } else {
-    this.indeterminateFlag = true;
-  }
-  this.reRender = !this.reRender;
-},
-updateAllSelected(val) {
-  this.indeterminateFlag = false;
-  if (val) {
-    this.articals.forEach((item) => {
-      item.checked = true;
-    });
-  } else {
-    this.articals.forEach((item) => {
-      item.checked = false;
-    });
-  }
-},
-//render-header方法
-renderCheckHeader(h, { column, $index }) {
-  return h("span", 0, [
-    h("el-checkbox", {
-      props: {
-        checked: this.allchecked,
-        indeterminate: this.indeterminateFlag, //表头复选框状态
-      },
-      on: {
-        change: this.updateAllSelected, // 选中事件
-      },
-    }),
-  ]);
-},
-// checkbox end
-},
-created() {
-  this.handleChangeVisitType();
-},
-mounted() {
-  this.loadArticals();
-},
+      this.reRender = !this.reRender;
+    },
+    updateAllSelected(val) {
+      this.indeterminateFlag = false;
+      if (val) {
+        this.articals.forEach((item) => {
+          item.checked = true;
+        });
+      } else {
+        this.articals.forEach((item) => {
+          item.checked = false;
+        });
+      }
+    },
+    //render-header方法
+    renderCheckHeader(h, { column, $index }) {
+      return h("span", 0, [
+        h("el-checkbox", {
+          props: {
+            checked: this.allchecked,
+            indeterminate: this.indeterminateFlag, //表头复选框状态
+          },
+          on: {
+            change: this.updateAllSelected, // 选中事件
+          },
+        }),
+      ]);
+    },
+    // checkbox end
+    },
+    created() {
+      this.handleChangeVisitType();
+    },
+    mounted() {
+      this.loadArticals();
+    },
 };
 </script>
 <style lang="scss" scoped>

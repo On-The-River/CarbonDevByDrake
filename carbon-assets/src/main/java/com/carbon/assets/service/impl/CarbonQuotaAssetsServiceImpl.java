@@ -2,12 +2,15 @@ package com.carbon.assets.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.carbon.assets.entity.CarbonCreditAssets;
 import com.carbon.assets.entity.CarbonQuotaAssets;
 import com.carbon.assets.mapper.CarbonQuotaAssetsMapper;
 import com.carbon.assets.service.CarbonQuotaAssetsService;
 import com.carbon.assets.param.CarbonQuotaAssetsQueryParam;
 import com.carbon.assets.vo.CarbonAssetsTotalVo;
 import com.carbon.assets.vo.CarbonQuotaAssetsQueryVo;
+import com.carbon.common.exception.CommonBizException;
+import com.carbon.common.feishu.FeiShuAPI;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.common.api.Paging;
 import com.carbon.domain.auth.vo.SecurityData;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 
 /**
@@ -44,6 +48,11 @@ public class CarbonQuotaAssetsServiceImpl extends BaseServiceImpl<CarbonQuotaAss
 
     @Resource
     private RocketMQTemplate mqTemplate;
+
+    @Override
+    public void triggerSyncToFeishu() {
+        FeiShuAPI.sendToMQTemplate("carbon_quota_assets");
+    }
 
     @Override
     public CarbonQuotaAssetsQueryVo getCarbonQuotaAssetsById(Serializable id) {
@@ -81,6 +90,35 @@ public class CarbonQuotaAssetsServiceImpl extends BaseServiceImpl<CarbonQuotaAss
                 .build();
         Message<QuotaApproval> msg= MessageBuilder.withPayload(approval).build();
         mqTemplate.syncSend(RocketMqName.QuotaApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
+    }
+
+
+    @Override
+    public void onAddQuote(Integer assetId, BigDecimal delta) {
+        CarbonQuotaAssets targetAsset = getById(assetId);
+        if(targetAsset==null){
+            throw new CommonBizException("通过assetId查询:碳信用资产不存在!,assetId="+String.valueOf(assetId));
+        }
+
+        targetAsset.setAvailableAmount(targetAsset.getAvailableAmount().subtract(delta));
+        BigDecimal added = targetAsset.getLockedAmount().add(delta);
+        targetAsset.setLockedAmount(added);
+        updateById(targetAsset);
+    }
+
+    @Override
+    public void toFrozen(Integer assetId, BigDecimal quoteQuantity, BigDecimal actualQuantity) {
+        CarbonQuotaAssets targetAsset = getById(assetId);
+        if(targetAsset==null){
+            throw new CommonBizException("通过assetId查询:碳信用资产不存在!,assetId="+String.valueOf(assetId));
+        }
+
+        targetAsset.setLockedAmount(targetAsset.getLockedAmount().subtract(quoteQuantity));
+        targetAsset.setFrozenAmount(targetAsset.getFrozenAmount().add(actualQuantity));
+
+        BigDecimal leftQuantity=quoteQuantity.subtract(actualQuantity);
+        targetAsset.setAvailableAmount(targetAsset.getAvailableAmount().add(leftQuantity));
+        updateById(targetAsset);
     }
 
 

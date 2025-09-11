@@ -1,7 +1,7 @@
 package com.carbon.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.carbon.system.entity.SyncConfig;
+import com.carbon.common.entity.SyncConfig;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

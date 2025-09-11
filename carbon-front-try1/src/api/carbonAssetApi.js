@@ -26,6 +26,14 @@ export function searchKeyword(data) {
   })
 }
 
+export function deleteQuote(id){
+  return request({
+    baseURL: "http://localhost:9005",
+    url: '/trade/carbonTradeQuote/delete/'+id,
+    method: 'GET',
+  })
+}
+
 //拿到城市字典
 export function getCityDict() {
   return request({
@@ -45,7 +53,7 @@ export function addCarbonProjectFile(data) {
   })
 }
 // 拿到碳信用面板数据
-export function getCreditData() {
+export function getCreditTotal() {
   return request({
     baseURL: "http://localhost:9003",
     url: '/assets/carbonCreditAssets/assetsTotal',

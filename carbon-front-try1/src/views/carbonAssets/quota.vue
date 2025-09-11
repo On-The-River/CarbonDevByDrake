@@ -272,7 +272,7 @@
           <el-form-item label="期望交割方式" prop="deliveryMethod">
             <el-select
               v-model="form.deliveryMethod"
-              placeholder="协议转入、竞价交易、定价交易"
+              placeholder="请选择"
               size="medium"
               style="width: 536px; top: -5px"
             >
@@ -287,7 +287,7 @@
           <el-form-item label="期望交割场所" prop="deliveryExchange">
             <el-select
               v-model="form.deliveryExchange"
-              placeholder="全国碳排放权交易中心、北京环境交易所、上海环境能源交易所"
+              placeholder="请选择"
               size="medium"
               style="width: 536px; top: -5px"
             >
@@ -338,7 +338,7 @@
 <script>
 import {
   getExchangeDict,
-  getDiliveryMethodeDict,
+  getDeliveryMethodDict,
   getAssetStatusDict,
   AssetStatus,
 } from "@/config/dictHelper";
@@ -347,6 +347,7 @@ import { setListNo } from "@/libs/public";
 import * as quota from "@/api/carbonAssetApi";
 import BuyAssets from "@/views/carbonTrade/quotation/buyAssets.vue";
 import { setLargeNumber } from "@/libs/public";
+import Cookies from "js-cookie";
 
 export default {
   name: "quota",
@@ -459,13 +460,13 @@ export default {
     };
   },
   mounted() {
-    
+
     this.getList(1);
     this.getTopData();
     this.exchangeList = getExchangeDict(this.$store);
-    this.tradeMethods = getDiliveryMethodeDict(this.$store);
+    this.tradeMethods = getDeliveryMethodDict(this.$store);
     this.formatAssetStatus(getAssetStatusDict(this.$store));
-    
+
     // console.log(this.switchTradeStatus("160000001"));
   },
   methods: {
@@ -531,7 +532,7 @@ export default {
       this.buyAssetsDlg = true;
     },
     toDetail(id) {
-      
+
       this.$router.push({
         path: "/assets/quotaDetail",
         query: { id: id },
@@ -729,11 +730,37 @@ export default {
         return;
       }
 
+      let info = JSON.parse(Cookies.get("JavaInfo"));
+      let curTenantId=0;
+      if(info)
+      {
+        curTenantId = info.tenantId;
+      }
+      let quoteData= {
+          id: this.form.id,
+          tradeQuantity: this.form.tradeQuantity, // 出售数量
+          assetUnitPrice: this.form.assetUnitPrice,
+          expirationDate: this.form.expirationDate,
+          deliveryTime: this.form.deliveryTime,
+          deliveryMethod: this.form.deliveryMethod,
+          deliveryExchange: this.form.deliveryExchange,
+          projectType: this.form.projectType,
+          tradeRole: "0270000002",
+
+
+          assetType: "0140000002",
+          status: "0160000001",
+          institutionName: this.form.institutionName,
+
+          publisherId: curTenantId,
+          assetId: this.form.id,
+      }
+
       // 校验：出售数量必填
-      if (this.form.tradeQuantity) {
-        this.form.assetType = "0140000002";
+      if (quoteData.tradeQuantity) {
+
         // 调用接口：添加碳资产到市场
-        quota.addcarbonAssetMarket(this.form).then(
+        quota.addcarbonAssetMarket(quoteData).then(
           (res) => {
             // 调用接口：变更配额
             quota.changeQuota(data).then(
@@ -862,6 +889,7 @@ export default {
   background: #ffffff;
   box-shadow: 0px 2px 8px 0px #eaf0f3;
   border-radius: 8px;
+
 }
 
 .container {

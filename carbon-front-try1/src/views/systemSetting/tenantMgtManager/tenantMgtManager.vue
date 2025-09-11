@@ -745,7 +745,7 @@ export default {
      * 功能：提交保存
      */
     update() {
-      if(!(this.addForm.address && this.addForm.tenantName && this.addForm.faxNumber && this.addForm.contactsEmail && this.addForm.contactsName && this.addForm.telephone && this.addForm.industry && this.addForm.tenantStatus && this.addForm.validityTime)){
+      if(!(this.addForm.address && this.addForm.tenantName&& this.addForm.contactsEmail && this.addForm.contactsName && this.addForm.telephone && this.addForm.industry && this.addForm.tenantStatus && this.addForm.validityTime)){
         return this.$message.warning("必填项不能为空");
       }
 
@@ -1045,13 +1045,13 @@ export default {
   width: 100%;
 }
 
-:deep(.el-cascader .el-input .el-input__inner),
-:deep(.el-cascader .el-input.is-focus .el-input__inner) {
+::v-deep(.el-cascader .el-input .el-input__inner),
+::v-deep(.el-cascader .el-input.is-focus .el-input__inner) {
   border-color: transparent;
 }
 
 .acea-row {
-  :deep(.el-avatar--small) {
+  ::v-deep(.el-avatar--small) {
     width: 22px;
     height: 22px;
     line-height: 22px;
@@ -1059,7 +1059,7 @@ export default {
 }
 
 .checkTime {
-  :deep(.el-radio__input) {
+  ::v-deep(.el-radio__input) {
     display: none;
   }
 }
@@ -1070,7 +1070,7 @@ export default {
 }
 
 .dashboard-console-visit {
-  :deep(.el-card__header) {
+  ::v-deep(.el-card__header) {
     padding: 14px 20px !important;
   }
 }

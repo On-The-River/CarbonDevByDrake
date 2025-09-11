@@ -5,6 +5,8 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.carbon.common.exception.CommonBizException;
+import com.carbon.domain.assets.api.AssetsServiceApi;
+import com.carbon.domain.common.ApiResult;
 import com.carbon.domain.common.constant.RocketDelayLevelConstant;
 import com.carbon.domain.common.constant.RocketMqName;
 import com.carbon.domain.trade.vo.MqCarbonTradeQuote;
@@ -44,6 +46,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.util.StringUtils;
+import  com.carbon.domain.assets.api.AssetsServiceApi;
+import org.springframework.web.client.RestTemplate;
+
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -79,6 +84,8 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
     @Autowired
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     @Override
     public void addTradeQuote(CarbonTradeQuote tradeQuote) {
 
@@ -104,6 +111,46 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
 //        Message<MqCarbonTradeQuote> message = MessageBuilder
 //                .withPayload(BeanUtil.copyProperties(tradeQuote, MqCarbonTradeQuote.class)).build();
 //        mqTemplate.syncSend(RocketMqName.FS_TEST,message,3000,RocketDelayLevelConstant.SECOND10);
+    }
+
+    @Override
+    public void addTradeQuoteWithLink(CarbonTradeQuote tradeQuote) {
+        Long projectId = tradeQuote.getProjectId();
+
+        Integer assetId=tradeQuote.getAssetId();
+        Optional.ofNullable(projectId).ifPresent(e->{
+            com.carbon.trade.vo.MetaregistryDataVo map =  carbonTradeQuoteMapper.getCarbonMetaregistryByCarbonMetaregistryProjectId(e);
+            if(map==null)
+            {
+                return;
+            }
+            tradeQuote.setProjectType(map.getProjectScopeTypeCode());
+            tradeQuote.setProjectScope(map.getProjectScope());
+            tradeQuote.setProjectScopeCode(map.getProjectScopeCode());
+            log.info("{}",JSONUtil.toJsonStr(map));
+        });
+
+        this.save(tradeQuote);
+
+        postAddQuote(assetId,tradeQuote.getAssetType(),tradeQuote.getTradeQuantity());
+    }
+
+
+
+    private void postAddQuote(Integer assetId,String assetType,BigDecimal tradeQuantity)
+    {
+        String url="";
+        if(assetType!=null &&assetType.equals("0140000001"))
+        {
+            //碳信用
+            url="http://localhost:9003/assets/carbonCreditAssets/onAddQuote/"+assetId+"/"+tradeQuantity;
+        }
+        else if(assetType!=null &&assetType.equals("0140000002"))
+        {
+            //碳配额
+            url="http://localhost:9003/assets/carbonQuotaAssets/onAddQuote/"+assetId+"/"+tradeQuantity;
+        }
+        restTemplate.getForEntity(url,ApiResult.class);
     }
 
     @Override
@@ -265,6 +312,43 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
         //保存到ES
         carbonTradeQuoteRepository.saveAll(records);
         return records.size();
+    }
+
+    @Override
+    public void deleteQuote(Integer id) {
+        CarbonTradeQuote targetQuote = getById(id);
+        if(targetQuote==null){
+            throw new CommonBizException("id 为"+id+"的供需行情不存在");
+        }
+        if(!targetQuote.getPublisherId().equals(getCurrentTenantId())){
+            throw new CommonBizException("不可删除其他租户的供需行情!");
+        }
+        if(!targetQuote.getStatus().equals("0160000001")){
+            throw new CommonBizException("id 为"+id+"的供需行情已存在意向成交,不允许被删除");
+        }
+
+        Integer assetId=targetQuote.getAssetId();
+
+        removeById(id);
+        carbonTradePriceService.removeByQuoteId(id);
+
+        postDeleteQuote(assetId,targetQuote.getAssetType(),targetQuote.getTradeQuantity());
+
+    }
+
+    private void postDeleteQuote(Integer assetId,String assetType,BigDecimal tradeQuantity) {
+        String url="";
+        if(assetType!=null &&assetType.equals("0140000001"))
+        {
+            //碳信用
+            url="http://localhost:9003/assets/carbonCreditAssets/onCancelQuote/"+assetId+"/"+tradeQuantity;
+        }
+        else if(assetType!=null &&assetType.equals("0140000002"))
+        {
+            //碳配额
+            url="http://localhost:9003/assets/carbonQuotaAssets/onCancelQuote/"+assetId+"/"+tradeQuantity;
+        }
+        restTemplate.getForEntity(url,ApiResult.class);
     }
 
 }

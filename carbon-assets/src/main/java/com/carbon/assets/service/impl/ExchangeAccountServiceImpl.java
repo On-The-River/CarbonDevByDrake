@@ -18,6 +18,7 @@ import com.carbon.assets.vo.ExchangeAccountInfo;
 import com.carbon.assets.vo.ExchangeAccountQueryVo;
 import com.carbon.common.enums.ExpCodeEnum;
 import com.carbon.common.exception.CommonBizException;
+import com.carbon.common.feishu.FeiShuAPI;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.common.api.Paging;
 import com.carbon.domain.assets.vo.CarbonExchangeQueryVo;
@@ -72,6 +73,11 @@ public class ExchangeAccountServiceImpl extends BaseServiceImpl<ExchangeAccountM
 
 
     @Override
+    public void triggerSyncToFeishu() {
+        FeiShuAPI.sendToMQTemplate("exchange_account");
+    }
+
+    @Override
     public ExchangeAccountQueryVo getExchangeAccountById(Serializable id) {
         return exchangeAccountMapper.getExchangeAccountById(id);
     }
@@ -107,18 +113,20 @@ public class ExchangeAccountServiceImpl extends BaseServiceImpl<ExchangeAccountM
 
         SecurityData data = getLoginInfoVo().getSecurityData();
         //飞书审批
-        AddTradingAccountApproval approval = AddTradingAccountApproval.builder()
-                .id(exchangeAccount.getId())
-                .userName(handleNull(data.getAccountName()))
-                .agenciesName(handleNull(data.getTenantName()))
-                .contactNumber(handleNull(data.getPhone()))
-                .exchangeName(handleNull(exchange.getName()))
-                .tradeAccount(handleNull(exchangeAccount.getAccountName()))
-                .accountProof(handleNull(exchangeAccount.getAccountCredentials()))
-                .remark(handleNull(exchangeAccount.getRemarks()))
-                .build();
-        org.springframework.messaging.Message<AddTradingAccountApproval> msg= MessageBuilder.withPayload(approval).build();
-        mqTemplate.syncSend(RocketMqName.AddTradingAccountApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
+//        AddTradingAccountApproval approval = AddTradingAccountApproval.builder()
+//                .id(exchangeAccount.getId())
+//                .userName(handleNull(data.getAccountName()))
+//                .agenciesName(handleNull(data.getTenantName()))
+//                .contactNumber(handleNull(data.getPhone()))
+//                .exchangeName(handleNull(exchange.getName()))
+//                .tradeAccount(handleNull(exchangeAccount.getAccountName()))
+//                .accountProof(handleNull(exchangeAccount.getAccountCredentials()))
+//                .remark(handleNull(exchangeAccount.getRemarks()))
+//                .build();
+//        org.springframework.messaging.Message<AddTradingAccountApproval> msg= MessageBuilder.withPayload(approval).build();
+//        mqTemplate.syncSend(RocketMqName.AddTradingAccountApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
+
+        triggerSyncToFeishu();
 
         try {
             Map<String, Object> map = BeanUtil.beanToMap(exchangeAccount, false, true);
@@ -165,6 +173,7 @@ public class ExchangeAccountServiceImpl extends BaseServiceImpl<ExchangeAccountM
         if (!this.updateById(account)){
             throw new CommonBizException(ExpCodeEnum.OPERATE_FAIL_ERROR);
         }
+        triggerSyncToFeishu();
     }
 
     @Override
@@ -176,6 +185,7 @@ public class ExchangeAccountServiceImpl extends BaseServiceImpl<ExchangeAccountM
         if (!exchangeAccountMapper.unbind(id)){
             throw new CommonBizException(ExpCodeEnum.OPERATE_FAIL_ERROR);
         }
+        triggerSyncToFeishu();
     }
 
 }

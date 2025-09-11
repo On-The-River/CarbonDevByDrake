@@ -206,7 +206,8 @@ export default {
         regForgotPasswordCode(this.regForm.email).then(response => {
           // 发送验证码成功
           console.log('response:', response);
-          if (response && response.code === 200) {
+          //  && response.code === 200
+          if (response) {
             this.$message.success('验证码发送成功，请查收邮箱');
             this.getAuthCode(); // 启动倒计时
           } else {

@@ -93,4 +93,6 @@ public class CarbonTradeQuote extends BaseEntity {
     @ApiModelProperty(value = "项目名称")
     private String projectName;
 
+    private Integer assetId;
+
 }

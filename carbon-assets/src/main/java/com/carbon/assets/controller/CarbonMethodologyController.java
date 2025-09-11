@@ -115,5 +115,18 @@ public class CarbonMethodologyController extends BaseController {
         }
         return null;
     }
+
+    // in dev
+    @GetMapping("/updateRef/{id}/{delta}")
+    public ApiResult<Boolean> updateRef(@PathVariable("id") Long id,@PathVariable("delta") Integer delta)
+    {
+        carbonMethodologyService.updateRefCount(id,delta);
+        return ApiResult.ok();
+    }
+
+//    @GetMapping("/delete/{id}")
+
+
+
 }
 

@@ -170,6 +170,8 @@ import * as artical from "@/api/article";
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import { cursor } from "@/libs/element-table";
+import { getNewsTypeDict } from "@/config/dictHelper"
+
 export default {
   name: "companyPackage",
   components: { echartsFrom, selectDropDownBox },
@@ -188,33 +190,12 @@ export default {
       isCollectionText: "请进入飞书文档，点击标题右侧按钮收藏！",
       isCollectionTip: true,
       isCollectionUrl: "",
-      Articleoptions: [
-        {
-          value: "0180000000",
-          label: "全部"
-        },
-        {
-          value: "0180000001",
-          label: "行业动态"
-        },
-        {
-          value: "0180000002",
-          label: "行业知识库"
-        },
-        {
-          value: "0180000004",
-          label: "常见问题"
-        },
-        {
-          value: "0180000003",
-          label: "平台公告"
-        }
-      ],
+      Articleoptions: [],
       value: "",
-      catagoryValue: 0
+      catagoryValue: 0,
     };
   },
-  mounted() {},
+
   methods: {
     cellStyle(data) {
       return cursor(data);
@@ -305,6 +286,7 @@ export default {
         size: 0,
         sortField: ""
       };
+
       artical
         .getCarbonArticles(data)
         .then(res => {
@@ -369,6 +351,18 @@ export default {
         })
         .catch(errror => {});
     },
+
+    formatNewsTypes(){
+        let data=getNewsTypeDict(this.$store);
+        // console.log("data",data);
+        if (!Array.isArray(data)) return;
+        this.Articleoptions = data.map(v => ({
+          label: v.name === "全部" ? v.name : v.name,
+          value: v.name !== "全部" ? v.value : ""
+        }));
+        this.Articleoptions[0].value="";
+    },
+
     // checkbox start
     updateAllSelected(val) {
       this.indeterminateFlag = false;
@@ -401,7 +395,8 @@ export default {
   created() {},
   mounted() {
     this.loadArticels();
-  }
+    this.formatNewsTypes();
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -133,6 +134,13 @@ public class CarbonTradePriceServiceImpl extends BaseServiceImpl<CarbonTradePric
 
         //生成履约信息
         carbonTradeContractService.addTradeContract(spawnedContract);
+    }
+
+    @Override
+    public void removeByQuoteId(Integer quoteId) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("trade_quote_id",quoteId);
+        removeByMap(param);
     }
 
 }

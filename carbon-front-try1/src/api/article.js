@@ -68,15 +68,15 @@ export function ListArticle(pram) {
 
 /**
  * 新增文章
- * @param pram
- * @constructor
+ * @param data
  */
-export function AddArticle() {
+export function AddArticle(data) {
   return request({
     baseURL: "http://localhost:9002",
-    url: "/system/carbonArticle/add",
+    url: "/system/carbonArticle/push",
     method: 'post',
-    timeout: 5000
+    timeout: 5000,
+    params: { title: data }
     // headers: { // 设置请求头
     //   token: token
     // }

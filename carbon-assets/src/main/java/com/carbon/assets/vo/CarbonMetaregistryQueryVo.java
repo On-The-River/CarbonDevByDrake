@@ -34,10 +34,12 @@ public class CarbonMetaregistryQueryVo implements Serializable{
     @ApiModelProperty(value = "项目名称")
     private String projectName;
 
+    @Dict(dictCode = "003")
     @ApiModelProperty(value = "项目领域")
-    private String projectScope;
-
     private String projectScopeCode;
+
+    @Dict(dictCode = "004")
+    private String projectScopeTypeCode;
 
     @ApiModelProperty(value = "项目业主")
     private String projectOwner;
@@ -48,6 +50,8 @@ public class CarbonMetaregistryQueryVo implements Serializable{
     @ApiModelProperty(value = "项目核证标准")
     private String certifiedStandard;
 
+
+    @Dict(dictCode = "009")
     @ApiModelProperty(value = "方法学字典编码")
     private String methodologyCode;
 

@@ -51,4 +51,6 @@ public interface CarbonMethodologyService extends BaseService<CarbonMethodology>
     List<CarbonMethodologySelectVo> getCarbonMethodologyList();
 
     CarbonMethodology getCarbonMethodologyByName(String name) throws Exception;
+
+    boolean updateRefCount(Long id,Integer delta);
 }

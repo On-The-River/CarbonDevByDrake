@@ -21,6 +21,8 @@ import com.carbon.assets.service.CarbonProjectService;
 import com.carbon.assets.vo.CarbonAssetsTotalVo;
 import com.carbon.assets.vo.CarbonCreditAssetsQueryVo;
 import com.carbon.assets.vo.CarbonMetaregistryQueryVo;
+import com.carbon.common.exception.CommonBizException;
+import com.carbon.common.feishu.FeiShuAPI;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.common.api.Paging;
 import com.carbon.domain.auth.vo.SecurityData;
@@ -45,6 +47,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,6 +81,11 @@ public class CarbonCreditAssetsServiceImpl extends BaseServiceImpl<CarbonCreditA
     @Autowired
     private ChainMakerServiceApi chainMakerServiceApi;
 
+
+    @Override
+    public void triggerSyncToFeishu() {
+        FeiShuAPI.sendToMQTemplate("carbon_credit_assets");
+    }
 
     @Override
     public CarbonCreditAssetsQueryVo getCarbonCreditAssetsById(Serializable id) {
@@ -152,31 +160,32 @@ public class CarbonCreditAssetsServiceImpl extends BaseServiceImpl<CarbonCreditA
         carbonCreditAssets.setAvailableAmount(carbonCreditAssets.getTotal());
         carbonCreditAssets.setValuation(carbonCreditAssets.getTotal().multiply(BigDecimal.valueOf(50)));
         this.save(carbonCreditAssets);
-
-        SecurityData data = getLoginInfoVo().getSecurityData();
-        //飞书审批
-        AssetUploadApproval approval = AssetUploadApproval.builder()
-                .id(carbonCreditAssets.getId())
-                .userName(handleNull(data.getAccountName()))
-                .agenciesName(handleNull(data.getTenantName()))
-                .contactNumber(handleNull(data.getPhone()))
-                .assetType(handleNull("碳信用"))
-                .primaryMarketHoldingInstitutions(handleNull(null))
-                .shareholding(handleNull(carbonCreditAssets.getTotal().toString()))
-                .proofOfPosition(handleNull(carbonCreditAssets.getIssuingCertificates()))
-                .issuingAgency(handleNull(carbonCreditAssets.getIssuingAgency()))
-                .build();
-        Message<AssetUploadApproval> msg= MessageBuilder.withPayload(approval).build();
-            mqTemplate.syncSend(RocketMqName.AssetUploadApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
-
-        //异步发送消息
-        try {
-            //区块链
-            chainMakerServiceApi.addCreditAssets(BeanUtil.copyProperties(carbonCreditAssets,CarbonCreditAssetsParam.class));
-        }catch (Exception e)
-        {
-            log.error("区块链消息异常！！");
-        }
+//
+//        SecurityData data = getLoginInfoVo().getSecurityData();
+//        //飞书审批
+//        AssetUploadApproval approval = AssetUploadApproval.builder()
+//                .id(carbonCreditAssets.getId())
+//                .userName(handleNull(data.getAccountName()))
+//                .agenciesName(handleNull(data.getTenantName()))
+//                .contactNumber(handleNull(data.getPhone()))
+//                .assetType(handleNull("碳信用"))
+//                .primaryMarketHoldingInstitutions(handleNull(null))
+//                .shareholding(handleNull(carbonCreditAssets.getTotal().toString()))
+//                .proofOfPosition(handleNull(carbonCreditAssets.getIssuingCertificates()))
+//                .issuingAgency(handleNull(carbonCreditAssets.getIssuingAgency()))
+//                .build();
+//        Message<AssetUploadApproval> msg= MessageBuilder.withPayload(approval).build();
+//            mqTemplate.syncSend(RocketMqName.AssetUploadApproval_MSG,msg,3000, RocketDelayLevelConstant.SECOND5);
+//
+//        //异步发送消息
+//        try {
+//            //区块链
+//            chainMakerServiceApi.addCreditAssets(BeanUtil.copyProperties(carbonCreditAssets,CarbonCreditAssetsParam.class));
+//        }catch (Exception e)
+//        {
+//            log.error("区块链消息异常！！");
+//        }
+        triggerSyncToFeishu();
 
     }
 
@@ -186,7 +195,7 @@ public class CarbonCreditAssetsServiceImpl extends BaseServiceImpl<CarbonCreditA
 
     @Override
     public CarbonAssetsTotalVo getCarbonAssetsTotal() {
-        return carbonCreditAssetsMapper.getCarbonAssetsTotal();
+        return carbonCreditAssetsMapper.getCarbonAssetsTotal(getCurrentTenantId());
     }
 
     @Override
@@ -197,7 +206,40 @@ public class CarbonCreditAssetsServiceImpl extends BaseServiceImpl<CarbonCreditA
             Optional.ofNullable(projectId).ifPresent(e->{
                 carbonMetaregistryProjectMapper.deleteById(projectId);
             });
+            triggerSyncToFeishu();
         }
         return res;
     }
+
+    @Override
+    public void onAddQuote(Integer assetId, BigDecimal delta) {
+        CarbonCreditAssets targetAsset = getById(assetId);
+        if(targetAsset==null){
+            throw new CommonBizException("通过assetId查询:碳信用资产不存在!,assetId="+String.valueOf(assetId));
+        }
+
+        targetAsset.setAvailableAmount(targetAsset.getAvailableAmount().subtract(delta));
+        BigDecimal added = targetAsset.getLockedAmount().add(delta);
+        targetAsset.setLockedAmount(added);
+        updateById(targetAsset);
+    }
+
+    @Override
+    public void toFrozen(Integer assetId, BigDecimal quoteQuantity, BigDecimal actualQuantity) {
+        CarbonCreditAssets targetAsset = getById(assetId);
+        if(targetAsset==null){
+            throw new CommonBizException("通过assetId查询:碳信用资产不存在!,assetId="+String.valueOf(assetId));
+        }
+
+        targetAsset.setLockedAmount(targetAsset.getLockedAmount().subtract(quoteQuantity));
+        targetAsset.setFrozenAmount(targetAsset.getFrozenAmount().add(actualQuantity));
+
+        BigDecimal leftQuantity=quoteQuantity.subtract(actualQuantity);
+        targetAsset.setAvailableAmount(targetAsset.getAvailableAmount().add(leftQuantity));
+        updateById(targetAsset);
+    }
+
+
+
+
 }

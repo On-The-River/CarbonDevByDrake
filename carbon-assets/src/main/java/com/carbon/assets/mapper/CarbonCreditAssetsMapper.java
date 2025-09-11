@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -38,5 +40,8 @@ public interface CarbonCreditAssetsMapper extends BaseMapper<CarbonCreditAssets>
      */
     IPage<CarbonCreditAssetsQueryVo> getCarbonCreditAssetsPageList(@Param("page") Page<?> page, @Param("param") CarbonCreditAssetsQueryParam param);
 
-    CarbonAssetsTotalVo getCarbonAssetsTotal();
+    CarbonAssetsTotalVo getCarbonAssetsTotal(@Param("tenantId") Long tenantId);
+
+
+
 }

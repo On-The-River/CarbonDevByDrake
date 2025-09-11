@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2021-08-16
  */
 public interface ExchangeAccountService extends BaseService<ExchangeAccount> {
-
+    void triggerSyncToFeishu();
     /**
      * 根据ID获取查询对象
      * @param id 主键id

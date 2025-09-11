@@ -23,6 +23,7 @@ import com.carbon.assets.vo.CarbonProjectListVo;
 import com.carbon.assets.vo.CarbonProjectQueryVo;
 import com.carbon.common.enums.ExpCodeEnum;
 import com.carbon.common.exception.CommonBizException;
+import com.carbon.common.feishu.FeiShuAPI;
 import com.carbon.common.service.BaseServiceImpl;
 import com.carbon.common.api.Paging;
 import com.carbon.domain.common.ApiResult;
@@ -75,10 +76,11 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
     @Autowired
     DictMapper dictMapper;
 
-
-    private void triggerSyncToFeishu(Long projectId) {
-        Message<Long> message = MessageBuilder.withPayload(projectId).build();
-        rocketMQTemplate.send(RocketMqName.DATABASE_TO_FEISHU_SYNC, message);
+    @Override
+    public void triggerSyncToFeishu(Long projectId) {
+//        Message<Long> message = MessageBuilder.withPayload(projectId).build();
+//        rocketMQTemplate.send(RocketMqName.DATABASE_TO_FEISHU_SYNC, message);
+        FeiShuAPI.sendToMQTemplate("carbon_project");
     }
 
     @Override
@@ -113,6 +115,22 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
         carbonProjectMapper.insertSubmissionToFactorProjectTable(param);
 
         return carbonProjectMapper.insertSubmissionToFactorTable(param);
+    }
+
+    @Override
+    public Boolean deleteProject(Long projectId) {
+        CarbonProject project = getById(projectId);
+        if (project == null) {
+            throw new CommonBizException("项目不存在");
+        }
+        boolean removed = removeById(projectId);
+        if (removed) {
+            carbonResourceFileService.lambdaUpdate()
+                    .eq(CarbonResourceFile::getBusinessId, projectId)
+                    .remove();
+            triggerSyncToFeishu(projectId);
+        }
+        return removed;
     }
 
     @Override

@@ -11,7 +11,8 @@
         cp.id, cp.project_name, cp.project_introduction, cp.principal_name,
         cp.principal_phone, cp.legal_person_name, cp.legal_person_phone, cp.project_type,
         cp.project_status, cp.country, cp.province, cp.city, cp.address,cp.owner_name,
-        cp.assets_develop_agency,cp.initiation_date ,cp.carbon_methodology, cp.approval_date, cp.record_filing_date, cp.certified_date, cp.issuing_date, cp.tenant_id
+        cp.assets_develop_agency,cp.initiation_date ,cp.carbon_methodology, cp.approval_date,
+        cp.record_filing_date, cp.certified_date, cp.issuing_date, cp.tenant_id, cp.in_meta
     </sql>
 
     <select id="getCarbonProjectById" resultType="com.carbon.assets.vo.CarbonProjectQueryVo">

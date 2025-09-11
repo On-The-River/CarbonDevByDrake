@@ -36,8 +36,8 @@ public class CarbonTradeQuoteQueryVo implements Serializable{
     @Dict(dictCode = "003")
     private String projectScopeCode;
 
-    @ApiModelProperty(value = "项目领域")
-    private String projectScope;
+//    @ApiModelProperty(value = "项目领域")
+//    private String projectScopeCode;
 
     @ApiModelProperty(value = "机构名称")
     private String institutionName;
@@ -55,8 +55,6 @@ public class CarbonTradeQuoteQueryVo implements Serializable{
     @ApiModelProperty(value = "项目类型（字典：004）")
     private String projectType;
 
-    @ApiModelProperty(value = "项目类型（字典：004）")
-    private String projectTypeName;
 
     @Dict(dictCode = "014")
     @ApiModelProperty(value = "资产类型（字典：014）")

@@ -7,8 +7,13 @@ import com.carbon.common.service.BaseService;
 import com.carbon.assets.param.CarbonCreditAssetsQueryParam;
 import com.carbon.assets.vo.CarbonCreditAssetsQueryVo;
 import com.carbon.common.api.Paging;
+import io.swagger.models.auth.In;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -20,6 +25,7 @@ import java.io.Serializable;
  */
 public interface CarbonCreditAssetsService extends BaseService<CarbonCreditAssets> {
 
+    void triggerSyncToFeishu();
     /**
      * 根据ID获取查询对象
      * @param id 主键id
@@ -44,4 +50,10 @@ public interface CarbonCreditAssetsService extends BaseService<CarbonCreditAsset
 
     @Override
     boolean removeById(Serializable id) ;
+
+    void onAddQuote(Integer assetId, BigDecimal delta);
+
+    void toFrozen(Integer assetId ,BigDecimal quoteQuantity ,BigDecimal actualQuantity);
+
+
 }

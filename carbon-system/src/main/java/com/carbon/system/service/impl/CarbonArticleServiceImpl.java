@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -182,106 +183,79 @@ public class CarbonArticleServiceImpl extends BaseServiceImpl<CarbonArticleMappe
      */
     @Override
     public CarbonArticleAddVo pushFeishu(CarbonArticle carbonArticle) {
-        log.info("===> push carbonArticle:{}",JSONUtil.toJsonStr(carbonArticle));
-
-        String content = carbonArticle.getContent();
+        log.info("===> push carbonArticle:{}", JSONUtil.toJsonStr(carbonArticle));
         String title = carbonArticle.getTitle();
-        // 创建文章需要传的json
-        /**
-         * {
-         *     "title": {
-         *     "elements":  [
-         *             {   "type": "textRun",
-         *                 "textRun": {
-         *                     "text": "%s"
-         *                 }
-         *             }
-         *         ]
-         *     },
-         *     "body": {
-         *         "blocks": [
-         *             {
-         *             "type": "paragraph",
-         *             "paragraph": {
-         *                 "elements":  [
-         *                     {
-         *                         "type": "textRun",
-         *                         "textRun": {
-         *                             "text": "%s"
-         *                         }
-         *                     }
-         *                     ]
-         *                 }
-         *             }
-         *         ]
-         *     }
-         * }
-         *
-         */
-        String body = "{\"title\":{\"elements\":[{\"type\":\"textRun\",\"textRun\":{\"text\":\"%s\"}}]},\"body\":{\"blocks\":[{\"type\":\"paragraph\",\"paragraph\":{\"elements\":[{\"type\":\"textRun\",\"textRun\":{\"text\":\"%s\"}}]}}]}}";
+        String tenantToken = FeiShuAPI.getTenantToken();
 
-        String formatBody = String.format(body, title, content);
-        String tenantToken = getTenantToken();
-        String createUrl="https://open.feishu.cn/open-apis/doc/v2/create";
+        String createUrl = "https://open.feishu.cn/open-apis/docx/v1/documents";
+        JSONObject createBody = new JSONObject();
+        createBody.put("title", title);
+        createBody.put("folder_token", FeiShuAPI.parent_node);
 
-        // head
-        MultiValueMap<String, String> header = new LinkedMultiValueMap();
-        header.add(Header.AUTHORIZATION.getValue(), tenantToken);
-        header.add(HttpHeaders.CONTENT_TYPE,org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE);
-        // requestBody
-        Map<String,String> requestBody = new HashMap<>();
-        requestBody.put("Content",formatBody);
         try {
-            RequestEntity request = RequestEntity
-                    .post(new URI(createUrl))
-                    .header(Header.AUTHORIZATION.getValue(),tenantToken)
-                    .header(HttpHeaders.CONTENT_TYPE,org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE)
+            RequestEntity<String> request = RequestEntity.post(new URI(createUrl))
+                    .header(Header.AUTHORIZATION.getValue(), tenantToken)
+                    .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
                     .accept(org.springframework.http.MediaType.APPLICATION_JSON)
-                    .body(requestBody);
+                    .body(createBody.toString());
 
             ResponseEntity<JSONObject> response = restTemplate.exchange(request, JSONObject.class);
-            log.info("===> responseBody:{}",response.getBody());
-            Integer code = response.getBody().getInteger("code");
+            log.info("===> 创建文档响应:{}", response.getBody());
+            Integer code = Objects.requireNonNull(response.getBody()).getInteger("code");
             String msg = response.getBody().getString("msg");
-            if(code!=0){
-                throw new CommonBizException("调用飞书api失败,msg:"+msg);
+            if (code != 0) {
+                throw new CommonBizException("调用飞书创建文档API失败,msg:" + msg);
             }
+
             JSONObject data = response.getBody().getJSONObject("data");
-            String objToken = data.getString("objToken");
-            modifyPermissions(tenantToken,objToken);
-            String url = data.getString("url");
-            log.info("====> objToken:{},url:{}",objToken,url);
-            // 将URL填入，存表
-            carbonArticle.setUrl(url);
+            JSONObject document = data.getJSONObject("document");
+            String documentId = document.getString("document_id");
+
+            modifyPermissions(tenantToken, documentId);
+
+            String shareUrl = createDocumentShareLink(tenantToken, documentId);
+            carbonArticle.setUrl(shareUrl);
+            // carbonArticle.setFeishuDocId(documentId);
+            carbonArticle.setStatus("0260000001");
             this.save(carbonArticle);
 
-            // 返回vo
-            CarbonArticleAddVo vo=new CarbonArticleAddVo();
-            vo.setUrl(url);
-            vo.setToken(objToken);
+            CarbonArticleAddVo vo = new CarbonArticleAddVo();
+            vo.setUrl(shareUrl);
+            vo.setToken(documentId);
             return vo;
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("URL格式错误", e);
         }
-//        String result = HttpUtil.createRequest(Method.POST, createUrl).
-//                header(Header.AUTHORIZATION, tenantToken)
-//                .body(requestBody)  // body内容
-//                .execute()
-//                .body();
-//        JSONObject object2= JSON.parseObject(result);
-//        JSONObject data = JSONObject.parseObject(object2.getString("data"));
-//        String objToken = data.getString("objToken");
-//        modifyPermissions(tenantToken,objToken);
-//        String url = data.getString("url");
-//        // 将URL填入，存表
-//        carbonArticle.setUrl(url);
-//        this.save(carbonArticle);
-//
-//        // 返回vo
-//        CarbonArticleAddVo vo=new CarbonArticleAddVo();
-//        vo.setUrl(url);
-//        vo.setToken(objToken);
-//        return vo;
+    }
+
+    private String createDocumentShareLink(String tenantToken, String documentId) throws URISyntaxException {
+        String permissionUrl = "https://open.feishu.cn/open-apis/drive/v1/metas/batch_query";
+
+        JSONObject permissionBody = new JSONObject();
+        JSONArray docs = new JSONArray();
+        JSONObject document = new JSONObject();
+        document.put("doc_token", documentId);
+        document.put("doc_type", "docx");
+        docs.add(document);
+        permissionBody.put("request_docs", docs);
+        permissionBody.put("with_url", true);
+
+        ResponseEntity<JSONObject> response = restTemplate.exchange(
+                RequestEntity.post(new URI(permissionUrl))
+                        .header(Header.AUTHORIZATION.getValue(), tenantToken)
+                        .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
+                        .body(permissionBody.toString()),
+                JSONObject.class
+        );
+
+        JSONObject result = response.getBody();
+        if (result != null && result.getInteger("code") == 0) {
+            log.info("分享启用成功");
+        } else {
+            throw new CommonBizException(result.getString("msg"));
+        }
+
+        return (String) ((Map<String, Object>) result.getObject("data", JSONObject.class).getJSONArray("metas").get(0)).get("url");
     }
 
     /**

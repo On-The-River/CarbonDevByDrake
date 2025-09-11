@@ -108,6 +108,9 @@
                sum(cca.frozen_amount) frozenAmount,
                sum(cca.locked_amount) lockedAmount
         from carbon_credit_assets cca
+        where cca.tenant_id=#{tenantId}
     </select>
+
+
 
 </mapper>

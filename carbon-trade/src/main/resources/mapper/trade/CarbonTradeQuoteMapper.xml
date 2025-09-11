@@ -9,7 +9,8 @@
         ctq.trade_role, ctq.institution_name,ctq.contacts_name,ctq.contacts_phone,
         ctq.contacts_email, ctq.project_type, ctq.asset_type, ctq.trade_quantity,
         ctq.asset_unit, ctq.asset_unit_price, ctq.status, ctq.expiration_date, ctq.delivery_method,
-        ctq.delivery_exchange, ctq.delivery_time, ctq.publisher_id, ctq.project_name, ctq.project_id
+        ctq.delivery_exchange, ctq.delivery_time, ctq.publisher_id, ctq.project_name, ctq.project_id,
+        ctq.asset_id
     </sql>
 
     <select id="getCarbonTradeQuoteById" resultType="com.carbon.trade.vo.CarbonTradeQuoteQueryVo">
@@ -67,5 +68,25 @@
         LEFT JOIN  carbon_metaregistry_project cmp ON cmr.id = cmp.metaregistry_id
         where cmp.id = #{id}
     </select>
+
+    <!--deprecated-->
+    <select id="getAssetIdByQuoteId" resultType="java.lang.Integer">
+        select aql.asset_id
+        from asset_quote_link aql
+        <where>
+            aql.quote_id=#{quoteId}
+        </where>
+    </select>
+
+    <insert id="addAssetQuoteLink">
+        insert into asset_quote_link
+        (asset_id,quote_id,asset_type)
+        values (#{assetId},#{quoteId},#{assetType})
+    </insert>
+
+    <delete id="deleteAssetQuoteLink">
+        delete from asset_quote_link aql
+        where aql.quote_id=#{quoteId}
+    </delete>
 
 </mapper>

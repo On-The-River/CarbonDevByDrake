@@ -63,9 +63,9 @@ public class CarbonArticleController extends BaseController {
      */
     @PostMapping("/push")
     @ApiOperation(value = "添加碳文章",notes = "添加碳文章")
-    public ApiResult<CarbonArticleAddVo> pushArticle(@RequestBody JSONObject jsonObject) {
-        CarbonArticle carbonArticle = JSONUtil.toBean(jsonObject, CarbonArticle.class);
-        //暂时调写死的接口
+    public ApiResult<CarbonArticleAddVo> pushArticle(@RequestParam String title) {
+        CarbonArticle carbonArticle = new CarbonArticle();
+        carbonArticle.setTitle(title);
         CarbonArticleAddVo vo = carbonArticleService.pushFeishu(carbonArticle);
         return ApiResult.ok(vo);
     }

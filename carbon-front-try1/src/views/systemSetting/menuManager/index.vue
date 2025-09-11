@@ -238,7 +238,7 @@ export default {
       this.form.description = "";
       this.form.type = "";
     },
-    addSubmit() {
+      nnnnaddSubmit() {
       this.addForm.parentId = 0;
       if (this.addForm.menuName && this.addForm.menuUrl && this.addForm.status) {
         if (!this.addForm.orderNum) {

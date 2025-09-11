@@ -41,4 +41,10 @@ public interface CarbonTradeQuoteMapper extends BaseMapper<CarbonTradeQuote> {
     IPage<CarbonTradeQuoteQueryVo> getCarbonTradeQuotePageList(@Param("page") Page<?> page, @Param("param") CarbonTradeQuoteQueryParam param);
 
     MetaregistryDataVo getCarbonMetaregistryByCarbonMetaregistryProjectId(Long id);
+
+    Integer getAssetIdByQuoteId(@Param("quoteId") Integer quoteId);
+
+    Boolean addAssetQuoteLink(@Param("assetId")Integer assetId, @Param("quoteId")Integer quoteId,@Param("assetType")String assetType);
+
+    Boolean deleteAssetQuoteLink(@Param("quoteId")Integer quoteId);
 }

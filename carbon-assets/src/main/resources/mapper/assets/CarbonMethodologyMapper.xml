@@ -20,7 +20,7 @@
     </select>
 
     <select id="getCarbonMethodologyPageList" resultType="com.carbon.assets.vo.CarbonMethodologyQueryVo">
-        select cm.id, cm.name, sdi.item_ch as status, cm.status_code,cm.type_code, cm.method_code, cm.dict_code, cm.certification_criteria,
+        select distinct cm.id, cm.name, sdi.item_ch as status, cm.status_code,cm.type_code, cm.method_code, cm.dict_code, cm.certification_criteria,
                cm.source_file_url, cm.cdm_code, cm.translate_version, cm.filing_batch, cm.field_code, cm.field_child_code,
                cm.industry_code,cm.creator_id,cm.updated_id,cm.created_time,cm.updated_time
         from carbon_methodology cm

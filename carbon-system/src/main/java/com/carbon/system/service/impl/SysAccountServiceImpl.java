@@ -102,16 +102,23 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
 
     @Override
     public void addAccount(SysAccountParam param) {
-        SysAccount account = sysAccountMapper.selectForUpdate(param.getAccountName());
         //账户名唯一
+
+        SysAccount account = sysAccountMapper.selectForUpdate(param.getAccountName());
         if (account != null){
             throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_NAME_ALREADY_EXISTS);
         }
-        account = sysAccountMapper.selectOne(Wrappers.<SysAccount>lambdaQuery().eq(SysAccount::getPhone,param.getPhone()));
         //手机号唯一
+        account = sysAccountMapper.selectOne(Wrappers.<SysAccount>lambdaQuery().eq(SysAccount::getPhone,param.getPhone()));
         if (account != null){
             throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_PHONE_ALREADY_EXISTS);
         }
+        //邮箱唯一
+        account = sysAccountMapper.selectOne(Wrappers.<SysAccount>lambdaQuery().eq(SysAccount::getEmail,param.getEmail()));
+        if(account != null){
+            throw new CommonBizException("此邮箱已被注册");
+        }
+
         //加密密码，保存账户
 //        param.setPassword(DigestUtils.md5Hex(param.getPassword()));
         account = new SysAccount();
@@ -228,10 +235,12 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
             throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_NOT_EXISTS);
         }
 
-        if (StrUtil.isEmpty(param.getOldPassword()) || !param.getOldPassword().equals(account.getPassword())){
+        String oldPasswordMd5 = StrUtil.isEmpty(param.getOldPassword()) ? param.getOldPasswordMd5() : DigestUtils.md5Hex(param.getOldPassword());
+        //校验旧密码
+        if (StrUtil.isEmpty(oldPasswordMd5) || !oldPasswordMd5.equals(account.getPassword())){
             throw new CommonBizException("旧密码不正确");
         }
-        account.setPassword(param.getNewPassword());
+        account.setPassword(DigestUtils.md5Hex(param.getNewPassword()));
         if (!this.updateById(account)){
             throw new CommonBizException("修改密码失败");
         }
@@ -249,17 +258,39 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
     }
 
     @Override
-    public void sendUpdateCode(String phone) {
-        String key = RedisKeyName.SMS_UPDATE_PHONE_KEY + phone;
-        String validCode = "123456";
+    public void sendUpdatePhoneCodeByEmail(Long accountId) {
+        // 获取账户信息
+        SysAccount account = this.getById(accountId);
+        if (account == null) {
+            throw new CommonBizException(ExpCodeEnum.SYS_ACCOUNT_NOT_EXISTS);
+        }
+
+        if (StrUtil.isBlank(account.getEmail())) {
+            throw new CommonBizException("账户未绑定邮箱，请先绑定邮箱");
+        }
+
+        // 生成验证码
+        String validCode = RandomUtil.randomNumbers(6);
+        String key = RedisKeyName.SMS_UPDATE_PHONE_KEY + account.getEmail();
+
         HashMap<String, Object> param = new HashMap<>();
         param.put("code", validCode);
-        //有效时间 5分钟
-        redisService.setEx(key, validCode, 300, TimeUnit.SECONDS);
-        System.out.println(templateCode);
 
-//        sendMsg(phone, templateCode, JSONUtil.toJsonStr(param));
+        // 有效时间 5分钟
+        redisService.setEx(key, validCode, 300, TimeUnit.SECONDS);
+
+        // 发送邮件
+        String subject = "【碳信使】修改手机号验证码";
+        String text = "您正在修改手机号，验证码为：" + validCode + "，5分钟内有效。";
+        try {
+            mailService.simple(account.getEmail(), subject, text);
+        } catch (Exception e) {
+            log.error("发送邮箱验证码失败，邮箱：{}，错误：{}", account.getEmail(), e.getMessage());
+            throw new CommonBizException("验证码发送失败，请稍后重试");
+        }
     }
+
+
 
     @Override
     public void updatePhone(ChangePhoneParam param) {
@@ -307,7 +338,7 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
         String value = RandomUtil.randomString(6);
         redisService.setEx(key,value,10,TimeUnit.MINUTES);
         String text="点击以下链接完成邮箱验证\n" +
-                "https://1c9c2ae067e8.ngrok-free.app/system/sysAccount/renew/email/"+param.getId().toString()+"/"+param.getEmail()+"/"+value;
+                "http://drakewang.f1.luyouxia.net:17333/system/sysAccount/renew/email/"+param.getId().toString()+"/"+param.getEmail()+"/"+value;
         mailService.simple(param.getEmail(),"【碳信使】邮箱验证",text);
     }
 

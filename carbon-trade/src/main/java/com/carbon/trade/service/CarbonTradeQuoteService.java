@@ -25,6 +25,7 @@ public interface CarbonTradeQuoteService extends BaseService<CarbonTradeQuote> {
      */
     void addTradeQuote(CarbonTradeQuote tradeQuote);
 
+    void addTradeQuoteWithLink(CarbonTradeQuote tradeQuote);
     /**
      * 根据ID获取查询对象
      * @param id 主键id
@@ -48,7 +49,6 @@ public interface CarbonTradeQuoteService extends BaseService<CarbonTradeQuote> {
 
     /**
      * 获取分页对象
-     * @param param CarbonTradeQuoteQueryParam
      * @return Paging<CarbonTradeQuoteQueryVo>
      */
     Paging<CarbonTradeQuoteQueryVo> searchByEs(String keyword,Integer pageNum,Integer pageSize);
@@ -57,5 +57,7 @@ public interface CarbonTradeQuoteService extends BaseService<CarbonTradeQuote> {
      * 从数据库中导入所有商品到ES
      */
     Integer importAll();
+
+    void deleteQuote(Integer id);
 
 }

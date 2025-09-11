@@ -184,19 +184,17 @@ public class FeishuAPI {
     @ApiOperation(value = "初始化表格同步", notes = "建立飞书表格与数据库表的同步关系")
     public ApiResult<Boolean> initSync(
             @RequestParam String feishuFileToken,
+            @RequestParam String sheetId,
             @RequestParam String databaseTable,
             @RequestParam String controllerEndpoint,
             @RequestBody LinkedHashMap<String, Object> fieldMapping) {
 
-        syncService.initializeSync(feishuFileToken, databaseTable, controllerEndpoint, fieldMapping);
+        syncService.initializeSync(
+                feishuFileToken, sheetId, databaseTable, controllerEndpoint, fieldMapping
+        );
         return ApiResult.ok("同步初始化成功");
     }
 
-    @PostMapping("/syncProjectToFeishu/{projectId}")
-    public ApiResult<Boolean> syncProjectToFeishu(@PathVariable Long projectId) {
-        syncService.syncProjectToFeishu(projectId);
-        return ApiResult.ok("同步到飞书成功");
-    }
 
     /**
      * 手动触发数据库到飞书的同步
@@ -204,8 +202,10 @@ public class FeishuAPI {
     @PostMapping("/syncToFeishu/{syncConfigId}")
     @ApiOperation(value = "同步数据库数据到飞书", notes = "将数据库指定表数据同步到飞书表格")
     public ApiResult<Boolean> syncDatabaseToFeishu(@PathVariable String syncConfigId) {
-        syncService.syncDatabaseToFeishu(syncConfigId);
-        return ApiResult.ok("同步到飞书成功");
+        if (syncService.syncDatabaseToFeishu(syncConfigId))
+            return ApiResult.ok("同步到飞书成功");
+        else
+            return ApiResult.fail("同步失败！");
     }
 
     /**
@@ -214,9 +214,12 @@ public class FeishuAPI {
     @PostMapping("/syncToDatabase/{syncConfigId}")
     @ApiOperation(value = "同步飞书数据到数据库", notes = "将飞书表格数据同步到数据库")
     public ApiResult<Boolean> syncFeishuToDatabase(@PathVariable String syncConfigId) {
-        syncService.syncFeishuToDatabase(syncConfigId);
-        return ApiResult.ok("同步到数据库成功");
+        if (syncService.syncFeishuToDatabase(syncConfigId))
+            return ApiResult.ok("同步到数据库成功");
+        else
+            return ApiResult.fail("同步失败！");
     }
+
 
     /**
      * 飞书表格变更webhook

@@ -66,10 +66,15 @@ public interface SysAccountService extends BaseService<SysAccount> {
 
     /**
      * 发送修改验证码
-     * @param phone 参数
+     * @param email 参数
      */
-    void sendUpdateCode(String phone);
+//    void sendUpdateCode(String email);
 
+    /**
+     * 发送修改手机号验证码到邮箱
+     * @param accountId 账户ID
+     */
+    void sendUpdatePhoneCodeByEmail(Long accountId);
     /**
      * 修改手机号
      * @param param 参数

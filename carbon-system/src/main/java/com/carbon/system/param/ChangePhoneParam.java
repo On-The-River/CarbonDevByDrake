@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value="ChangePhoneParam对象", description="账户手机号参数")
 public class ChangePhoneParam {
 
-    @NotNull(message = "账户ID不能为空")
+//    @NotNull(message = "账户ID不能为空")
     @ApiModelProperty(value = "账户id")
     private Long id;
 

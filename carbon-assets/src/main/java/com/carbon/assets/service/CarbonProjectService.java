@@ -28,6 +28,7 @@ import java.util.List;
  */
 public interface CarbonProjectService extends BaseService<CarbonProject> {
 
+    void triggerSyncToFeishu(Long projectId);
 
     Boolean delDataSubmissionPage(String id);
 
@@ -36,6 +37,8 @@ public interface CarbonProjectService extends BaseService<CarbonProject> {
     List<CarbonDetectionDataVo> getDataSubmissionPageById(String id);
 
     boolean insertSubmissionToDB(CarbonDataSubmissionQueryParam param);
+
+    Boolean deleteProject(Long projectId);
 
     /**
      * 根据ID获取查询对象

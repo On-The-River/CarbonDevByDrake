@@ -23,6 +23,7 @@ export function getPageList(data) {
 
 export function addTenantUserData(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/add',
         method: 'POST',
         data
@@ -35,6 +36,7 @@ export function addTenantUserData(data) {
  */
 export function readTenantUserData(id) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/info/' + id,
         method: 'GET',
         // params: {'id' : id},
@@ -48,6 +50,7 @@ export function readTenantUserData(id) {
  */
 export function deleteTenantUserData(id) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/delete/' + id,
         method: 'DELETE',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -59,6 +62,7 @@ export function deleteTenantUserData(id) {
 */
 export function editTenantUserData(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/update',
         method: 'PUT',
         data: data
@@ -73,6 +77,7 @@ export function editTenantUserData(data) {
  */
 export function widraw(userId, amount) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/cashBack/' + userId + '/' + amount,
         method: 'PUT',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -114,6 +119,7 @@ export function getAccountEnterPriseInfo(userId) {
  */
 export function putAccountUpdate(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/sysAccount/update',
         method: 'POST',
         data
@@ -205,25 +211,24 @@ export function getListByTenant(data) {
  * @param data
  */
 export function putAccountUpdatePhone(data) {
-    return request({
-        baseURL: "http://localhost:9002",
-        url: '/system/sysAccount/update/phone',
-        method: 'PUT',
-        data
-    })
+  return request({
+    baseURL: "http://localhost:9002",
+    url: '/system/sysAccount/update/phone',
+    method: 'PUT',
+    data
+  })
 }
 /**
  * 账号管理-修改手机号
- * @returns {Promise}
- * @param phone
+ * @returns
  */
-export function getAccoutUpdateCode(phone) {
-    return request({
-        baseURL: "http://localhost:9002",
-        url: '/system/sysAccount/update/code/' + phone,
-        method: 'GET',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    })
+export function getAccoutUpdateCode() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: '/system/sysAccount/update/code' ,
+    method: 'GET',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
 }
 // /**20220602 不在使用
 // * 账号管理-绑定邮箱
@@ -259,6 +264,7 @@ export function putAccountSend(data) {
  */
 export function getTenantUserQuery(param) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/query/' + param,
         method: 'GET',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -272,6 +278,7 @@ export function getTenantUserQuery(param) {
  */
 export function getUserGetPageList(data) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/getPageList/',
         method: 'GET',
         params: data
@@ -286,6 +293,7 @@ export function getUserGetPageList(data) {
 */
 export function getUserInfo(id) {
     return request({
+        baseURL: "http://localhost:9002",
         url: '/system/tenantUser/info/' + id,
         method: 'GET',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
