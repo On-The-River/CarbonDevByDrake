@@ -96,6 +96,14 @@ public class CarbonMethodologyController extends BaseController {
         return ApiResult.ok(paging);
     }
 
+    @PostMapping("/getPageListAsUser")
+    @ApiOperation(value = "碳减排方法学有效分页列表",notes = "碳减排方法学分页列表")
+    public ApiResult<Paging<CarbonMethodologyQueryVo>> getCarbonMethodologyPageListAsUser(@Valid @RequestBody(required = false) CarbonMethodologyQueryParam carbonMethodologyQueryParam) {
+        carbonMethodologyQueryParam.setStatusCode("0450000002");
+        Paging<CarbonMethodologyQueryVo> paging = carbonMethodologyService.getCarbonMethodologyPageList(carbonMethodologyQueryParam);
+        return ApiResult.ok(paging);
+    }
+
     /**
      * 获取碳减排方法学列表
      */

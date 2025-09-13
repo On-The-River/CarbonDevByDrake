@@ -135,9 +135,35 @@ public class SyncService {
                     if (inMeta == null) {
                         inMeta = "0";
                     }
-                    if (status != null && status.equals("0100000019") && inMeta.equals("0")) {
-                        Map<String, Object> params = new HashMap<>(map);
-
+                    if (status != null && status.equals("0100000013") && inMeta.equals("0")) {
+                        Map<String, Object> params = new HashMap<>();
+                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+                            switch (entry.getKey()) {
+                                case "projectStatus": {
+                                    params.put("projectStatusCode", entry.getValue());
+                                    break;
+                                }
+                                case "carbonMethodology": {
+                                    params.put("methodologyCode", entry.getValue());
+                                    break;
+                                }
+                                case "country": {
+                                    params.put("projectCountryCode", entry.getValue());
+                                    break;
+                                }
+                                case "province": {
+                                    params.put("projectProvinceCode", entry.getValue());
+                                    break;
+                                }
+                                case "city": {
+                                    params.put("projectCityCode", entry.getValue());
+                                    break;
+                                }
+                                default: {
+                                    params.put(entry.getKey(), entry.getValue());
+                                }
+                            }
+                        }
                         ResponseEntity<ApiResult> res = restTemplate.postForEntity(
                                 "http://localhost:9003/assets/carbonMetaregistry/add",
                                 params, ApiResult.class

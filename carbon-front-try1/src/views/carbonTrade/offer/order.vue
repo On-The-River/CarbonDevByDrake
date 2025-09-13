@@ -202,6 +202,7 @@
               :options="assetsTypeList"
               clearable
               @change="updateType"
+              disabled
             >
             </el-cascader>
           </el-form-item>
@@ -211,7 +212,6 @@
         <el-form
           label-position="left"
           ref="detailData"
-          :rules="formRules"
           :model="detailData"
           style="width:100%;"
         >
@@ -219,11 +219,11 @@
             <label slot="label">项目类型<span style="color:red">*</span></label>
             <el-cascader
               :class="projectTypeClass(isQuota)"
-              placeholder="全部"
+              placeholder="--"
               v-model="detailData.projectType"
               :options="projectTypeList"
               clearable
-              :disabled="isQuota"
+              disabled
             >
             </el-cascader>
           </el-form-item>
@@ -332,14 +332,26 @@
       >
         <el-form-item prop="deliveryExchange" label-width="20%">
           <label slot="label">交割场所<span style="color:red">*</span></label>
-          <el-cascader
-            class="selectbox-root half margleft"
-            placeholder="全部"
-            v-model="detailData.deliveryExchange"
-            :options="exchangeList"
-            clearable
+<!--          <el-cascader-->
+<!--            class="selectbox-root half margleft"-->
+<!--            placeholder="全部"-->
+<!--            v-model="detailData.deliveryExchange"-->
+<!--            :options="exchangeList"-->
+<!--            clearable-->
+<!--          >-->
+<!--          </el-cascader>-->
+          <el-select class="selectbox-root half margleft"
+                     v-model="detailData.deliveryExchange"
+                     placeholder="状态"
+                     clearable
           >
-          </el-cascader>
+            <el-option
+              v-for="item in exchangeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
     </div>
@@ -601,9 +613,11 @@ export default {
 
       getTenantInfo(this.data.buyerId)
         .then(res => {
+
           this.detailData.buyerName = res.tenantName;
           this.detailData.buyerContacts = res.tenantName;
           this.detailData.buyerPhone = res.telephone;
+          this.detailData.buyerEmail = res.contactsEmail;
         })
         .catch(err => {});
       getTenantInfo(this.data.sellerId)
@@ -611,7 +625,7 @@ export default {
           this.detailData.sellerName = res.tenantName;
           this.detailData.sellerContacts = res.tenantName;
           this.detailData.sellerPhone = res.telephone;
-          // this.detailData.sellerEmail = res.data.tenantEmail
+          this.detailData.sellerEmail = res.contactsEmail;
         })
         .catch(err => {});
     },
@@ -680,6 +694,13 @@ export default {
         this.detailData.assetUnitPrice === "0"
       ) {
         this.$message("请检查协议价格");
+        return;
+      }
+
+      console.warn("交易所",this.detailData.deliveryExchange);
+      if(!this.detailData.deliveryExchange || this.detailData.deliveryExchange==="")
+      {
+        this.$message("请选择交易所");
         return;
       }
 
@@ -761,7 +782,7 @@ export default {
             // this.detailData=[]
           })
           .catch(err => {
-            this.$emit("successSubmit", false);
+            // this.$emit("successSubmit", false);
             //  this.detailData=[]
           });
       });
@@ -795,9 +816,11 @@ export default {
       };
       item.value = v.value;
       item.label = v.name;
-      this.exchangeList.push(item);
+      if(!(item.label==="全部")){
+        this.exchangeList.push(item);
+      }
     });
-    debugger;
+
 
     data = getAssetTypeDict(this.$store);
     this.assetsTypeList = [];

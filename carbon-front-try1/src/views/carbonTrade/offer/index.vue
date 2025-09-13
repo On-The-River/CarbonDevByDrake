@@ -113,59 +113,93 @@
                 <span>{{ getCurListNo(scope.$index) }}</span>
               </template>
             </el-table-column>
+<!--            <el-table-column-->
+<!--              align="left"-->
+<!--              :show-overflow-tooltip="true"-->
+<!--              prop="conversation"-->
+<!--              label="对话"-->
+<!--              min-width="120"-->
+<!--            />-->
             <el-table-column
               align="left"
               :show-overflow-tooltip="true"
               prop="conversation"
-              label="对话"
-              min-width="120"
-            />
-            <el-table-column
-              align="left"
-              :show-overflow-tooltip="true"
-              prop="tradeRoleName"
-              label="交易角色"
+              label="对话人"
               min-width="80"
             />
+
             <el-table-column
-              align="left"
+              align="center"
+              :show-overflow-tooltip="true"
+              label="买方"
+
+              min-width="120"
+            >
+              <template slot-scope="scope">
+                <span :class="getTenantClass(scope.row,true)">{{scope.row.buyerName}}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              align="center"
+              :show-overflow-tooltip="true"
+              label="↔"
+              min-width="50"
+              style="{font-weight: bold;}"
+            >
+              ↔
+            </el-table-column>
+
+            <el-table-column
+              align="center"
+              :show-overflow-tooltip="true"
+              label="卖方"
+              min-width="120"
+            >
+              <template slot-scope="scope">
+                <span :class="getTenantClass(scope.row,false)">{{scope.row.sellerName}}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              align="center"
               :show-overflow-tooltip="true"
               prop="assetTypeName"
               label="资产类型"
               min-width="80"
             />
+<!--            <el-table-column-->
+<!--              align="left"-->
+<!--              prop="projectTypeName"-->
+<!--              label="项目类型"-->
+<!--              min-width="80"-->
+<!--            />-->
             <el-table-column
-              align="left"
-              prop="projectTypeName"
-              label="项目类型"
-              min-width="80"
-            />
-            <el-table-column
-              align="left"
+              align="center"
               prop="sellerTradeQuantity"
               label="报价量(tCO2e)"
               min-width="100"
             />
             <el-table-column
-              align="left"
+              align="center"
               prop="sellerUnitPrice"
               label="报价(元/tCO2e)"
-              min-width="120"
+              min-width="100"
             />
             <el-table-column
-              align="left"
+              align="center"
               prop="buyerTradeQuantity"
               label="询价量(tCO2e)"
               min-width="100"
             />
             <el-table-column
-              align="left"
+              align="center"
               prop="buyerUnitPrice"
               label="询价(元/tCO2e)"
-              min-width="120"
+              min-width="100"
             />
             <el-table-column
-              align="left"
+              align="center"
               prop="expirationDate"
               label="截止日期"
               min-width="110"
@@ -180,14 +214,23 @@
             <el-table-column label="拟交割方式">
               <template slot-scope="scope">
                 <span v-if="scope.row.tradeRoleName==='买方'">{{ scope.row.buyerDeliveryMethodName }}</span>
-
                 <span v-else>{{ scope.row.sellerDeliveryMethodName }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="拟交割时间">
+            <el-table-column label="拟交割时间" align="center">
               <template slot-scope="scope">
                 <span v-if="scope.row.tradeRoleName==='买方'">{{ scope.row.buyerDeliveryTime }}</span>
                 <span v-else>{{ scope.row.sellerDeliveryTime }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              align="center"
+              label="状态"
+              min-width="70"
+            >
+              <template slot-scope="scope">
+                <span :class="getStatusStyleClass(scope.row)">{{scope.row.statusName}}</span>
               </template>
             </el-table-column>
 
@@ -337,6 +380,41 @@ export default {
     };
   },
   methods: {
+
+    getStatusStyleClass(row)
+    {
+      if(row.status==="0160000001")
+      {
+        return "status-offer";
+      }
+      else if(row.status==="0160000002")
+      {
+        return "status-trading";
+      }
+      else if(row.status==="0160000004")
+      {
+        return "status-traded";
+      }
+      return "plain";
+    },
+
+    getTenantClass(row,isBuyer)
+    {
+      let usedWidgetRole="0270000002";
+      if(isBuyer)
+      {
+        usedWidgetRole="0270000001";
+      }
+      if(row.tradeRole===usedWidgetRole)
+      {
+        return "ff"
+      }
+      else
+      {
+        return "plain"
+      }
+    },
+
     closeTip() {
       this.isShow = false;
     },
@@ -826,5 +904,24 @@ export default {
     font-weight: 400;
     margin: 10px;
   }
+}
+
+.ff{
+  color: #0c8351;
+  font-weight: bold;
+}
+.status-trading{
+  font-weight: bold;
+  color: #c48d00;
+}
+
+.status-traded{
+  font-weight: bold;
+  color: #989898;
+}
+
+.status-offer{
+  font-weight: bold;
+  color: green;
 }
 </style>

@@ -85,6 +85,7 @@
             class="selectbox-input"
             v-model="searchKeyword"
             @keyup.enter.native="onClickSearch"
+            placeholder="查询租户(公司)名称"
             clearable
             @clear="onClickSearch"
           />
@@ -93,6 +94,7 @@
       </div>
       <div class="content-container">
         <div>
+
           <el-table
             :header-cell-style="{
               background: '#F2F5F7',
@@ -118,6 +120,15 @@
               label="资产类型"
               min-width="15%"
             />
+            <el-table-column
+              align="center"
+              label="状态"
+              min-width="15%"
+            >
+              <template slot-scope="scope">
+                <span :class="getStatusStyleClass(scope.row)">{{scope.row.statusName}}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               align="left"
               prop="projectTypeName"
@@ -299,8 +310,27 @@ export default {
     };
   },
   methods: {
+
+    getStatusStyleClass(row)
+    {
+      if(row.status==="0160000001")
+      {
+        return "status-offer";
+      }
+      else if(row.status==="0160000002")
+      {
+        return "status-trading";
+      }
+      else if(row.status==="0160000004")
+      {
+        return "status-traded";
+      }
+      return "plain";
+    },
+
     changeAssetType() {
       this.isProjectTypeDisable = isProjectTypeDisable(
+
         this.seletedAssetStatus[0]
       );
       this.onClickSearch();
@@ -588,7 +618,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .root {
   display: flex;
   flex-direction: column;
@@ -666,79 +696,19 @@ export default {
   cursor: default;
 }
 
-// .root {
-//   display: flex;
-//   flex-direction: column;
-//   background: white;
-// }
+.status-trading{
+  font-weight: bold;
+  color: #c48d00;
+}
 
-// .search-container {
-//   display: flex;
-//   flex-direction: row;
-//   width: 100%;
-//   margin-top: 10px;
-//   margin-bottom: 20px;
-// }
+.status-traded{
+  font-weight: bold;
+  color: #989898;
+}
 
-// .container {
-//   height: 50px;
-//   margin: 10px 0px 20px 0px;
-//   display: flex;
-//   flex-direction: row;
-// }
+.status-offer{
+  font-weight: bold;
+  color: green;
+}
 
-// .content-container {
-//   flex-grow: 1;
-//   display: flex;
-//   flex-direction: column;
-//   width: 100%;
-// }
-
-// >>> .el-cascader .el-input .el-input__inner,
-// >>> .el-cascader .el-input.is-focus .el-input__inner {
-//   border-color: transparent;
-// }
-
-// .acea-row {
-//   >>> .el-avatar--small {
-//     width: 22px;
-//     height: 22px;
-//   }
-// }
-
-// .checkTime {
-//   >>> .el-radio__input {
-//     display: none;
-//   }
-// }
-
-// .ivu-pl-8 {
-//   margin-left: 8px;
-// }
-
-// .dashboard-console-visit {
-//   >>> .el-card__header {
-//     padding: 14px 20px !important;
-//   }
-//   ul {
-//     li {
-//       list-style-type: none;
-//       margin-top: 12px;
-//     }
-//   }
-// }
-
-// .iwu-mb {
-//   margin-bottom: 10px;
-// }
-
-// .newsImg {
-//   width: 30px;
-//   height: 30px;
-//   border-radius: 4px;
-// }
-
-// .cursor-mi {
-//   cursor: default;
-// }
 </style>

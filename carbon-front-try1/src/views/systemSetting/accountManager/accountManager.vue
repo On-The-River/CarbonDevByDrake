@@ -334,6 +334,7 @@
               <el-input v-model="form.email" autocomplete="off" style="width: 80%; margin-left: 10px" size="medium"></el-input>
             </el-form-item>
             <el-form-item label="账户角色">
+              <span style="color: red">*</span>
               <el-select v-model="selectedRole" placeholder="请选择角色" style="width: 80%; margin-left: 10px" size="medium">
                 <el-option v-for="(item, index) in roleOptions" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -582,6 +583,12 @@ export default {
      * 功能：提交用户
      */
     addSubmit() {
+      if(!this.selectedRole || this.selectedRole==="")
+      {
+        this.$message("请选择账户角色");
+        return;
+      }
+
       this.form.roleIds = [this.selectedRole];
       if (
           this.form.password &&

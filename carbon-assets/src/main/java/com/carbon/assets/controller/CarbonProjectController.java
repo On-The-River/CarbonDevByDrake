@@ -48,7 +48,7 @@ public class CarbonProjectController extends BaseController {
     */
     @PostMapping("/add")
     @ApiOperation(value = "添加碳减排项目",notes = "添加碳减排项目")
-    public ApiResult<CarbonProjectQueryVo> addCarbonProject(@Valid @RequestBody CarbonProjectAddParam param) {
+    public ApiResult<CarbonProjectQueryVo> addCarbonProject(@Valid @RequestBody CarbonProject param) {
         return ApiResult.ok(carbonProjectService.addCarbonProject(param));
     }
 

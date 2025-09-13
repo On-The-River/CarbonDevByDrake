@@ -173,8 +173,7 @@ public class CarbonProjectServiceImpl extends BaseServiceImpl<CarbonProjectMappe
     }
 
     @Override
-    public CarbonProjectQueryVo addCarbonProject(CarbonProjectAddParam param) {
-        CarbonProject carbonProject = BeanUtil.copyProperties(param, CarbonProject.class);
+    public CarbonProjectQueryVo addCarbonProject(CarbonProject carbonProject) {
         carbonProject.setProjectStatus(ProjectStatus.STATUS_1.getStatus());
         carbonProject.setTenantId(getCurrentTenantId());
         save(carbonProject);

@@ -10,7 +10,8 @@
   .sidebar-container {
     transition: width 0.28s;
     width: $sideBarWidth !important;
-    background-color: $menuBg;
+    /*去掉color*/
+    background: $menuBg;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -58,6 +59,7 @@
     }
 
     .el-menu {
+      background: transparent !important; // ✅ 使菜单容器透明，显示父级渐变
       border: none;
       height: 100%;
       width: 100% !important;
@@ -66,22 +68,41 @@
     // menu hover
     .submenu-title-noDropdown,
     .el-submenu__title {
+      background: transparent !important; // ✅ 默认透明
+      color: #fff !important;
       &:hover {
-        background-color: $menuHover !important;
+        //去掉color
+        background: $menuHover !important;
+        //悬停时字体的颜色
+        color: #7acca9 !important;
       }
     }
 
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
     }
+    //自加
+    .el-menu-item.is-active {
+      color: $menuActiveText !important;
+    }
+
+    .el-submenu.is-active > .el-submenu__title {
+      color: $subMenuActiveText !important;
+    }
 
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
-      background-color: $subMenuBg !important;
-
+      //去掉color
+      background: $subMenuBg !important;
+      color: #fff !important; // ✅ 显式设置文字颜色
+      &.is-active {
+        color: $menuActiveText !important;
+      }
       &:hover {
-        background-color: $subMenuHover !important;
+        //去掉color
+        background: $subMenuHover !important;
+        color: #7acca9 !important; // ✅ 悬停时文字颜色
       }
     }
   }
@@ -92,7 +113,7 @@
     margin-bottom: 2px;
 
     &:hover {
-      // filter: drop-shadow(0 0 #289c8a); 
+      // filter: drop-shadow(0 0 #289c8a);
       // -webkit-filter: drop-shadow(0px 0 #289c8a);
       &:before,
       &:after {
@@ -101,7 +122,7 @@
     }
 
     &:active {
-      // filter: drop-shadow(0px 0 #289c8a); 
+      // filter: drop-shadow(0px 0 #289c8a);
       &:before,
       &:after {
         background: white;
@@ -111,8 +132,8 @@
   .myicon{ width: 20px;
     height: 20px;
     margin-bottom: 2px;}
-  .myicon img{ 
-    filter: drop-shadow(39px 0 #289c8a); 
+  .myicon img{
+    filter: drop-shadow(39px 0 #289c8a);
     -webkit-filter: drop-shadow(39px 0 #289c8a);
   }
   .myicon:hover img{
@@ -220,7 +241,8 @@
   .el-menu-item {
     &:hover {
       // you can use $subMenuHover
-      background-color: $menuHover !important;
+      //去掉color
+      background: $menuHover !important;
     }
   }
 

@@ -288,8 +288,13 @@ export default {
     },
     //查看操作
     toDetail(id) {
+      let routeData = this.$router.resolve({
+        path: "/carbon/projectCreate/projectDetail",
+        query: { id: id }
+      });
+      // openUrlInNewWindow(routeData.href);
       this.$router.push({
-        path: "/carbon/projectDetail",
+        path: routeData.href,
         query: { id: id }
       });
     },

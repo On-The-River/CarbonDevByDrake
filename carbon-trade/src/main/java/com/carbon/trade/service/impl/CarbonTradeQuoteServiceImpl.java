@@ -132,13 +132,25 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
 
         this.save(tradeQuote);
 
-        postAddQuote(assetId,tradeQuote.getAssetType(),tradeQuote.getTradeQuantity());
+        postAddQuote(assetId,tradeQuote);
     }
 
 
 
-    private void postAddQuote(Integer assetId,String assetType,BigDecimal tradeQuantity)
+    private void postAddQuote(Integer assetId,CarbonTradeQuote tradeQuote)
     {
+        if(tradeQuote==null)
+        {
+            throw new CommonBizException("供需行情不存在");
+        }
+
+        if(tradeQuote.getTradeRole().equals("0270000001"))
+        {
+            return;
+        }
+
+        String assetType=tradeQuote.getAssetType();
+        BigDecimal tradeQuantity=tradeQuote.getTradeQuantity();
         String url="";
         if(assetType!=null &&assetType.equals("0140000001"))
         {
@@ -161,19 +173,6 @@ public class CarbonTradeQuoteServiceImpl extends BaseServiceImpl<CarbonTradeQuot
     @Override
     public Paging<CarbonTradeQuoteQueryVo> getCarbonTradeQuotePageList(CarbonTradeQuoteQueryParam param) {
 
-//        if(param!=null)
-//        {
-//            if(param.getProjectType().substring(8).equals("000"))
-//            {
-//                param.setProjectType(null);
-//            }
-//
-//            if(param.getProjectScope().substring(8).equals("000"))
-//            {
-//                param.setProjectScope(null);
-//            }
-//
-//        }
         //分页列表按更新时间降序
         Page<?> page = getPage(param);
         page.addOrder(OrderItem.desc("ctq.updated_time"));

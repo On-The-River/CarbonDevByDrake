@@ -17,19 +17,6 @@
             </el-cascader>
           </div>
           <div style="margin-left: 10px; width: 200px" class="selectbox-root">
-            <span class="selectbox-hint" style="min-width: 60px">领域</span>
-            <div class="selectbox-deliver" />
-            <el-cascader
-                placeholder="全部"
-                @change="update"
-                class="selectbox-input"
-                v-model="selectedArea"
-                :options="ProjectAreaDict"
-                clearable
-            >
-            </el-cascader>
-          </div>
-          <div style="margin-left: 10px; width: 200px" class="selectbox-root">
             <span class="selectbox-hint" style="min-width: 60px">类型</span>
             <div class="selectbox-deliver" />
             <el-cascader
@@ -63,23 +50,6 @@
             <div class="selectbox-deliver" />
             <el-date-picker
                 v-model="selectRecordDate"
-                @change="update"
-                type="daterange"
-                start-placeholder="开始"
-                end-placeholder="结束"
-                align="right"
-                size="medium"
-            >
-            </el-date-picker>
-          </div>
-          <div
-              style="width: 230px; margin-left: 16px; padding: 0 0 0 0"
-              class="selectbox-root"
-          >
-            <span class="selectbox-hint" style="min-width: 80px">签发时间</span>
-            <div class="selectbox-deliver" />
-            <el-date-picker
-                v-model="selectIssueDate"
                 @change="update"
                 type="daterange"
                 start-placeholder="开始"
@@ -195,7 +165,7 @@
           />
           <el-table-column
               align="left"
-              prop="methodologyName"
+              prop="methodologyCodeName"
               label="方法学"
               min-width="100"
           />
@@ -205,39 +175,9 @@
               label="状态"
               min-width="80"
           />
-          <el-table-column align="left" label="审定日期" min-width="100">
-            <template slot-scope="scope">
-              {{ scope.row.approvalDate | formatDate }}
-            </template>
-          </el-table-column>
           <el-table-column align="left" label="备案日期" min-width="100">
             <template slot-scope="scope">
               {{ scope.row.recordFilingDate | formatDate }}
-            </template>
-          </el-table-column>
-          <el-table-column align="left" label="核证日期" min-width="100">
-            <template slot-scope="scope">
-              {{ scope.row.certifiedDate | formatDate }}
-            </template>
-          </el-table-column>
-          <el-table-column align="left" label="签发日期" min-width="100">
-            <template slot-scope="scope">
-              {{ scope.row.issuingDate | formatDate }}
-            </template>
-          </el-table-column>
-          <el-table-column
-              align="left"
-              prop="estimatedAnnualReduction"
-              label="年排放量"
-              min-width="100"
-          >
-            <template slot-scope="scope">
-              <span>
-                {{ scope.row.estimatedAnnualReduction }}
-                <span v-if="scope.row.estimatedAnnualReduction !== '--'"
-                >tCO2e</span
-                >
-              </span>
             </template>
           </el-table-column>
           <el-table-column label="操作" min-width="150" align="center">
@@ -473,10 +413,10 @@ export default {
         asc: true,
         size: this.pageSize,
         current: 1,
-        refDateStart: this.selectRecordDate[0],
-        refDateEnd: this.selectRecordDate[1],
-        issueDateStart: this.selectIssueDate[0],
-        issueDateEnd: this.selectIssueDate[1],
+        refDateStart: Array.isArray(this.selectRecordDate)?this.selectRecordDate[0]:"",
+        refDateEnd: (Array.isArray(this.selectRecordDate)&&this.selectRecordDate.length>1)?this.selectRecordDate[1]:"",
+        issueDateStart: Array.isArray(this.selectIssueDate)?this.selectIssueDate[0]:"",
+        issueDateEnd: (Array.isArray(this.selectIssueDate)&&this.selectIssueDate.length>1)?this.selectIssueDate[1]:"",
         projectName: null,
         projectTypeCode: null,
         certifiedStandardCode: null,
@@ -635,7 +575,7 @@ export default {
         });
     },
     getByCarbonMetaregistryList(data) {
-      console.log("keywordData", data);
+      // console.log("keywordData", data);
       getCarbonMetaregistryList(data)
         .then((res) => {
           this.list = res.data.records;

@@ -1,5 +1,12 @@
 <template>
   <div class="login-container">
+    <div class="video-overlay-container">
+      <video autoplay loop muted class="background-video">
+        <source src="@/assets/videos/shu1.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+      <div class="video-overlay"></div>
+    </div>
     <div>
       <img class="logo" :src="loginLogo" />
     </div>
@@ -158,7 +165,7 @@ export default {
       nextShow: false,
       sendAuthCode: true,
       auth_time: 60,
-      loginLogo: require('@/assets/imgs/login_logo.png'),
+      loginLogo: require('@/assets/videos/logol.png'),
     }
   },
   methods: {
@@ -330,136 +337,149 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
-$bg: #2d3a4b;
-$light_gray: #68b0fe;
-
-/* reset element-ui css */
-.login-container {
-  display: flex;
-  flex-direction: column;
-  background-color: rgba(237, 249, 252, 1);
-
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-
-      &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: #fff !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-
-.el-form-item__error {
-  color: #fff;
-}
-</style>
-
 <style rel="stylesheet/scss" lang="scss" scoped>
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
-.bg {
-  height: 100%;
-  width: 100%;
-  background-color: rgba(237, 249, 252, 1);
+// 页面外层容器：改为全屏 flex 居中，且背景透明，让视频背景完全透出
+.pageContainer {
+  position: relative;
+  z-index: 1;
+  background-color: transparent !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 水平居中 */
+  justify-content: flex-start; /* 垂直从顶部开始布局 */
+  padding-top: 30px; /* 给 logo 等顶部元素留间距 */
 }
 
+// 登录容器：作为.pageContainer 的子容器，继承居中特性
 .login-container {
-  position: fixed;
-  height: 100%;
+  position: static;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 内部元素水平居中 */
+}
 
-  .login-form {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    width: 520px;
-    min-height: 400px;
-    padding: 35px 35px 15px 35px;
-    margin: -260px auto 0;
-    background: #fff;
+// 表单容器：核心是透明背景 + 居中，且不被其他层遮挡
+.login-form {
+  position: static;
+  width: 520px;
+  min-height: 400px;
+  padding: 35px;
+  margin: 20px auto; /* 水平居中 + 顶部留间距 */
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(5px);
+  border-radius: 8px;
+  z-index: 2; /* 确保在视频遮罩之上 */
+}
+
+// logo 样式：保持显示，调整位置
+.logo {
+  background: transparent;
+  width: 134px;
+  height: 36px;
+  margin: 30px 0 20px; /* 上下间距，取消左右浮动 */
+  filter: brightness(1.2);
+  z-index: 3; /* 层级高于视频遮罩 */
+}
+
+// 登录输入容器：跟随表单居中
+.loginInputContainer {
+  margin: 0;
+  height: auto !important; /* 由内容撑开高度 */
+  padding: 0 !important;
+  border-radius: 6px;
+  z-index: 2;
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(5px);
+}
+
+// 视频背景容器：全屏覆盖，层级放最底层
+.video-overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 层级低于表单和 logo */
+}
+
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 128, 0, 0.3), rgba(0, 64, 0, 0.5));
+  pointer-events: none;
+}
+
+// 其他原有样式（保持不变，如输入框、按钮等）
+.tips {
+  font-size: 14px;
+  color: #000000;
+  margin-bottom: 10px;
+  span:first-of-type {
+    margin-right: 16px;
   }
+}
 
-  .tips {
-    font-size: 14px;
+.svg-container {
+  padding: 6px 5px 6px 15px;
+  color: $dark_gray;
+  vertical-align: middle;
+  width: 30px;
+  display: inline-block;
+  &_login {
+    font-size: 20px;
+  }
+}
+
+.title-container {
+  position: relative;
+  .title {
+    font-size: 26px;
+    font-weight: bold;
     color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
+    margin: 0 auto 40px;
+    text-align: center;
   }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-
-    &_login {
-      font-size: 20px;
-    }
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      font-weight: 400;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .set-language {
-      color: #fff;
-      position: absolute;
-      top: 5px;
-      right: 0px;
-    }
-  }
-
-  .show-pwd {
+  .set-language {
+    color: #fff;
     position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
+    top: 5px;
+    right: 0;
   }
+}
 
-  .thirdparty-button {
-    position: absolute;
-    right: 35px;
-    bottom: 28px;
-  }
+.show-pwd {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  font-size: 16px;
+  color: $dark_gray;
+  cursor: pointer;
+  user-select: none;
+}
+
+.thirdparty-button {
+  position: absolute;
+  right: 35px;
+  bottom: 28px;
 }
 
 .loginBtn {
@@ -475,45 +495,47 @@ $light_gray: #eee;
 
 .regInfo {
   text-align: center;
-  color: #fff;
+  color: #000000;
   font-size: 16px;
 }
 
 .codeBtn {
-  background: #E5F9F0;
-  color: #0065FF;
-  border: none;
-  border-width: 0px;
-  border-color: transparent;
+  background: rgba(255, 255, 255, 0.3);
+  color: #092ef8;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   align-items: center;
   font-size: 15px;
   margin-right: 16px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   line-height: 15px;
-}
-
-.logo {
-  background: transparent;
-  width: 134px;
-  height: 36px;
-  float: left;
-  margin-left: 40px;
-  margin-top: 30px
+  cursor: pointer;
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  &:disabled {
+    background: rgba(255, 255, 255, 0.3);
+    color: #092ef8;
+    cursor: not-allowed;
+  }
 }
 
 .login-input {
   margin-top: 32px;
   height: 50px;
-  background: #E5F9F0;
+  background: rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: row;
   font-family: PingFangSC-Medium, PingFang SC;
-
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
 }
 
 .txt1 {
-  width: 55px;
+  width: 64px;
   height: 15px;
   overflow-wrap: break-word;
   text-align: left;
@@ -522,11 +544,10 @@ $light_gray: #eee;
   display: flex;
   align-self: center;
   margin-left: 16px;
-  width: 64px;
   font-size: 16px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
-  color: #172B4D;
+  color: #000000;
   letter-spacing: 1px;
 }
 
@@ -535,8 +556,8 @@ $light_gray: #eee;
   height: 16px;
   display: flex;
   align-self: center;
-  margin-left: 9px;
-  margin-right: 9px;
+  margin: 0 9px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .user-input {
@@ -552,11 +573,13 @@ $light_gray: #eee;
   outline: none;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #172B4D;
+  color: #000000;
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
 }
 
 .verificationCodeContainer {
-  // height: 100%;
   display: flex;
 }
 
@@ -572,26 +595,26 @@ $light_gray: #eee;
   border: 0;
   outline: none;
   font-family: PingFangSC-Regular, PingFang SC;
+  color: #fff;
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
 }
 
 .loginContiner {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   width: 100%;
   display: flex;
   flex-flow: row;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
 }
 
-.loginInputContainer {
-  margin: auto;
-  padding-top: 32px;
-  height: 519px !important;
-  padding: 0 !important;
-  /*overflow: hidden;*/
-  border-radius: 6px;
-  // z-index: 1;
-  // display: flex;
+.loginLeftPic {
+  display: none;
+  flex-grow: 1;
+  height: 705px;
+  z-index: 3;
 }
 
 .hasaccount {
@@ -605,7 +628,7 @@ $light_gray: #eee;
 
 .hasaccountbtn {
   display: flex;
-  color: #27A777;
+  color: #4caf50;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
 }
@@ -614,35 +637,51 @@ $light_gray: #eee;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
-  color: #5E6C84;
+  color: #ccc;
   line-height: 14px;
 }
 
 .register-text {
-  font-size: 15px;
-  background: #27A777;
-  color: #fff;
   font-size: 18px;
+  background: #4caf50;
+  color: #fff;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
-  color: #FFFFFF;
   line-height: 18px;
-  transition: background-color .3s ease-in;
+  transition: background-color 0.3s ease-in;
+  border: none;
+  &:hover {
+    background: #43a047;
+  }
 }
 
 .no-register-text {
-  background: #76DFB7;
+  background: #76dfb7;
   color: #fff;
   font-size: 18px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
-  color: #FFFFFF;
   line-height: 18px;
   width: 100%;
   margin-top: 30px;
   height: 50px;
   border: none;
   pointer-events: none;
-  transition: background-color .3s ease-in;
+  transition: background-color 0.3s ease-in;
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+  .login-form {
+    width: 90%;
+    padding: 25px 20px;
+  }
+  .loginInputContainer {
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+  .logo {
+    margin: 20px 0;
+  }
 }
 </style>

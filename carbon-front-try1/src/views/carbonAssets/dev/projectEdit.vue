@@ -411,7 +411,7 @@
 </template>
 <script>
 import { readCarbonProject } from "@/api/carbonAssetApi";
-import { loadMethodList } from "@/api/carbonAssetApi";
+import { loadMethodListAsUser } from "@/api/carbonAssetApi";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import { getProvinceDict } from "@/config/dictHelper";
 import { getCountryDict } from "@/config/dictHelper";
@@ -541,7 +541,7 @@ export default {
         certificationCriteria: this.selectedCertification[0],
         current: this.methodCurrent,
       };
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then((res) => {
           this.methodList = res.data.records;
           this.total = res.data.total;
@@ -660,7 +660,7 @@ export default {
         industryCode: this.selectedIndustry[0],
         certificationCriteria: this.selectedCertification[0],
       };
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then((res) => {
           this.methodList = res.data.records;
           this.total = res.data.total;
@@ -690,7 +690,7 @@ export default {
         current: val,
         // status: 1,
       };
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then((res) => {
           this.methodList = res.data.records;
           this.total = res.data.total;

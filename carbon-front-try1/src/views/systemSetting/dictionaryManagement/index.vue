@@ -26,12 +26,6 @@
         <Button style="margin-top: 0px; margin-bottom: 20px" class="normal-white-btn" @click="addDict">
           +添加
         </Button>
-        <Button style="margin-top: 0px; margin-bottom: 20px; margin-left: 20px" class="normal-white-btn">
-          导出
-        </Button>
-        <Button style="margin-top: 0px; margin-bottom: 20px; margin-left: 20px" class="normal-white-btn">
-          导入
-        </Button>
       </div>
       <el-table :header-cell-style="{
         background: '#F5F5F7',

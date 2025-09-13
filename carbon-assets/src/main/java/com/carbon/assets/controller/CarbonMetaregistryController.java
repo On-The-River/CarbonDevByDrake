@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,6 +42,7 @@ public class CarbonMetaregistryController extends BaseController {
     @PostMapping("/add")
     @ApiOperation(value = "添加CarbonMetaregistry对象",notes = "添加项目仓库")
     public ApiResult<Boolean> addCarbonMetaregistry(@Valid @RequestBody CarbonMetaregistry carbonMetaregistry) {
+        carbonMetaregistry.setRecordFilingDate(new Date());
         boolean flag = carbonMetaregistryService.save(carbonMetaregistry);
         return ApiResult.result(flag);
     }

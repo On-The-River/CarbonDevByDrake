@@ -79,4 +79,56 @@ import request from '../utils/newRequest'
         data:data,
         headers: { 'Content-Type': 'application/json' }
     })
+
+
+}
+
+// 获取大宗交易数据
+export function getBlockTradingData() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: '/system/python/blockTrading',
+    method: 'get'
+  })
+}
+
+// 获取市场行情数据
+export function getMarketConditionsData() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: 'system/python/marketConditions',
+    method: 'get'
+  })
+}
+//价格区间预测
+export function predictTree() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: 'system/python/predictPrice',
+    method: 'post'
+  })
+}
+//树类型
+export function getBarTreeWithType() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: 'system/python/barTreeWithType',
+    method: 'get'
+  })
+}
+//土壤质量
+export function getBarTreeWithSoil() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: 'system/python/barTreeWithSoil',
+    method: 'get'
+  })
+}
+//气候类型
+export function getBarTreeWithClimate() {
+  return request({
+    baseURL: "http://localhost:9002",
+    url: 'system/python/barTreeWithClimate',
+    method: 'get'
+  })
 }

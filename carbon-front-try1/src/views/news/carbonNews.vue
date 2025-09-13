@@ -227,7 +227,7 @@ export default {
           sortField: ""
         };
         artical
-          .getCarbonArticles(data)
+          .getCarbonArticlesAsUser(data)
           .then(res => {
             this.articals.push(...res.records);
             this.total = res.total;
@@ -260,8 +260,7 @@ export default {
         sortField: ""
       };
       artical
-        .getCarbonArticles(data)
-        .then(res => {
+        .getCarbonArticlesAsUser(data).then(res => {
           this.articals = res.records;
           this.total = res.total;
           this.current = res.current;
@@ -288,7 +287,7 @@ export default {
       };
 
       artical
-        .getCarbonArticles(data)
+        .getCarbonArticlesAsUser(data)
         .then(res => {
           this.articals = res.records;
           this.total = res.total;
@@ -334,7 +333,7 @@ export default {
         status: "0260000002"
       };
       artical
-        .getCarbonArticles(data)
+        .getCarbonArticlesAsUser(data)
         .then(res => {
           this.articals = res.records;
           this.total = res.total;

@@ -7,8 +7,18 @@
 # BlueJ files
 *.ctxt
 
+.idea/
+
+carbon-front-try1/node_modules/
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+
+training module/methodology/carbon_bert_model/
+training module/plant/*.pth
+training module/plant/*.pkl
+training module/price/models/
+training module/price/results/
 
 # Package Files #
 *.jar

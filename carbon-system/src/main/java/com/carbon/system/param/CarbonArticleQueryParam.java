@@ -23,8 +23,8 @@ public class CarbonArticleQueryParam extends QueryParam {
     @ApiModelProperty(value = "分类ID: 字典表里面的值")
     private String categoryId;
 
-    @ApiModelProperty(value = "文章状态: 1.未发布 2.已发布 3.已下线 4.编辑中 5.已推送")
-    private Integer status;
+    @ApiModelProperty(value = "文章状态")
+    private String status;
 
     @ApiModelProperty(value = "搜索标题关键字")
     private String searchKeywords;

@@ -101,7 +101,7 @@ public class CarbonTradePriceServiceImpl extends BaseServiceImpl<CarbonTradePric
             }
 
             if (CollUtil.isNotEmpty(accountNameMap) && CollUtil.isNotEmpty(tenantNameMap)){
-                record.setConversation(accountNameMap.get(record.getPublisherUserId()) + "_" + tenantNameMap.get(record.getPublisherId()));
+                record.setConversation(accountNameMap.get(record.getPublisherUserId()));
             }
         }
         return new Paging<>(iPage);
@@ -121,6 +121,13 @@ public class CarbonTradePriceServiceImpl extends BaseServiceImpl<CarbonTradePric
         if(!TradeStatusEnum.OFFER.getStatus().equals(targetQuote.getStatus()))
         {
             throw new CommonBizException("碳供需行情状态错误");
+        }
+
+        double quoteQuantity=targetQuote.getTradeQuantity().doubleValue();
+        double actualQuantity=param.getTradeContract().getTradeQuantity().doubleValue();
+        if(quoteQuantity<actualQuantity)
+        {
+            throw new CommonBizException("实际成交数量不可大于上架数量:"+quoteQuantity+"(tCO2e)!");
         }
 
         //on:修改交易行情状态

@@ -452,6 +452,16 @@ export function loadMethodList(data) {
   })
 }
 
+export function loadMethodListAsUser(data) {
+  return request({
+    baseURL: 'http://localhost:9003',
+    url: '/assets/carbonMethodology/getPageListAsUser',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data
+  })
+}
+
 /*********************方法学全文检索***************/
 /**
  * 获取方法学列表

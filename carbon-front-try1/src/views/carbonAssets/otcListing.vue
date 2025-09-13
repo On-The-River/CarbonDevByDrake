@@ -111,6 +111,7 @@ import {getTenantInfo} from "@/api/systemadmin";
 import {getCarbonMetaregistryInfo} from "@/api/carbonAssetApi";
 import {getDeliveryMethodDict,getExchangeDict} from "@/config/dictHelper";
 
+
 export default {
   props:{
     dialogFormVisible: false,
@@ -199,9 +200,7 @@ export default {
   methods: {
     toQuotation() {
       // 跳转到碳资产详情页面
-      this.$router.push({
-        path: "/quota",
-      });
+      this.$router.push("/trade/quotation");
     },
     // 自加close方法
     clickClose() {
@@ -275,8 +274,16 @@ export default {
         this.form.contactsEmail = tenantRes.contactsEmail;
 
         console.log("diliveryMethod",this.deliveryMethodField);
-        this.form.deliveryMethod=this.deliveryMethodField[0];
-        this.form.deliveryExchange=this.deliveryExchangeField[0];
+        this.form.deliveryMethod="";
+        if(Array.isArray(this.deliveryMethodField))
+        {
+          this.form.deliveryMethod=this.deliveryMethodField[0];
+        }
+        this.form.deliveryExchange="";
+        if(Array.isArray(this.deliveryExchangeField))
+        {
+          this.form.deliveryExchange=this.deliveryExchangeField[0];
+        }
 
 
         const metaRegistryRes = await credit.getCarbonMetaregistryInfo(this.form.carbonProjectId);

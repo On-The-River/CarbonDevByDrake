@@ -29,9 +29,7 @@
                 and ctq.trade_role = #{param.tradeRole}
             </if>
             <if test="param.keyword != null and param.keyword != '' ">
-                and (ctq.institution_name like concat('%',#{param.keyword},'%') or
-                sd1.item_ch like concat('%',#{param.keyword},'%') or
-                sd2.item_ch like concat('%',#{param.keyword},'%') )
+                and st.tenant_name like concat('%',#{param.keyword},'%')
             </if>
             <if test="param.projectType != null and param.projectType != '' ">
                 and ctq.project_type = #{param.projectType}

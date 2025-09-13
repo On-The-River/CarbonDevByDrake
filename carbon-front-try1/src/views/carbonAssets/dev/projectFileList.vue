@@ -111,13 +111,14 @@
   </div>
 </template>
 <script>
-import { loadcarbonDoc } from "@/api/carbonAssetApi";
+import {loadcarbonDoc, loadMethodListAsUser} from "@/api/carbonAssetApi";
 import { editMethod } from "@/api/carbonAssetApi";
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import { getDocumentTypeDict } from "@/config/dictHelper";
 import { cursor } from "@/libs/element-table";
 import { stringify } from "querystring";
+
 export default {
   name: "companyPackage",
   components: { selectDropDownBox },
@@ -217,7 +218,7 @@ export default {
         certificationCriteria: this.selectedCertification[0]
       };
 
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then(res => {
           this.list = res.data.records;
           this.total = res.data.total;

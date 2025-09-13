@@ -179,12 +179,13 @@
   </div>
 </template>
 <script>
-import {delCarbonExchanger, getEscarbonMethodologyByKeyword} from "@/api/carbonAssetApi";
+import { delCarbonExchanger, loadMethodListAsUser } from "@/api/carbonAssetApi";
 import { editMethod } from "@/api/carbonAssetApi";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
 import { getCertificationCriteriaDict } from "@/config/dictHelper";
 import { getBusinessDict } from "@/config/dictHelper";
 import { getProjectAreaDict } from "@/config/dictHelper";
+
 export default {
   name: "method",
   data() {
@@ -302,7 +303,7 @@ export default {
       if (this.searchKeyWord) {
         data["searchKey"] = this.searchKeyWord;
       }
-      getEscarbonMethodologyByKeyword(data)
+      loadMethodListAsUser(data)
         .then(res => {
           this.list = res.data.records;
           // this.list = res.data.data;
@@ -321,7 +322,7 @@ export default {
         .catch(errror => {});
     },
     onEdit(url) {
-      if (url != "--") {
+      if (url !== "--") {
         openUrlInNewWindow(url);
       } else {
         this.$message.warning("没有对应的url");
@@ -370,7 +371,7 @@ export default {
       if (this.searchKeyWord) {
         data["searchKey"] = this.searchKeyWord;
       }
-      getEscarbonMethodologyByKeyword(data)
+      loadMethodListAsUser(data)
         .then(res => {
           this.list = res.data.records;
           // this.list = res.data.data;
@@ -402,7 +403,7 @@ export default {
       if (this.searchKeyWord) {
         data["searchKey"] = this.searchKeyWord;
       }
-      getEscarbonMethodologyByKeyword(data)
+      loadMethodListAsUser(data)
         .then(res => {
           this.list = res.data.records;
           // this.list = res.data.data;

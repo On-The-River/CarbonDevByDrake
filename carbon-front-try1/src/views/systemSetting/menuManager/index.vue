@@ -43,7 +43,7 @@
       </el-pagination>
     </div> -->
     <!-- Form -->
-    <el-dialog title="title" :visible.sync="dialogFormVisible" width="30%">
+    <el-dialog :title="form.menuName" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form">
         <el-form-item label="菜单名称" :label-width="60">
           <span class="require">*</span>
@@ -99,7 +99,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDictShow = false" class="normal-white-btn">取消</el-button>
-        <el-button type="primary" @click="addSubmit" class="light-green-btn">确定</el-button>
+        <el-button type="primary" @click="onClickPublish" class="light-green-btn">确定</el-button>
       </div>
     </el-dialog>
     <!-- 添加子菜单 -->
@@ -128,7 +128,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addChildShow = false" class="normal-white-btn">取消</el-button>
-        <el-button type="primary" @click="addChildSubmit" class="light-green-btn">确定</el-button>
+        <el-button type="primary" @click="onClickPublish" class="light-green-btn">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -139,6 +139,7 @@ import * as systemAdminApi from "@/api/systemadmin.js"
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
 import { openUrlInNewWindow } from "@/libs/OpenHelper.js";
 import { cursor } from "@/libs/element-table.js";
+import {addMenu} from "@/api/systemadmin.js";
 
 export default {
   name: "menuManager",
@@ -297,7 +298,7 @@ export default {
       this.row = row;
     },
     submitChange() {
-      if (this.form.menuIcon && this.form.menuName && this.form.menuUrl) {
+      if (this.form.menuName && this.form.menuUrl) {
         systemAdminApi.editMenu(this.form).then(res => {
           this.$message.success("修改成功");
           this.dialogFormVisible = false;
@@ -309,7 +310,25 @@ export default {
         this.$message.warning("请输入必填项");
       }
     },
-    onClickPublish() {},
+    onClickPublish() {
+      addMenu(this.addForm).then(res => {
+        if (res.code == 200) {
+          this.$message.success("添加成功");
+          this.addDictShow = false;
+          this.addForm.menuName = "";
+          this.addForm.menuUrl= "";
+          this.addForm.menuIcon= "";
+          this.addForm.orderNum= "";
+          this.addForm.menuLevel= 1;
+          this.addForm.parentId= 0;
+          this.addForm.status="";
+        } else {
+          this.$message.error(res.msg);
+        }
+      }).catch(err => {
+        console.error(err);
+      })
+    },
     onClickDelete(row) {
       this.$confirm("是否删除此菜单项？").then(() => {
         systemAdminApi.delMenu(row.id).then(res => {

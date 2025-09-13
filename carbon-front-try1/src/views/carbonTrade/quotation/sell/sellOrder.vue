@@ -192,7 +192,6 @@ export default {
         institutionName: "",
         deliveryExchange: "",
         deliveryMethod: "",
-        assetUnitPrice: "",
         assetType: "",
         projectType: "",
         projectScopeCode: "",

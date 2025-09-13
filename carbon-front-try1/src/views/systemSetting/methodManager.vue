@@ -363,18 +363,6 @@
             ></el-input>
           </el-col>
           <div style="clear: both; height: 20px"></div>
-          <el-col :span="5"
-            ><span class="table-text">world文档url:</span></el-col
-          >
-          <el-col :span="19">
-            <el-input
-              v-model="methodForm.wordUrl"
-              placeholder="请输入world文档url"
-              autocomplete="off"
-              size="medium"
-            ></el-input>
-          </el-col>
-          <div style="clear: both; height: 20px"></div>
           <div class="dialog-footer" align="right">
             <el-button @click="onCancel">取消</el-button>
             <el-button @click="saveMethod" type="primary">保存</el-button>
@@ -444,7 +432,6 @@ export default {
         methodCode: "", // 方法学编码
         name: "", // 方法学名称
         pdfUrl: "", // 飞书pdf路径
-        wordUrl: "", // 飞书word路径
         fieldChildType: "", //项目类型
         sourceFileUrl: "" ///// 飞书pdf路径
       }
@@ -494,7 +481,6 @@ export default {
       this.methodForm["methodCode"] = "";
       this.methodForm["name"] = "";
       this.methodForm["pdfUrl"] = "";
-      this.methodForm["wordUrl"] = "";
       this.methodForm["fieldChildType"] = "";
       this.methodForm["sourceFileUrl"] = "";
       this.addMethodFormVisible = !this.addMethodFormVisible;
@@ -502,7 +488,6 @@ export default {
     syncContentCarbonMethodology(data) {
       let datas = {
         methodCode: data.methodCode,
-        wordUrl: data.wordUrl
       };
       synContentCarbonMethodology(datas).then(res => {
         this.getList();
@@ -639,9 +624,6 @@ export default {
             if (res && res.code === 200) {
               this.$message.success("操作成功！");
               this.addMethodFormVisible = false;
-              if (this.methodForm["wordUrl"]) {
-                this.syncContentCarbonMethodology(this.methodForm);
-              }
               this.update();
             }
           })
@@ -667,6 +649,7 @@ export default {
       }
     },
     goMethod(url) {
+      console.log(url);
       openUrlInNewWindow(url);
     },
     //列表项点击事件，跳转到对应url

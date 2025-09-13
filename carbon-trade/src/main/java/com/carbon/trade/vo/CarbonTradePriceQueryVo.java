@@ -37,6 +37,9 @@ public class CarbonTradePriceQueryVo implements Serializable{
     @ApiModelProperty(value = "交易行情ID")
     private Long tradeQuoteId;
 
+    @Dict(dictCode = "016")
+    private String status;
+
     @JsonIgnore
     @ApiModelProperty(value = "交易行情发布租户ID",hidden = true)
     private Long publisherId;

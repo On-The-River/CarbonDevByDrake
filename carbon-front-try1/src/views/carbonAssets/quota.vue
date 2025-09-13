@@ -1,69 +1,54 @@
 <template>
-  <div class="root">
-    <div class="divBox">
-      <div class="content-container">
-        <div class="myasset-div">
-          <img class="icon" src="@/assets/icon/icon_my_assets.png" />
-          <span style="margin-left: 8px" class="list-blue-text text-left">
-            我的配额碳资产
-          </span>
+  <div class="carbon-quota-page">
+    <el-card class="asset-overview-card">
+      <div slot="header" class="title">
+        <i class="icon">🌱</i>
+        我的配额碳资产
+      </div>
+      <div class="asset-content-row">
+        <div class="asset-info">
+          <!-- 左侧：资产信息 -->
+          <span class="item">持仓总量 <strong>{{ setNumber(topData.total) }}(tCO2e)</strong></span>
+          <span class="divider">|</span>
+          <span class="item">可用数量 <strong>{{ setNumber(topData.availableAmount) }}(tCO2e)</strong></span>
+          <span class="divider">|</span>
+          <span class="item">锁定数量 <strong>{{ setNumber(topData.lockedAmount) }}(tCO2e)</strong></span>
+          <span class="divider">|</span>
+          <span class="item">冻结数量 <strong>{{ setNumber(topData.frozenAmount) }}(tCO2e)</strong></span>
         </div>
-        <div class="myassets-container">
-          <span class="assets-hint">持仓总量</span>
-          <div class="assets-line" />
-          <span class="assets-text">{{ setNumber(topData.total) }}(tCO2e)</span>
-          <span class="assets-hint">可用数量</span>
-          <div class="assets-line" />
-          <span class="assets-text"
-            >{{ setNumber(topData.availableAmount) }}(tCO2e)</span
-          >
-          <span class="assets-hint">锁定数量</span>
-          <div class="assets-line" />
-          <span class="assets-text"
-            >{{ setNumber(topData.lockedAmount) }}(tCO2e)</span
-          >
-          <span class="assets-hint">冻结数量</span>
-          <div class="assets-line" />
-          <span class="assets-text"
-            >{{ setNumber(topData.frozenAmount) }}(tCO2e)</span
-          >
-          <div class="empty-holder" />
-          <button
-            style="width: 68px; margin-left: 16px"
-            class="normal-blue-btn"
-            @click="onClickUpload"
-          >
-            上传
-          </button>
-          <button
-            style="width: 68px; margin-left: 16px"
-            class="normal-white-btn vertical-center"
-            @click="onClickBuy"
-          >
-            我想买
-          </button>
+        <!-- 右侧：操作按钮 -->
+        <div class="operation-btns">
+          <el-button type="success" class="btn-upload" plain @click="onClickUpload">上传</el-button>
+          <el-button type="primary" class="btn-buy" @click="onClickBuy">我想买</el-button>
         </div>
       </div>
-      <div class="container">
-        <div style="width: 270px; margin-right: 16px" class="selectbox-root">
-          <a class="selectbox-hint">资产状态</a>
-          <div class="selectbox-deliver" />
-          <el-cascader
-            style="width: 120px"
-            placeholder="全部"
-            class="selectbox-input"
+    </el-card>
+    <el-card class="search-filter-card" style="margin-top: 20px">
+      <el-form :inline="true" class="search-form">
+        <el-form-item label="资产状态">
+<!--          <el-cascader-->
+<!--            style="width: 120px"-->
+<!--            placeholder="全部"-->
+<!--            class="selectbox-input"-->
+<!--            v-model="selectedAssetStatus"-->
+<!--            :options="assetStatusList"-->
+<!--            clearable-->
+<!--            @change="update"-->
+<!--          />-->
+          <el-select
             v-model="selectedAssetStatus"
-            :options="assetStatusList"
-            clearable
+            placeholder="全部"
             @change="update"
-          />
-        </div>
-        <div
-          style="margin-right: 16px; padding-right: 0px"
-          class="selectbox-root"
-        >
-          <a class="selectbox-hint" style="width: 100px">有效日期</a>
-          <div class="selectbox-deliver" />
+          >
+            <el-option
+              v-for="item in assetStatusList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="有效日期">
           <el-date-picker
             v-model="selectDate"
             type="datetime"
@@ -84,13 +69,8 @@
             size="medium"
             value-format="yyyy-MM-dd HH:mm:ss"
           />
-        </div>
-        <div
-          style="flex-grow: 1; margin-left: 16px; margin-right: 16px"
-          class="selectbox-root"
-        >
-          <a class="selectbox-hint" style="min-width: 100px">关键词搜索</a>
-          <div class="selectbox-deliver" />
+        </el-form-item>
+        <el-form-item label="关键词搜索">
           <el-input
             v-model="searchKeyword"
             placeholder="请输入名称"
@@ -98,240 +78,238 @@
             size="medium"
             @clear="onClickSearch"
             @keyup.enter.native="onClickSearch"
-          />
-        </div>
-        <button
-          style="margin: auto"
-          class="light-green-btn"
-          @click="onClickSearch"
-        >
-          查询
-        </button>
-      </div>
-      <el-table
-        :header-cell-style="{
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="success" @click="onClickSearch">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-card class="table-card" style="margin-top: 20px">
+    <el-table
+      :header-cell-style="{
           background: '#F2F5F7',
           border: '0px solid #DDDDDD',
           color: '#424B35',
           height: '64px',
         }"
-        show-header
-        :data="list"
-        stripe
-        @cell-click="handle"
-        :row-style="{ height: '64px' }"
-        :cell-style="cellStyle"
-        style="width: 100%"
+      show-header
+      :data="list"
+      stripe
+      @cell-click="handle"
+      :row-style="{ height: '64px' }"
+      :cell-style="cellStyle"
+      style="width: 100%"
+    >
+      <!-- <el-table-column label="" align="center" min-width="30">
+        <template slot="header" slot-scope="{ column }">
+          <el-checkbox
+            v-model="column.checked"
+            :indeterminate="indeterminateFlag"
+            :checked="allchecked"
+            label=""
+            @change="updateAllSelected"
+          />
+        </template>
+        <template slot-scope="scope">
+          <el-checkbox
+            @change="signCheckChange"
+            v-model="scope.row.checked"
+          />
+        </template>
+      </el-table-column> -->
+      <el-table-column min-width="10" />
+      <el-table-column label="序号" align="left" min-width="40">
+        <template slot-scope="scope">
+          <span>{{ getCurListNo(scope.$index) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :show-overflow-tooltip="true"
+        prop="agencyName"
+        align="left"
+        label="一级市场持有机构"
+        min-width="120"
+      />
+      <el-table-column
+        align="left"
+        prop="total"
+        label="持仓量(tCO2e)"
+        min-width="90"
       >
-        <!-- <el-table-column label="" align="center" min-width="30">
-          <template slot="header" slot-scope="{ column }">
-            <el-checkbox
-              v-model="column.checked"
-              :indeterminate="indeterminateFlag"
-              :checked="allchecked"
-              label=""
-              @change="updateAllSelected"
-            />
-          </template>
-          <template slot-scope="scope">
-            <el-checkbox
-              @change="signCheckChange"
-              v-model="scope.row.checked"
-            />
-          </template>
-        </el-table-column> -->
-        <el-table-column min-width="10" />
-        <el-table-column label="序号" align="left" min-width="40">
-          <template slot-scope="scope">
-            <span>{{ getCurListNo(scope.$index) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :show-overflow-tooltip="true"
-          prop="agencyName"
-          align="left"
-          label="一级市场持有机构"
-          min-width="120"
-        />
-        <el-table-column
-          align="left"
-          prop="total"
-          label="持仓量(tCO2e)"
-          min-width="90"
-        >
-          <template slot-scope="scope">
-            <span>{{ setNumber(scope.row.total) }}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column
-          align="left"
-          prop="availableAmount"
-          label="可用量(tCO2e)"
-          min-width="90"
-        /> -->
-        <el-table-column
-          align="left"
-          prop="valuation"
-          label="资产估值(¥)"
-          min-width="90"
-        >
-          <template slot-scope="scope">
-            <span>{{ setNumber(scope.row.valuation) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="left"
-          prop="assetsStatusName"
-          label="资产状态"
-          min-width="60"
-        />
-        <!-- <el-table-column
-          align="left"
-          prop="transactionStatusName"
-          label="交易状态"
-          min-width="60"
-        /> -->
-        <el-table-column
-          align="left"
-          prop="expiryDate"
-          label="有效日期"
-          min-width="60"
-        />
-        <el-table-column label="操作" min-width="150" align="center">
-          <template slot-scope="scope">
-            <a class="list-blue-text" @click="toDetail(scope.row.id)">查看</a>
-            <a
-              style="margin-left: 10px"
-              class="list-blue-text"
-              @click="outsizeTransaction(scope.row)"
-            >
-              场外报价
-            </a>
-            <a
-              style="margin-left: 10px"
-              class="list-green-text"
-              @click="insideTransaction"
-            >
-              场内交易
-            </a>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div style="margin-top: 30px; margin-bottom: 10px" class="pageBox">
-        <div style="flex-grow: 1" />
-        <el-pagination
-          style="margin: auto"
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="current"
-          :page-size="pageSize"
-          :page-count="pageCount"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        />
-      </div>
-      <!-- 场外交易按钮弹出页面 -->
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" width="720px">
-        <el-form label-position="left" label-width="130px" :model="form">
-          <el-form-item label="出售数量(tCO2e)" prop="tradeQuantity">
-            <span class="require">*</span>
-            <el-input
-              v-model="form.tradeQuantity"
-              size="medium"
-              style="width: 268px; top: -5px"
-            />
-          </el-form-item>
-          <el-form-item label="出售单价(¥)" prop="negotiatedPrice">
-            <el-input
-              v-model="form.assetUnitPrice"
-              size="medium"
-              style="width: 268px; top: -5px"
-            />
-          </el-form-item>
-          <el-form-item label="出售截止时间" prop="expirationDate">
-            <el-date-picker
-              type="date"
-              placeholder="选择日期"
-              size="medium"
-              v-model="form.expirationDate"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              style="width: 268px; top: -5px"
-            />
-          </el-form-item>
-          <el-form-item label="期望交割时间" prop="deliveryTime">
-            <el-date-picker
-              type="date"
-              placeholder="选择日期"
-              size="medium"
-              v-model="form.deliveryTime"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              style="width: 268px; top: -5px"
-            />
-          </el-form-item>
-          <el-form-item label="期望交割方式" prop="deliveryMethod">
-            <el-select
-              v-model="form.deliveryMethod"
-              placeholder="请选择"
-              size="medium"
-              style="width: 536px; top: -5px"
-            >
-              <el-option
-                v-for="(item, index) in tradeMethods"
-                :key="index"
-                :label="item.name"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="期望交割场所" prop="deliveryExchange">
-            <el-select
-              v-model="form.deliveryExchange"
-              placeholder="请选择"
-              size="medium"
-              style="width: 536px; top: -5px"
-            >
-              <el-option
-                v-for="(item, index) in exchangeList"
-                :key="index"
-                :label="item.name"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            @click="submit('form')"
-            class="light-green-btn"
+        <template slot-scope="scope">
+          <span>{{ setNumber(scope.row.total) }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
+        align="left"
+        prop="availableAmount"
+        label="可用量(tCO2e)"
+        min-width="90"
+      /> -->
+      <el-table-column
+        align="left"
+        prop="valuation"
+        label="资产估值(¥)"
+        min-width="90"
+      >
+        <template slot-scope="scope">
+          <span>{{ setNumber(scope.row.valuation) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="left"
+        prop="assetsStatusName"
+        label="资产状态"
+        min-width="60"
+      />
+      <!-- <el-table-column
+        align="left"
+        prop="transactionStatusName"
+        label="交易状态"
+        min-width="60"
+      /> -->
+      <el-table-column
+        align="left"
+        prop="expiryDate"
+        label="有效日期"
+        min-width="60"
+      />
+      <el-table-column label="操作" min-width="150" align="center">
+        <template slot-scope="scope">
+          <a class="list-blue-text" @click="toDetail(scope.row.id)">查看</a>
+          <a
+            style="margin-left: 10px"
+            :class="getOtcButtonClass(scope.row)"
+            @click="outsizeTransaction(scope.row)"
           >
-            确定
-          </el-button>
-        </div>
-      </el-dialog>
-      <el-dialog title="上架成功" :visible.sync="showQuotation" width="30%">
+            场外上架
+          </a>
+          <a
+            style="margin-left: 10px"
+            :class="getOtcButtonClass(scope.row)"
+            @click="insideTransaction"
+          >
+            场内交易
+          </a>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="margin-top: 30px; margin-bottom: 10px" class="pageBox">
+      <div style="flex-grow: 1" />
+      <el-pagination
+        style="margin: auto"
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="current"
+        :page-size="pageSize"
+        :page-count="pageCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      />
+    </div>
+    </el-card>>
+    <!-- 场外交易按钮弹出页面 -->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" width="720px">
+      <el-form label-position="left" label-width="130px" :model="form">
+        <el-form-item label="出售数量(tCO2e)" prop="tradeQuantity">
+          <span class="require">*</span>
+          <el-input
+            v-model="form.tradeQuantity"
+            size="medium"
+            style="width: 268px; top: -5px"
+          />
+        </el-form-item>
+        <el-form-item label="出售单价(¥)" prop="negotiatedPrice">
+          <el-input
+            v-model="form.assetUnitPrice"
+            size="medium"
+            style="width: 268px; top: -5px"
+          />
+        </el-form-item>
+        <el-form-item label="出售截止时间" prop="expirationDate">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            size="medium"
+            v-model="form.expirationDate"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            style="width: 268px; top: -5px"
+          />
+        </el-form-item>
+        <el-form-item label="期望交割时间" prop="deliveryTime">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            size="medium"
+            v-model="form.deliveryTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            style="width: 268px; top: -5px"
+          />
+        </el-form-item>
+        <el-form-item label="期望交割方式" prop="deliveryMethod">
+          <el-select
+            v-model="form.deliveryMethod"
+            placeholder="协议转入、竞价交易、定价交易"
+            size="medium"
+            style="width: 536px; top: -5px"
+          >
+            <el-option
+              v-for="(item, index) in tradeMethods"
+              :key="index"
+              :label="item.name"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="期望交割场所" prop="deliveryExchange">
+          <el-select
+            v-model="form.deliveryExchange"
+            placeholder="全国碳排放权交易中心、北京环境交易所、上海环境能源交易所"
+            size="medium"
+            style="width: 536px; top: -5px"
+          >
+            <el-option
+              v-for="(item, index) in exchangeList"
+              :key="index"
+              :label="item.name"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button
+          type="primary"
+          @click="submit('form')"
+          class="light-green-btn"
+        >
+          确定
+        </el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="上架成功" :visible.sync="showQuotation" width="30%">
         <span>
           您的采购单已提交，可在供需行情中查看。确定为您跳转供需行情沟通
         </span>
-        <span slot="footer" class="dialog-footer">
+      <span slot="footer" class="dialog-footer">
           <el-button @click="showQuotation = false">取消</el-button>
           <el-button @click="toQuotation" type="primary">确定</el-button>
         </span>
-      </el-dialog>
-      <BuyAssets
-        :dialogFormVisible="buyAssetsDlg"
-        @changeBuyAssetsDialogFormVisible="changeDialogFormVisible"
-      />
-      <carbon-upload-vue
-        :dialogFormVisible="carbonUploadDlg"
-        :selData="list"
-        :isCredit="false"
-        title="碳配额项目上传"
-        @changeVisible="changeCarbonVisible"
-        @submit="submited"
-      />
-    </div>
+    </el-dialog>
+    <BuyAssets
+      :dialogFormVisible="buyAssetsDlg"
+      @changeBuyAssetsDialogFormVisible="changeDialogFormVisible"
+    />
+    <carbon-upload-vue
+      :dialogFormVisible="carbonUploadDlg"
+      :selData="list"
+      :isCredit="false"
+      title="碳配额项目上传"
+      @changeVisible="changeCarbonVisible"
+      @submit="submited"
+    />
   </div>
 </template>
 
@@ -355,12 +333,12 @@ export default {
   data() {
     return {
       pickerOptions: {
-        disabledDate(time) {
-          return (
-            time.getTime() <
-            new Date().setTime(new Date().getTime() - 3600 * 1000 * 24)
-          );
-        },
+        // disabledDate(time) {
+        //   return (
+        //     time.getTime() <
+        //     new Date().setTime(new Date().getTime() - 3600 * 1000 * 24)
+        //   );
+        // },
       },
       indeterminateFlag: false, // 表头复选框状态
       reRender: true, // 重新渲染列表使用
@@ -470,6 +448,20 @@ export default {
     // console.log(this.switchTradeStatus("160000001"));
   },
   methods: {
+
+    getOtcButtonClass(row)
+    {
+      if(row && row.assetsStatus==="0130000001")
+      {
+        return "list-green-text"
+      }
+      else{
+        return "afterSubmitEdit"
+      }
+    },
+
+
+
     setNumber(str) {
       return setLargeNumber(str);
     },
@@ -639,19 +631,19 @@ export default {
         .loadCarbonQuotaPageList(data)
         .then((res) => {
           // 遍历数据，根据资产状态码映射状态名称
-          res.data.records.forEach(function (e) {
-            if (e.assetsStatus === "0130000004") {
-              e.assetsStatusName = "待审核";
-            } else if (e.assetsStatus === "0130000001") {
-              e.assetsStatusName = "已签发";
-            } else if (e.assetsStatus === "0130000002") {
-              e.assetsStatusName = "已锁定";
-            } else if (e.assetsStatus === "0130000003") {
-              e.assetsStatusName = "已冻结";
-            } else if (e.assetsStatus === "0130000005") {
-              e.assetsStatusName = "驳回";
-            }
-          });
+          // res.data.records.forEach(function (e) {
+          //   if (e.assetsStatus === "0130000004") {
+          //     e.assetsStatusName = "待审批";
+          //   } else if (e.assetsStatus === "0130000001") {
+          //     e.assetsStatusName = "已签发";
+          //   } else if (e.assetsStatus === "0130000002") {
+          //     e.assetsStatusName = "已锁定";
+          //   } else if (e.assetsStatus === "0130000003") {
+          //     e.assetsStatusName = "已冻结";
+          //   } else if (e.assetsStatus === "0130000005") {
+          //     e.assetsStatusName = "已驳回";
+          //   }
+          // });
 
           // 赋值分页数据到组件变量
           console.log("QuotaRecords",res.data.records);
@@ -683,7 +675,7 @@ export default {
     update() {
       // 构造查询参数：资产状态、日期范围、关键词
       const data = {
-        assetsStatus: this.selectedAssetStatus[0],
+        assetsStatus: this.selectedAssetStatus,
         expiryDateStart: this.selectDate,
         expiryDateEnd: this.selectEndDate,
         agencyName: this.searchKeyword,
@@ -889,14 +881,13 @@ export default {
   background: #ffffff;
   box-shadow: 0px 2px 8px 0px #eaf0f3;
   border-radius: 8px;
-
 }
-
-.container {
-  margin: 10px 0px 20px 0px;
-  display: flex;
-  flex-direction: row;
-}
+//
+//.container {
+//  margin: 10px 0px 20px 0px;
+//  display: flex;
+//  flex-direction: row;
+//}
 
 .content-container {
   display: flex;
@@ -905,32 +896,32 @@ export default {
 }
 
 // 覆盖 el-cascader 输入框样式
-:deep(.el-cascader .el-input .el-input__inner),
-:deep(.el-cascader .el-input.is-focus .el-input__inner) {
+::v-deep(.el-cascader .el-input .el-input__inner),
+::v-deep(.el-cascader .el-input.is-focus .el-input__inner) {
   border-color: transparent;
 }
 
 // 覆盖带时间选择的 el-date-picker 样式
-:deep(.el-date-picker.has-sidebar.has-time) {
+::v-deep(.el-date-picker.has-sidebar.has-time) {
   background: #0a5857d6;
   color: #fff;
   border: 1px solid #22f4d6;
 }
 
 // 覆盖 el-date-picker 表头标签样式
-:deep(.el-date-picker__header-label) {
+::v-deep(.el-date-picker__header-label) {
   color: #ffffff;
 }
 
 .acea-row {
-  :deep(.el-avatar--small) {
+  ::v-deep(.el-avatar--small) {
     width: 22px;
     height: 22px;
   }
 }
 
 .checkline {
-  :deep(.el-radio__input) {
+  ::v-deep(.el-radio__input) {
     display: none;
   }
 }
@@ -940,7 +931,7 @@ export default {
 }
 
 .dashboard-console-visit {
-  :deep(.el-card__header) {
+  ::v-deep(.el-card__header) {
     padding: 14px 20px !important;
   }
 }
@@ -986,7 +977,7 @@ ul {
   padding-left: 10px;
   padding-right: 10px;
   height: 54px;
-  background: #e3f2ec;
+  background: #e6f7e6;
   border-radius: 6px;
   // opacity: 0.1;
 }
@@ -995,7 +986,7 @@ ul {
   margin-top: auto;
   margin-bottom: auto;
   font-weight: 400;
-  color: #424cbc;
+  color: #424c5c;
 }
 
 .require {
@@ -1024,4 +1015,72 @@ ul {
   margin-top: auto;
   margin-bottom: auto;
 }
+
+//自加
+.asset-overview-card {
+  //background-color: #e6f7e6; /* 浅绿色背景 */
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.asset-overview-card .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #1a4441;
+  margin: 0;
+  background-color: #FFFFFF;
+  justify-content: flex-start; /* 强制左对齐 */
+}
+.asset-content-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #e6f7e6;
+}
+.asset-info {
+  font-size: 14px;
+  color: #1a4441;
+  line-height: 1.4;
+  display: flex;
+  gap: 12px;
+}
+
+.asset-info .item {
+  display: inline-block;
+}
+
+.asset-info .divider {
+  color: #999;
+  margin: 0 4px;
+}
+
+.operation-btns {
+  display: flex;
+  gap: 8px;
+}
+.btn-upload {
+  border: 1px solid #007bff;
+  background-color: white;
+  color: #007bff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-buy {
+  background-color: #1a4441;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 </style>

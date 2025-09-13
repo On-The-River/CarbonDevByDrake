@@ -94,22 +94,24 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         assetsIncome.setTotalIncome(carbonCreditTotal.add(carbonQuotaTotal));
         {
             double assetsTotalLastMonth=carbonCreditLastMonth.add(carbonQuotaLastMonth).doubleValue();
-            BigDecimal monthOnMonthRatio=BigDecimal.ZERO;
+            double monthOnMonthRatio= 0.0;
             if(currentTotal!=0)
             {
-                monthOnMonthRatio=BigDecimal.valueOf((assetsTotalLastMonth-currentTotal)/currentTotal);
+                monthOnMonthRatio=(assetsTotalLastMonth-currentTotal)/currentTotal;
+                monthOnMonthRatio *= 100;
             }
 
-            assetsIncome.setMonthOnMonthRatio(monthOnMonthRatio);
+            assetsIncome.setMonthOnMonthRatio(BigDecimal.valueOf(monthOnMonthRatio).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
         {
-            BigDecimal assetsLastYearTotal=carbonCreditLastYear.add(carbonQuotaLastYear);
-            BigDecimal yearOnYearRatio=BigDecimal.ZERO;
-            if(assetsLastYearTotal.doubleValue()!=0)
+            double assetsLastYearTotal=carbonCreditLastYear.add(carbonQuotaLastYear).doubleValue();
+            double yearOnYearRatio=0.0;
+            if(assetsLastYearTotal!=0)
             {
-                yearOnYearRatio=BigDecimal.valueOf(currentTotal).subtract(assetsLastYearTotal).divide(assetsLastYearTotal,2,BigDecimal.ROUND_HALF_UP);
+                yearOnYearRatio= (currentTotal-assetsLastYearTotal)/assetsLastYearTotal;
+                yearOnYearRatio *= 100;
             }
-            assetsIncome.setYearOnYearRatio(yearOnYearRatio);
+            assetsIncome.setYearOnYearRatio(BigDecimal.valueOf(yearOnYearRatio).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
         vo.setAssetsIncome(assetsIncome);
 
@@ -128,15 +130,17 @@ public class DataPanelServiceImpl extends BaseServiceImpl<DataPanelMapper, DataP
         if(performanceCurrent!=0)
         {
             monthOnMonth=(performanceCurrent-performanceLastMonth)/performanceLastMonth;
+            monthOnMonth*=100;
         }
-        fundIncome.setMonthOnMonthRatio(BigDecimal.valueOf(monthOnMonth));
+        fundIncome.setMonthOnMonthRatio(BigDecimal.valueOf(monthOnMonth).setScale(2,BigDecimal.ROUND_HALF_UP));
 
         double yearOnYear=0.0;
         if(performanceLastYear!=0)
         {
             yearOnYear=(performanceCurrent-performanceLastYear)/performanceLastYear;
+            yearOnYear*=100;
         }
-        fundIncome.setYearOnYearRatio(BigDecimal.valueOf(yearOnYear));
+        fundIncome.setYearOnYearRatio(BigDecimal.valueOf(yearOnYear).setScale(2,BigDecimal.ROUND_HALF_UP));
 
 
         vo.setFundIncome(fundIncome);

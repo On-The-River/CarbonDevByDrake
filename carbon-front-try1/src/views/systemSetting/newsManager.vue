@@ -6,7 +6,13 @@
           <div style="margin-left: 0px" class="selectbox-root">
             <span class="selectbox-hint" style="">文章类型</span>
             <div class="selectbox-deliver" />
-            <el-cascader placeholder="全部" class="selectbox-input" :options="Articleoptions" v-model="catagoryValue" clearable @change="onClickSearch">
+            <el-cascader
+              placeholder="全部"
+              class="selectbox-input"
+              :options="Articleoptions"
+              v-model="catagoryValue"
+              clearable
+              @change="onClickSearch">
             </el-cascader>
           </div>
           <div style="margin-left: 20px" class="selectbox-root">
@@ -27,14 +33,6 @@
         <div>
           <button style="margin-top: 0px; margin-bottom: 20px; width: 103px" class="normal-white-btn" @click="onAdd">
             +添加文章
-          </button>
-          <button style="
-              margin-top: 0px;
-              margin-bottom: 20px;
-              width: 103px;
-              margin-left: 15px;
-            " class="normal-white-btn" @click="sameForArtical">
-            同步文章
           </button>
           <el-table :header-cell-style="{
             background: '#F2F5F7',
@@ -94,7 +92,7 @@
 
       <el-button
         @click="onCreateArticle"
-        style="{width: auto}"
+        :style="{width: 'auto'}"
       >
         创建至飞书
       </el-button>
@@ -131,7 +129,7 @@ export default {
         "https://carbonmesger.feishu.cn/drive/folder/f1dcn66yo6D40oXwzGEMHL6Q0Sg?from=space_personal_filelist",
       Articleoptions: [
         {
-          value: "0180000000",
+          value: "",
           label: "全部",
         },
         {
@@ -153,7 +151,7 @@ export default {
       ],
       articleStatus: [
         {
-          value: "0260000000",
+          value: "",
           label: "全部",
         },
         {
@@ -173,7 +171,7 @@ export default {
       statusValue: 0, //当前要查询的文章状态
     };
   },
-  mounted() {},
+
   methods: {
     cellStyle: ({ row, column, rowIndex, columnIndex }) => {
       if (column.label == "编号" || column.label == "操作") {
@@ -248,6 +246,7 @@ export default {
           if (this.addUrl) {
             openUrlInNewWindow(this.addUrl);
           }
+          this.onCreateDialogClose();
         })
         .catch((reason) => {
           this.$message.error("连接超时，请重新连接");

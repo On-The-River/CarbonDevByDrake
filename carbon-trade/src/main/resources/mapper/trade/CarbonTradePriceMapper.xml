@@ -41,6 +41,7 @@
             ctq.expiration_date,
             ctq.project_scope_code,
             ctq.project_scope,
+            ctq.status,
             ctq.creator_id publisherUserId,
             st_buyer.tenant_name buyerName,
             st_seller.tenant_name sellerName

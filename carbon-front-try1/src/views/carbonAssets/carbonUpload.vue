@@ -5,6 +5,7 @@
       :visible.sync="show"
       :before-close="clickClose"
       width="720px"
+
     >
       <!-- 碳信用界面 -->
       <el-form v-if="isCredit" :model="form" :inline="true">
@@ -363,7 +364,6 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="clickClose">取 消</el-button>
-        <el-button type="primary" @click="clickSave">保存</el-button>
         <el-button type="primary" @click="submit" style="margin-right: 25px"
         >提交</el-button
         >
@@ -437,7 +437,6 @@
 <script>
 import {
   getCarbonMetaregistryPageList,
-  loadMethodList,
   addCarbonCredit,
   addCarbonQuota,
   changeCredit,
@@ -499,8 +498,8 @@ export default {
         buyDate: null,
         carbonExchangeId: null,
         availableAmount: null,
-        lockedAmount: null,
-        frozenAmount: null,
+        lockedAmount: 0,
+        frozenAmount: 0,
         valuation: null,
         assetsStatus: "0130000004",
         expiryDate: null,
@@ -551,6 +550,11 @@ export default {
     },
     clickClose() {
       this.$emit("changeVisible", false);
+      this.quotaForm={};
+      this.form={};
+      this.issueFileList=[];
+      this.buyFileList=[];
+      this.tranFileList=[];
       this.show = false;
     },
     // setSelData(data) {
@@ -670,7 +674,7 @@ export default {
       // }
       if (this.isCredit) {
         localStorage.setItem("carbonUpload", JSON.stringify(this.form));
-        console.log("修改之后本地的数据为：",JSON.parse(localStorage.getItem("carbonUpload")));
+        // console.log("修改之后本地的数据为：",JSON.parse(localStorage.getItem("carbonUpload")));
         this.$message.success("保存成功");
       } else {
         localStorage.setItem(

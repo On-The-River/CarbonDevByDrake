@@ -55,6 +55,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -324,6 +325,10 @@ public class SysAccountServiceImpl extends BaseServiceImpl<SysAccountMapper, Sys
     @Override
     public void sendEmail(SendEmailParam param) {
         //验证密码是否正确
+        Map<String, Object> account = getMap(new QueryWrapper<SysAccount>().eq("email", param.getEmail()));
+        if (account != null && !account.isEmpty()){
+            throw new CommonBizException("邮箱已被注册");
+        }
         SysAccount sysAccount = baseMapper.selectById(param.getId());
         if(!(param.getPassword()).equals(sysAccount.getPassword())){
             throw new CommonBizException("请输入正确的登录密码！");

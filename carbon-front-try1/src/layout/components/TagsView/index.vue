@@ -45,6 +45,7 @@ export default {
   },
   computed: {
     visitedViews() {
+      console.log("1111111111:",this.$store.state.tagsView.visitedViews)
       return this.$store.state.tagsView.visitedViews
     },
     routes() {

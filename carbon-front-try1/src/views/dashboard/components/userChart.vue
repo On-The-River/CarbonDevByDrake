@@ -32,180 +32,180 @@
 </template>
 
 <script>
-  import {chartUserApi, chartBuyApi} from '@/api/dashboard';
-  import echartsFrom from '@/components/echarts/index';
-  import gridMenu from './applyProject.vue'
-  import operationData from './operationData.vue'
-  import greenDegree from './greenDegree.vue'
+import {chartUserApi, chartBuyApi} from '@/api/dashboard';
+import echartsFrom from '@/components/echarts/index';
+import gridMenu from './applyProject.vue'
+import operationData from './operationData.vue'
+import greenDegree from './greenDegree.vue'
 
-  export default {
-    name: 'user-chart',
-    components: {echartsFrom, gridMenu, operationData, greenDegree},
-    data() {
-      return {
-        line: 'line',
-        circle: 'circle',
-        xAxis: [],
-        infoList: {},
-        series: [],
-        xData: [],
-        y1Data: [],
-        y2Data: [],
-        lists: [],
-        bing_data: [],
-        bing_xdata: [],
+export default {
+  name: 'user-chart',
+  components: {echartsFrom, gridMenu, operationData, greenDegree},
+  data() {
+    return {
+      line: 'line',
+      circle: 'circle',
+      xAxis: [],
+      infoList: {},
+      series: [],
+      xData: [],
+      y1Data: [],
+      y2Data: [],
+      lists: [],
+      bing_data: [],
+      bing_xdata: [],
 
-        legendData: [],
-        seriesUser: [],
-        chartBuy: {}
-      }
-    },
-    methods: {
-      // 统计
-      getStatistics() {
-        chartUserApi().then(async res => {
-          this.infoList = res
-          let data = []
-          for (let key  in res) {
-            data.push(res[key])
-            this.xAxis.push(key)
-          }
-          this.series = [
-            {
-              data: data,
-              name: '人数（人）',
-              type: 'line',
-              tooltip: true,
-              smooth: true,
-              symbol: 'none',
-              areaStyle: {
-                normal: {
-                  opacity: 0.2
-                }
+      legendData: [],
+      seriesUser: [],
+      chartBuy: {}
+    }
+  },
+  methods: {
+    // 统计
+    getStatistics() {
+      chartUserApi().then(async res => {
+        this.infoList = res
+        let data = []
+        for (let key  in res) {
+          data.push(res[key])
+          this.xAxis.push(key)
+        }
+        this.series = [
+          {
+            data: data,
+            name: '人数（人）',
+            type: 'line',
+            tooltip: true,
+            smooth: true,
+            symbol: 'none',
+            areaStyle: {
+              normal: {
+                opacity: 0.2
               }
             }
-          ];
-          // this.bing_data = res.bing_data;
-          // this.bing_xdata = res.bing_xdata;
-        })
-      },
-      // 用户购买统计
-      getRank() {
-        chartBuyApi().then(async res => {
-          this.chartBuy = res
-          this.legendData = ["未消费用户", "消费一次用户", "留存客户", "回流客户"]
-          this.seriesUser = [{
-            "name": "未消费用户",
-            "value": res.zero,
+          }
+        ];
+        // this.bing_data = res.bing_data;
+        // this.bing_xdata = res.bing_xdata;
+      })
+    },
+    // 用户购买统计
+    getRank() {
+      chartBuyApi().then(async res => {
+        this.chartBuy = res
+        this.legendData = ["未消费用户", "消费一次用户", "留存客户", "回流客户"]
+        this.seriesUser = [{
+          "name": "未消费用户",
+          "value": res.zero,
+          "itemStyle": {
+            "color": "#5cadff"
+          }
+        },
+          {
+            "name": "消费一次用户",
+            "value": res.one,
             "itemStyle": {
-              "color": "#5cadff"
+              "color": "#b37feb"
             }
           },
-            {
-              "name": "消费一次用户",
-              "value": res.one,
-              "itemStyle": {
-                "color": "#b37feb"
-              }
-            },
-            {
-              "name": "留存客户",
-              "value": res.history,
-              "itemStyle": {
-                "color": "#19be6b"
-              }
-            },
-            {
-              "name": "回流客户",
-              "value": res.back,
-              "itemStyle": {
-                "color": "#ff9900"
-              }
-            }]
-        })
-      },
-      // 监听页面宽度变化，刷新表格
-      handleResize() {
-        if (this.infoList && this.series.length !== 0) this.$refs.userChart.handleResize();
-        // if (this.infoList) this.$refs.visitChart.handleResize();
-      }
+          {
+            "name": "留存客户",
+            "value": res.history,
+            "itemStyle": {
+              "color": "#19be6b"
+            }
+          },
+          {
+            "name": "回流客户",
+            "value": res.back,
+            "itemStyle": {
+              "color": "#ff9900"
+            }
+          }]
+      })
     },
-    mounted() {
-      this.getStatistics();
-      this.getRank();
-    },
-    beforeDestroy() {
-      // if (this.visitChart) {
-      //   this.visitChart.dispose();
-      //   this.visitChart = null;
-      // }
+    // 监听页面宽度变化，刷新表格
+    handleResize() {
+      if (this.infoList && this.series.length !== 0) this.$refs.userChart.handleResize();
+      // if (this.infoList) this.$refs.visitChart.handleResize();
     }
+  },
+  mounted() {
+    this.getStatistics();
+    this.getRank();
+  },
+  beforeDestroy() {
+    // if (this.visitChart) {
+    //   this.visitChart.dispose();
+    //   this.visitChart = null;
+    // }
   }
+}
 </script>
 
 <style scoped lang="scss">
-  .acea-row{
-    ::v-deep.el-avatar--small {
-      width: 22px;
-      height: 22px;
-      line-height: 22px;
+.acea-row{
+  ::v-deep.el-avatar--small {
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+  }
+}
+.ivu-pl-8{
+  margin-left: 8px;
+  font-size: 14px;
+}
+.dashboard-console-visit {
+  ::v-deep.el-card__header{
+    padding: 14px 20px !important;
+  }
+  ul {
+    li {
+      list-style-type: none;
+      margin-top: 12px;
     }
   }
-  .ivu-pl-8{
-    margin-left: 8px;
-    font-size: 14px;
+}
+.dashboard-green {
+  display: flexbox;
+  flex-grow: 1;
+  flex-shrink: 1;
+  ::v-deep.el-card__header{
+    padding: 14px 20px !important;
   }
-  .dashboard-console-visit {
-    ::v-deep.el-card__header{
-      padding: 14px 20px !important;
-    }
-    ul {
-      li {
-        list-style-type: none;
-        margin-top: 12px;
-      }
-    }
-  }
-  .dashboard-green {
-    display: flexbox;
-    flex-grow: 1;
-    flex-shrink: 1;
-    ::v-deep.el-card__header{
-      padding: 14px 20px !important;
-    }
-    ul {
-      li {
-        list-style-type: none;
-        margin-top: 12px;
-      }
+  ul {
+    li {
+      list-style-type: none;
+      margin-top: 12px;
     }
   }
+}
 
-  .trees-coadd {
+.trees-coadd {
+  width: 100%;
+  height: 100%;
+  .scollhide {
     width: 100%;
     height: 100%;
-    .scollhide {
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
-      overflow-y: scroll;
-    }
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
+}
 
-  .scollhide::-webkit-scrollbar {
-    display: none;
-  }
+.scollhide::-webkit-scrollbar {
+  display: none;
+}
 
-  .names {
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 84%;
-    margin-bottom: -7px;
-  }
- .cardContainer {
-   display: flexbox;
-   height: 400px;
- }
+.names {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 84%;
+  margin-bottom: -7px;
+}
+.cardContainer {
+  display: flexbox;
+  height: 400px;
+}
 </style>

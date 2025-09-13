@@ -22,7 +22,7 @@
         cm.project_site, cm.estimated_annual_reduction, cm.ref_reduction, cm.issued_reduction, cm.retired_reduction,
         cm.remaining_reduction, cm.project_url, cm.project_auditor, cm.pub_time,cm.issuing_date,
         cm.project_verifier, cm.create_time, cm.update_time,
-        cm.project_industry,cm.project_industry_code,cm.certified_date
+        cm.project_industry,cm.project_industry_code,cm.certified_date,cm.record_filing_date
     </sql>
 
 

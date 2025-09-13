@@ -8,8 +8,8 @@
         <sell-quote-vue @changeTab="gotoBuy" />
       </el-tab-pane>
     </el-tabs>
-    <button class="normal-white-blue-text-btn" style="position: absolute;right:20px;top:30px;"
-      @click="clickBuy">我想买</button>
+    <button class="light-green-btn" style="position: absolute;right:20px;top:28px;"
+            @click="clickBuy">我想买</button>
     <buy-assets-vue :dialogFormVisible="buyAssetsDlg" @changeBuyAssetsDialogFormVisible="changeDialogFormVisible" />
   </div>
 </template>
@@ -72,16 +72,10 @@ export default {
   }
 }
 </script>
-
-
-<!-- <style lang="scss" scoped> -->
-<!-- .label1 {
-  margin-bottom: 10px;
-  color: rgb(0, 0, 0);
-}
+<style lang="scss" scoped>
 
 .more-btn {
-  display: a;
+  //display: ;
   text-align: right;
 }
 
@@ -114,6 +108,15 @@ export default {
     font-weight: 400;
     color: #5E6C84;
   }
-} -->
+}
+.btn-buy {
+  background-color: #1a4441;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 
-<!-- </style> -->
+}
+</style>

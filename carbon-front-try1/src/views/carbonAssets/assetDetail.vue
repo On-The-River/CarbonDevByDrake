@@ -190,20 +190,6 @@
           <br />
           <div class="basic-div" style="height: 89px; background-color: white">
             <button
-              style="width: 96px; float: right"
-              class="light-green-btn"
-              @click="insideTransaction"
-            >
-              场内交易
-            </button>
-            <button
-              style="width: 96px; float: right; margin-right: 20px"
-              class="light-green-btn"
-              @click="outsideTransaction"
-            >
-              场外上架
-            </button>
-            <button
               style="width: 96px; float: right; margin-right: 20px"
               class="normal-white-btn"
               @click="goBack"

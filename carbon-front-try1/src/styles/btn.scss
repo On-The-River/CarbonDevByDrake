@@ -61,6 +61,101 @@
   //   background: -webkit-gradient(linear,left top,right top,from(transition),to(transition))!important;
   // }
 }
+//添加全局样式的按钮
+// 全局默认按钮样式 - 应用于所有 el-button 元素
+.el-button {
+  background: $lightGreen !important;
+  color: white !important;
+  border: 1px solid $lightGreen !important;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background: darken($lightGreen, 10%) !important;
+    border-color: darken($lightGreen, 10%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  // 禁用状态
+  &.is-disabled,
+  &[disabled] {
+    background: #cccccc !important;
+    border-color: #cccccc !important;
+    color: #ffffff !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+// 全局按钮尺寸变体
+.el-button--mini {
+  padding: 10px 15px !important;
+  font-size: 12px !important;
+}
+
+.el-button--small {
+  padding: 12px 18px !important;
+  font-size: 13px !important;
+}
+
+.el-button--large {
+  padding: 14px 22px !important;
+  font-size: 16px !important;
+}
+
+// 全局按钮类型变体
+.el-button--primary {
+  background: $myGreen !important;
+  border-color: $lightGreen !important;
+}
+
+.el-button--success {
+  background: $myGreen !important;
+  border-color: $green !important;
+}
+
+.el-button--warning {
+  background: $yellow !important;
+  border-color: $yellow !important;
+  color: #000 !important;
+}
+
+.el-button--danger {
+  background: $red !important;
+  border-color: $red !important;
+}
+
+.el-button--info {
+  background: $blue !important;
+  border-color: $blue !important;
+}
+
+// 朴素按钮样式
+.el-button.is-plain {
+  background: transparent !important;
+  color: $myGreen !important;
+  border-color: $lightGreen !important;
+
+  &:hover {
+    background: rgba($lightGreen, 0.1) !important;
+  }
+}
 
 .blue-btn {
   @include newColorBtn($new-blue, white, white, $new-blue, $new-blue, $light-blue)
@@ -87,6 +182,7 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+//修改整体按钮样式 $lightGreen
 .light-green-btn {
   @include newColorBtn($lightGreen, white, white, #26B581, $lightGreen, $panGreen)
 }
@@ -119,8 +215,9 @@
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   border: 1px solid #26B581;
-  color: #26B581;
-  background:white!important;
+  /*字体的颜色*/
+  color: #f6faf9;
+  background:#1a4441 !important;
   &:active {
     color: #26B581;
     background-color: #E5F9F0;

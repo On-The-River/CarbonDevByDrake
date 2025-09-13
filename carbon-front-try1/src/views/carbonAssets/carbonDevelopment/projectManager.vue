@@ -167,7 +167,7 @@
   </div>
 </template>
 <script>
-import { loadMethodList } from "@/api/carbonAssetApi";
+import { loadMethodListAsUser } from "@/api/carbonAssetApi";
 import { editMethod } from "@/api/carbonAssetApi";
 import selectDropDownBox from "@/components/selectbox/selectDropDownBox.vue";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
@@ -297,7 +297,7 @@ export default {
         certificationCriteria: this.selectedCertification[0]
       };
 
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then(res => {
           this.list = res.data.records;
           this.total = res.data.total;
@@ -355,7 +355,7 @@ export default {
         certificationCriteria: this.selectedCertification[0]
         // status: 1,
       };
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then(res => {
           this.list = res.data.records;
           this.total = res.data.total;

@@ -1,0 +1,274 @@
+{
+  "methodology": "太阳能集中式",
+  "confidence": "83.60%",
+  "top_predictions": [
+    {
+      "methodology": "太阳能集中式",
+      "confidence": "83.60%"
+    },
+    {
+      "methodology": "水力发电",
+      "confidence": "0.73%"
+    },
+    {
+      "methodology": "供暖",
+      "confidence": "0.69%"
+    },
+    {
+      "methodology": "风能发电",
+      "confidence": "0.67%"
+    },
+    {
+      "methodology": "可再生能源组合使用",
+      "confidence": "0.66%"
+    },
+    {
+      "methodology": "燃料运输",
+      "confidence": "0.65%"
+    },
+    {
+      "methodology": "社区钻井",
+      "confidence": "0.58%"
+    },
+    {
+      "methodology": "太阳能热水器",
+      "confidence": "0.56%"
+    },
+    {
+      "methodology": "铝冶炼厂减排",
+      "confidence": "0.53%"
+    },
+    {
+      "methodology": "垃圾焚烧",
+      "confidence": "0.49%"
+    },
+    {
+      "methodology": "粪肥沼气池",
+      "confidence": "0.45%"
+    },
+    {
+      "methodology": "石油回收",
+      "confidence": "0.44%"
+    },
+    {
+      "methodology": "REDD + 管辖权",
+      "confidence": "0.37%"
+    },
+    {
+      "methodology": "水稻减排",
+      "confidence": "0.35%"
+    },
+    {
+      "methodology": "地热发电",
+      "confidence": "0.34%"
+    },
+    {
+      "methodology": "公共交通",
+      "confidence": "0.29%"
+    },
+    {
+      "methodology": "己二酸生产中N2O的消除",
+      "confidence": "0.29%"
+    },
+    {
+      "methodology": "废气回收",
+      "confidence": "0.28%"
+    },
+    {
+      "methodology": "氮管理",
+      "confidence": "0.28%"
+    },
+    {
+      "methodology": "燃料转换",
+      "confidence": "0.27%"
+    },
+    {
+      "methodology": "车队效率",
+      "confidence": "0.27%"
+    },
+    {
+      "methodology": "硝酸生产中N2O的消除",
+      "confidence": "0.26%"
+    },
+    {
+      "methodology": "太阳能照明",
+      "confidence": "0.26%"
+    },
+    {
+      "methodology": "湿地恢复",
+      "confidence": "0.24%"
+    },
+    {
+      "methodology": "HFC23消除",
+      "confidence": "0.23%"
+    },
+    {
+      "methodology": "电动汽车充电",
+      "confidence": "0.23%"
+    },
+    {
+      "methodology": "改善森林管理",
+      "confidence": "0.23%"
+    },
+    {
+      "methodology": "矿井甲烷捕集",
+      "confidence": "0.22%"
+    },
+    {
+      "methodology": "太阳灶",
+      "confidence": "0.22%"
+    },
+    {
+      "methodology": "柴油车停车电气化",
+      "confidence": "0.22%"
+    },
+    {
+      "methodology": "废物管理",
+      "confidence": "0.22%"
+    },
+    {
+      "methodology": "天然气发电",
+      "confidence": "0.21%"
+    },
+    {
+      "methodology": "填埋甲烷",
+      "confidence": "0.20%"
+    },
+    {
+      "methodology": "SF6更替",
+      "confidence": "0.18%"
+    },
+    {
+      "methodology": "制砖减排",
+      "confidence": "0.18%"
+    },
+    {
+      "methodology": "余热回收",
+      "confidence": "0.18%"
+    },
+    {
+      "methodology": "气动改造",
+      "confidence": "0.17%"
+    },
+    {
+      "methodology": "太阳能分布式",
+      "confidence": "0.17%"
+    },
+    {
+      "methodology": "可持续放牧",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "避免草场转化",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "废水中甲烷的回收",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "泡沫生产中HFC的替代",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "净水",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "捆绑能源效率",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "REDD+（减少毁林和森林退化造成的排放）",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "锅灶",
+      "confidence": "0.16%"
+    },
+    {
+      "methodology": "生物消化器",
+      "confidence": "0.15%"
+    },
+    {
+      "methodology": "可持续农业",
+      "confidence": "0.15%"
+    },
+    {
+      "methodology": "环氧丙烷生产",
+      "confidence": "0.15%"
+    },
+    {
+      "methodology": "制冷剂泄漏检测",
+      "confidence": "0.14%"
+    },
+    {
+      "methodology": "碳捕获和储存在塑料中",
+      "confidence": "0.14%"
+    },
+    {
+      "methodology": "堆肥",
+      "confidence": "0.13%"
+    },
+    {
+      "methodology": "照明",
+      "confidence": "0.13%"
+    },
+    {
+      "methodology": "避免森林转化",
+      "confidence": "0.12%"
+    },
+    {
+      "methodology": "高级制冷剂",
+      "confidence": "0.11%"
+    },
+    {
+      "methodology": "饲料添加剂",
+      "confidence": "0.11%"
+    },
+    {
+      "methodology": "大学校园减排",
+      "confidence": "0.11%"
+    },
+    {
+      "methodology": "改善灌溉管理",
+      "confidence": "0.11%"
+    },
+    {
+      "methodology": "能源效率",
+      "confidence": "0.10%"
+    },
+    {
+      "methodology": "生物量",
+      "confidence": "0.10%"
+    },
+    {
+      "methodology": "碳捕获和提高石油采收率",
+      "confidence": "0.08%"
+    },
+    {
+      "methodology": "气体系统中的泄漏检测和维修",
+      "confidence": "0.08%"
+    },
+    {
+      "methodology": "臭氧消耗物质的回收与消除",
+      "confidence": "0.08%"
+    },
+    {
+      "methodology": "造林和再造林",
+      "confidence": "0.08%"
+    },
+    {
+      "methodology": "HFC制冷剂回收",
+      "confidence": "0.07%"
+    },
+    {
+      "methodology": "牧场添加堆肥",
+      "confidence": "0.06%"
+    },
+    {
+      "methodology": "固体废物分离",
+      "confidence": "0.06%"
+    }
+  ]
+}

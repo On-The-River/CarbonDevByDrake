@@ -66,6 +66,7 @@ public class CarbonArticleController extends BaseController {
     public ApiResult<CarbonArticleAddVo> pushArticle(@RequestParam String title) {
         CarbonArticle carbonArticle = new CarbonArticle();
         carbonArticle.setTitle(title);
+
         CarbonArticleAddVo vo = carbonArticleService.pushFeishu(carbonArticle);
         return ApiResult.ok(vo);
     }
@@ -113,6 +114,13 @@ public class CarbonArticleController extends BaseController {
         return ApiResult.ok(paging);
     }
 
+    @PostMapping("/getPageListAsUser")
+    public ApiResult<Paging<CarbonArticleQueryVo>> getCarbonArticlePageListAsUser(@Valid @RequestBody(required = false) CarbonArticleQueryParam carbonArticleQueryParam) {
+        carbonArticleQueryParam.setStatus("0260000002");
+        Paging<CarbonArticleQueryVo> paging = carbonArticleService.getCarbonArticlePageList(carbonArticleQueryParam);
+        return ApiResult.ok(paging);
+    }
+
     /**
      * 碳文章的发布和下线（文章的状态修改）
      */
@@ -147,5 +155,7 @@ public class CarbonArticleController extends BaseController {
         }
 
     }
+
+
 }
 

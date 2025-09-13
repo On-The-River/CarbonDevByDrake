@@ -34,7 +34,7 @@
 
     <el-table
       :header-cell-style="{
-        background: '#B2F5FF',
+        background: '#F2F5F7',
         border: '0px solid #DDDDDD',
         color: '#242B35',
         height: '64px',
@@ -190,13 +190,14 @@
   <el-dialog title="添加角色" :visible.sync="addUserShow" width="500px">
     <el-form :model="addForm" label-position="left">
       <el-form-item label="角色名称">
+        <span style="color: red">*</span>
         <el-input
           v-model="addForm.roleName"
           size="medium"
           style="width: 350px"
         />
       </el-form-item>
-      <el-form-item label="角色编码">
+      <el-form-item label="角色编码"><span style="color: red">*</span>
         <el-input
           v-model="addForm.roleCode"
           size="medium"
@@ -204,10 +205,11 @@
         />
       </el-form-item>
       <el-form-item label="角色状态">
+        <span style="color: red">*</span>
         <el-select
           v-model="addForm.status"
-          placeholder="请选择角色状态"
           size="medium"
+          :default-first-option="true"
         >
           <el-option label="启用" value="0"></el-option>
           <el-option label="禁用" value="1"></el-option>
@@ -256,7 +258,7 @@ export default {
       addForm: {
         roleName: "",
         roleCode: "",
-        status: "",
+        status: "1",
         remarks: "",
       },
       data: [],
@@ -591,6 +593,7 @@ created() {},
 mounted() {
   this.getList(1);
   let data={};
+
   systemAdminApi.getMenuList(data).then((res) => {
     this.data = res;
   }).catch(err)

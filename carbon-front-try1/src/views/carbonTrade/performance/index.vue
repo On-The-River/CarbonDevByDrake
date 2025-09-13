@@ -114,20 +114,54 @@
               ><span>{{ getCurListNo(scope.$index) }}</span></template
             >
           </el-table-column>
+<!--          <el-table-column-->
+<!--            align="left"-->
+<!--            :show-overflow-tooltip="true"-->
+<!--            prop="counterparty"-->
+<!--            label="交易对手"-->
+<!--            min-width="15%"-->
+<!--          />-->
+<!--          <el-table-column-->
+<!--            align="left"-->
+<!--            :show-overflow-tooltip="true"-->
+<!--            prop="tradeRoleName"-->
+<!--            label="交易角色"-->
+<!--            min-width="15%"-->
+<!--          />-->
           <el-table-column
-            align="left"
+            align="center"
             :show-overflow-tooltip="true"
-            prop="counterparty"
-            label="交易对手"
+            label="买方"
+
             min-width="15%"
-          />
+          >
+            <template slot-scope="scope">
+              <span :class="getTenantClass(scope.row,true)">{{scope.row.buyerName}}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column
-            align="left"
+            align="center"
             :show-overflow-tooltip="true"
-            prop="tradeRoleName"
-            label="交易角色"
+            label="↔"
+            min-width="5%"
+            style="{font-weight: bold;}"
+          >
+            ↔
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            :show-overflow-tooltip="true"
+            label="卖方"
             min-width="15%"
-          />
+          >
+            <template slot-scope="scope">
+              <span :class="getTenantClass(scope.row,false)">{{scope.row.sellerName}}</span>
+            </template>
+          </el-table-column>
+
+
           <el-table-column
             align="left"
             :show-overflow-tooltip="true"
@@ -295,6 +329,23 @@ export default {
     };
   },
   methods: {
+    getTenantClass(row,isBuyer)
+    {
+      let usedWidgetRole="0270000002";
+      if(isBuyer)
+      {
+        usedWidgetRole="0270000001";
+      }
+      if(row.tradeRole===usedWidgetRole)
+      {
+        return "ff"
+      }
+      else
+      {
+        return "plain"
+      }
+    },
+
     onClickClearSellerKeyword() {
       debugger;
       this.searchSellerName = "";
@@ -317,9 +368,11 @@ export default {
       let no = setListNo(page, size, curNo);
       return no ? no : 1;
     },
-    changeOrderDialogFormVisible() {
-      this.orderDialogFormVisible = false;
-      this.dialogFormVisible = false;
+    changeOrderDialogFormVisible(res) {
+      this.orderDialogFormVisible = res;
+      this.dialogFormVisible = res;
+      // this.update();
+      this.getList(1);
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (column.label == "编号") {
@@ -728,5 +781,10 @@ export default {
 
 .cursor-mi {
   cursor: default;
+}
+
+.ff{
+  color: #0c8351;
+  font-weight: bold;
 }
 </style>

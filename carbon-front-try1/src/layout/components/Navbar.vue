@@ -49,7 +49,7 @@
                   alt=""
                   style="width:18px;height:18px;"
                 />
-                <span style="margin:0px 8px;font-size: 14px;">首页</span>
+                <span class="dropdown-home-text" style="margin:0px 8px;font-size: 14px">首页</span>
               </div>
             </el-dropdown-item>
           </router-link>
@@ -174,6 +174,8 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 在 navbar 容器的末尾添加水平线 -->
+    <div class="navbar-divider"></div>
   </div>
 </template>
 
@@ -325,16 +327,38 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped>@import '@/styles/variables.scss';
 // ::v-deep  #tab-more {
 //   width: calc(100% - 10px);
 //   text-align: right;
 // }
+//自加
+//::v-deep .app-breadcrumb.el-breadcrumb .no-redirect[data-v-b50ef614] {
+//  color: #FFFFFF !important;
+//}
+//// 覆盖所有面包屑文字颜色
+//::v-deep .app-breadcrumb.el-breadcrumb a {
+//  color: #FFFFFF !important;
+//}
+
 .navbar {
+  .navbar-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #c2c4c5; // 与 .deliver 元素颜色一致
+    z-index: 10;
+  }
+  color: #ffffff; // 白色字体，适配渐变背景
   height: 64px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  /*上边栏的背景色*/
+  //background: #0064fd;
+  /* 渐变背景：从深蓝到青绿，匹配Logo风格 */
+  background: #f5f5f5;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {

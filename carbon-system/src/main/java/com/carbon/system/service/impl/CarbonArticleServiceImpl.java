@@ -216,7 +216,7 @@ public class CarbonArticleServiceImpl extends BaseServiceImpl<CarbonArticleMappe
             String shareUrl = createDocumentShareLink(tenantToken, documentId);
             carbonArticle.setUrl(shareUrl);
             // carbonArticle.setFeishuDocId(documentId);
-            carbonArticle.setStatus("0260000001");
+            carbonArticle.setStatus("0260000003");
             this.save(carbonArticle);
 
             CarbonArticleAddVo vo = new CarbonArticleAddVo();

@@ -28,7 +28,6 @@
           :header-cell-style="{
             background: '#f2f5f7',
             border: '0px solid #DDDDDD',
-            color: '#4242B5',
             height: '64px'
           }"
           :show-header="true"
@@ -82,13 +81,14 @@
           />
           <el-table-column label="操作" align="center" min-width="170">
             <template slot-scope="scope">
-              <a class="list-blue-text" @click="handle(scope.row.detailUrl)"
+              <a class="list-blue-text" @click="handle(scope.row.website)"
                 >查看</a
               >
+
               <a
                 :class="editStyleChange(scope.row.status)"
                 style="margin-left: 10px"
-                @click="onEdit(scope.row.website)"
+                @click="onEdit(scope.row.detailUrl)"
                 >编辑</a
               >
               <a

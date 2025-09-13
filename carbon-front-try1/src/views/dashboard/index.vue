@@ -1,33 +1,50 @@
 <template>
-  <div>
-    <!--头部-->
-    <company-package
-      ref="companyPackage"
-      :accountVo="accountVo"
-      :assetsIncome="assetsIncome"
-      :fundIncome="fundIncome"
-      :carbonCredit="carbonCredit"
-      :carbonQuota="carbonQuota"
-      :greenScore="greenScore"
-    />
+  <div class="dashboard-container">
+    <!-- 背景图容器 -->
+    <div class="background-container"></div>
 
-    <capital-stat
-      ref="capitalStat"
-      :monthSupply="monthSupply"
-      :monthDevelopment="monthDevelopment"
-      :monthSales="monthSales"
-    />
+    <!-- 内容容器 -->
+    <div class="content-wrapper">
+      <!-- 轮播图组件 -->
+      <el-carousel :interval="4000" type="card" height="400px">
+        <el-carousel-item v-for="item in carouselImages" :key="item.id">
+          <img :src="item.url" class="carousel-image" />
+        </el-carousel-item>
+      </el-carousel>
+      <!--头部-->
+      <company-package
+        ref="companyPackage"
+        :accountVo="accountVo"
+        :assetsIncome="assetsIncome"
+        :fundIncome="fundIncome"
+        :carbonCredit="carbonCredit"
+        :carbonQuota="carbonQuota"
+        :greenScore="greenScore"
+      />
 
-    <!--小方块一-->
-    <apply-project />
-    <!-- <project-stat ref="projectStat" :projectStat="projectStat" /> -->
-    <projectStatistical v-if="(projectStat.projectList && projectStat.projectList.length > 0)" :projectStat="projectStat" />
-    <trade-info :quotation="quotation" />
+      <capital-stat
+        ref="capitalStat"
+        :monthSupply="monthSupply"
+        :monthDevelopment="monthDevelopment"
+        :monthSales="monthSales"
+      />
 
-    <newsContaiert ref="newsList" />
+      <!--小方块一-->
+      <apply-project />
+      <!-- <project-stat ref="projectStat" :projectStat="projectStat" /> -->
+      <projectStatistical v-if="(projectStat.projectList && projectStat.projectList.length > 0)" :projectStat="projectStat" />
+      <trade-info :quotation="quotation" />
+      <carbon-trading-chart />
+      <carbon-market-chart />
+      <price-prediction-chart/>
+      <carbon-emission-factors/>
 
-    <commom-usage-grid />
+      <newsContaiert ref="newsList" />
+
+      <commom-usage-grid />
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -44,11 +61,16 @@ import { getAllDiction } from "@/config/dictHelper";
 import projectStatistical from "./components/projectStatistical.vue";
 import { setLargeNumber } from "@/libs/public";
 import CommomUsageGrid from "@/views/dashboard/components/commomUsageGrid.vue";
-
+import CarbonTradingChart from "@/views/dashboard/components/carbonTradingChart.vue";
+import CarbonMarketChart from "@/views/dashboard/components/carbonMarketChart.vue";
+import PricePredictionChart from "@/views/dashboard/components/PricePredictionChart.vue";
+import CarbonEmissionFactors from "@/views/dashboard/components/CarbonEmissionFactors.vue";
 
 export default {
   name: "Dashboard",
   components: {
+    PricePredictionChart,
+    CarbonMarketChart,
     CommomUsageGrid,
     applyProject,
     tradeInfo,
@@ -57,6 +79,9 @@ export default {
     newsContaiert,
     commomUsageGrid,
     projectStatistical,
+    CarbonTradingChart,
+    CarbonEmissionFactors,
+
   },
   data() {
     return {
@@ -72,6 +97,13 @@ export default {
       monthSupply: {},
       projectStat: {},
       quotation: {},
+      // 轮播图数据
+      carouselImages: [
+        { id: 1, url: require('../../assets/videos/lun1.png')},
+        { id: 2, url: require('../../assets/videos/lun2.png') },
+        { id: 3, url: require('../../assets/videos/lun3.png') },
+        { id: 4, url: require('../../assets/videos/lun4.png') },
+      ],
     };
   },
   methods: {
@@ -155,3 +187,51 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* 背景图样式 */
+.dashboard-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+.background-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* 使用feng1.jpg作为背景图 */
+  background-image: url("../../assets/videos/feng2.png"); /* 假设图片放在src/assets目录下 */
+  background-size: cover; /* 背景图覆盖整个容器 */
+  background-position: center; /* 背景图居中显示 */
+  background-repeat: no-repeat; /* 背景图不重复 */
+  background-attachment: fixed; /* 背景图固定，内容滚动时背景不动 */
+  z-index: 1; /* 背景图在最底层 */
+  /* 可选：添加半透明遮罩，使内容更易读 */
+  opacity: 0.9;
+}
+
+/* 内容容器样式 */
+.content-wrapper {
+  position: relative;
+  z-index: 2; /* 内容在背景图之上 */
+  padding: 20px;
+}
+
+/* 可选：为内容区块添加背景色，增强可读性 */
+::v-deep .content-block {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+/* 轮播图样式 */
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0 auto 20px auto;
+}
+</style>

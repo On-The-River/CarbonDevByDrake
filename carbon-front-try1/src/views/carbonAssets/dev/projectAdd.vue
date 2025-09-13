@@ -8,12 +8,12 @@
           <span class="updateTips">{{ this.form.updatedId }} {{ this.form.updatedTime }} 更新</span>
           <el-divider></el-divider>
           <div class="outer20 flex-col">
-            <span class="info5">&nbsp; 填写项目基本信息</span>
+            <span class="info5">1&nbsp;填写项目基本信息</span>
           </div>
           <div class="outer21 flex-col" @click="toChangePage">
-            <span class="word">&nbsp; 上传项目业主资料</span>
+            <span class="word9">2&nbsp;上传项目业主资料</span>
           </div>
-          <div class="changelin"></div>
+          <div class="changeline"></div>
           <button
             style="
               margin-top: 0px;
@@ -153,12 +153,73 @@
 <!--  -->
 <div style="clear: both; height: 40px"></div>
 <el-row>
-  <el-col :span="12">
+  <el-col :span="8">
     <div class="selectbox-root">
       <span class="selectbox-hint" style="width: 200px">减排量<span style="color: red">*</span></span>
       <div class="selectbox-deliver"></div>
       <el-input size="medium" class="selectbox-input" v-model="form.estimatedReduction" placeholder="输入减排量" clearable></el-input>
     </div>
+  </el-col>
+
+
+  <el-col :span="7">
+    <div class="selectbox-root" style="margin: 0 20px;">
+      <span class="selectbox-hint" style="width: 100px">项目领域<span style="color: red">*</span></span>
+      <div class="selectbox-deliver"></div>
+      <el-select
+        size="medium"
+        v-model="form.projectScope"
+        :value-key="'value'"
+        placeholder="请选择项目领域"
+        style="flex: 1; height: 36px;"
+        class="project-type-select"
+        @change = "handleProjectScopeChanged"
+      >
+
+        <el-option
+          v-for="item in projectAreaOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item"
+        >
+        </el-option>
+      </el-select>
+    </div>
+  </el-col>
+
+  <el-col :span="6">
+    <div class="selectbox-root" style="flex: 1;">
+      <span class="selectbox-hint" style="width: 100px">项目类型</span>
+      <div class="selectbox-deliver"></div>
+      <el-select
+        size="medium"
+        v-model="form.projectType"
+        :value-key="'value'"
+        placeholder="请选择项目类型"
+        style="flex: 1; height: 36px;"
+        class="project-type-select"
+        @change = "handleProjectTypeChanged"
+      >
+
+        <el-option
+          v-for="item in projectTypeOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item"
+        >
+        </el-option>
+      </el-select>
+    </div>
+  </el-col>
+
+  <el-col :span="3">
+    <button
+      style="width: 96px; float: right; margin-right: 20px"
+      class="light-green-btn"
+      @click="autoClassify"
+    >
+      智能预测
+    </button>
   </el-col>
 </el-row>
 <!-- <hr> -->
@@ -353,9 +414,9 @@
 </template>
 
 <script>
-import { loadMethodList } from "@/api/carbonAssetApi";
+import { loadMethodListAsUser } from "@/api/carbonAssetApi";
 import { openUrlInNewWindow } from "@/libs/OpenHelper";
-import { getProvinceDict } from "@/config/dictHelper";
+import {getProjectTypeDict, getProvinceDict} from "@/config/dictHelper";
 import { getCountryDict } from "@/config/dictHelper";
 import { getCertificationCriteriaDict } from "@/config/dictHelper";
 import { getBusinessDict } from "@/config/dictHelper";
@@ -364,12 +425,8 @@ import {
     getMethodologyDict,
     getCityDict
 } from "@/config/dictHelper";
-// import { getCityDict } from "@/api/carbonAssetApi";
+import axios from "axios";
 
-
-import { number } from "echarts/lib/export";
-import { log } from "console";
-import { async } from "q";
 export default {
   name: "projectAdd",
   data() {
@@ -391,6 +448,8 @@ export default {
       countryList: [], //国家
       submit: false,
       isCreate: true, //是创建还是修改？
+      projectTypeOptions: [],        //项目类型
+      projectAreaOptions: [],
       // OwnerNameOptions: [
       //   {
       //     value: "北京我爱我家地产有限公司",
@@ -419,6 +478,9 @@ export default {
         projectIntroduction: "",
         projectStatus: "", //已创建
         projectType: "",
+        projectScope: "",
+        projectScopeCode: "",
+        projectTypeCode: "",
         approvalDate: "",
         estimatedReduction: "", //减排量
       },
@@ -439,6 +501,96 @@ export default {
     });
   },
   methods: {
+    handleProjectScopeChanged(selectedItem) {
+      if (selectedItem) {
+        this.form.projectScope = selectedItem.label;
+        this.form.projectScopeCode = selectedItem.value;
+      } else {
+        this.form.projectScope = "";
+        this.form.projectScopeCode = "";
+      }
+    },
+    handleProjectTypeChanged(selectedItem) {
+      if (selectedItem) {
+        this.form.projectType = selectedItem.label;
+        this.form.projectTypeCode = selectedItem.value;
+      } else {
+        this.form.projectType = "";
+        this.form.projectTypeCode = "";
+      }
+    },
+    autoClassify() {
+      if (!this.form.projectName || !this.form.projectIntroduction) {
+        this.$message.warning("请填写项目名称和介绍");
+        return;
+      }
+
+      const data = {
+        name: this.form.projectName,
+        introduce: this.form.projectIntroduction
+      };
+
+      const apiUrl = 'http://localhost:9002/system/python/classifyProjectType';
+      const requestPromise = () => {
+        return axios.post(apiUrl, data)
+          .then(response => response.data);
+      };
+
+      const timeoutPromise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(new Error('请求超时，请稍后重试'));
+        }, 60000); // 60秒超时
+      });
+
+      Promise.race([requestPromise(), timeoutPromise])
+        .then(res => {
+          if (res.code === 200) {
+            if (Number(res.data.confidence) > 30.00) {
+              this.form.projectType = res.data.type;
+              for (let i = 0; i < this.projectTypeOptions.length; i++) {
+                var iter = this.projectTypeOptions[i];
+                if (iter.label === res.data.type) {
+                  this.form.projectTypeCode = iter.value;
+                }
+              }
+              this.$message.success("智能分类成功");
+            } else {
+              this.$message.warning("智能检测置信度不足，请丰富项目介绍");
+            }
+          } else {
+            this.$message.error(`请求失败: ${res.msg || '未知错误'}`);
+          }
+        }).catch(err => {
+        console.error("分类请求出错:", err);
+        this.$message.error(err.message || "智能检测失败");
+      });
+    },
+    formatProjectType(data) {
+      data.map((v) => {
+        let typeName = {
+          value: "",
+          label: "",
+        };
+        if (v.name !== "全部") {
+          typeName.value = v.value;
+          typeName.label = v.name;
+          this.projectTypeOptions.push(typeName);
+        }
+      });
+    },
+    formatProjectArea(data) {
+      data.map((v) => {
+        let typeName = {
+          value: "",
+          label: "",
+        };
+        if (v.name !== "全部") {
+          typeName.value = v.value;
+          typeName.label = v.name;
+          this.projectAreaOptions.push(typeName);
+        }
+      });
+    },
     loadAll() {
       return [
         {
@@ -487,7 +639,7 @@ export default {
         current: this.methodCurrent,
         status: "0450000002",
       };
-      loadMethodList(data)
+      loadMethodListAsUser(data)
         .then((res) => {
           this.methodList = res.data.records;
           this.total = Number(res.data.total);
@@ -556,7 +708,7 @@ export default {
       }
     },
     onCancel() {
-      if (this.fromPath == "/carbon/projectCreate/ownerAdd") {
+      if (this.fromPath === "/carbon/projectCreate/ownerAdd") {
       } else {
         this.$router.go(-1);
       }
@@ -581,7 +733,7 @@ onClickSearch() {
     certificationCriteria: this.selectedCertification[0],
     status: "0450000002",
   };
-  loadMethodList(data)
+  loadMethodListAsUser(data)
     .then((res) => {
       this.methodList = res.data.records;
       this.total = Number(res.data.total);
@@ -614,7 +766,7 @@ getMethodList(val) {
     // status: 1,
 
   };
-  loadMethodList(data)
+  loadMethodListAsUser(data)
     .then((res) => {
       this.methodList = res.data.records;
       this.total = Number(res.data.total);
@@ -701,7 +853,7 @@ changeProvince() {
     for (var i in this.cityList)
     {
         var curCityProvinceCode = this.cityList[i].value.slice(6,8);
-        if (curCityProvinceCode == provinceCode) {
+        if (curCityProvinceCode === provinceCode) {
             this.list.push(this.cityList[i]);
         }
     }
@@ -758,30 +910,31 @@ formatCountry(data) {
     this.countryList.push(CertificationItem);
   });
 },
-loadProject() {
-  var form = sessionStorage.getItem("projectAdd");
-  if (form) {
-    var myform = JSON.parse(form);
-    this.form = myform;
-    if (this.form.province) {
-      this.changeProvince();
-    }
-  }
+    loadProject() {
+      var form = localStorage.getItem("projectAdd");
+      if (form && form !== "undefined") {
+        var myform = JSON.parse(form);
+        console.log("myform2222222:",myform);
+        this.form = myform;
+        if (this.form.province) {
+          this.changeProvince();
+        }
+      }
 
-  var data = this.$route.query;
-  var method = getMethodologyDict(this.$store);
-  if (data.code) {
-    this.form.carbonMethodology = data.code;
-  }
+      var data = this.$route.query;
+      var method = getMethodologyDict(this.$store);
+      if (data.code) {
+        this.form.carbonMethodology = data.code;
+      }
 
-method.map((v) => {
-  if (v.value == this.form.carbonMethodology) {
-    this.form.name = v.name;
-  }
-});
-},
+      method.map((v) => {
+        if (v.value === this.form.carbonMethodology) {
+          this.form.name = v.name;
+        }
+      });
+    },
 loadCityDict() {
-getCityDict().then((res) => {
+getCityDict(this.$store).then((res) => {
   this.cityList = res.data;
   this.loadProject();
 });
@@ -845,14 +998,18 @@ mounted() {
     this.form.name = data.methodName;
     this.form.carbonMethodology = data.code;
   }
+  this.formatProjectType(getProjectTypeDict(this.$store));
+  this.formatProjectArea(getProjectAreaDict(this.$store));
   this.formatProvince(getProvinceDict(this.$store));
   this.formatCountry(getCountryDict(this.$store));
   this.formatStatus(getCertificationCriteriaDict(this.$store));
   this.formatIndustry(getBusinessDict(this.$store));
-  this.formatArea(getProjectAreaDict(this.$store));
+  // this.formatArea(getProjectAreaDict(this.$store));
   // this.loadCityDict();
   this.formatCity(getCityDict(this.$store));
-  this.form.country = this.countryList[0].value;
+  if (this.countryList.length > 0) {
+    this.form.country = this.countryList[0].value; // 建议用 value，而非整个对象（级联选择器通常绑定 value）
+  }
   this.states = this.loadAll();
 // this.list = this.states.map(item => {
 //   return { value: item, label: item };
@@ -864,14 +1021,14 @@ mounted() {
 
 <style lang="scss" scoped>
 .root {
-background: #f2f5f7;
+  background: #f2f5f7;
 }
 
 .divBox {
-margin: 20px;
-background: #ffffff;
-box-shadow: 0px 2px 8px 0px #eaf0f2;
-border-radius: 8px;
+  margin: 20px;
+  background: #ffffff;
+  box-shadow: 0px 2px 8px 0px #eaf0f2;
+  border-radius: 8px;
 }
 
 // .container {
@@ -881,88 +1038,89 @@ border-radius: 8px;
 // }
 
 .cardBody {
-margin: 30px 30px 30px 30px;
+  margin: 30px 30px 30px 30px;
 }
 
 .header {
-overflow-wrap: break-word;
-color: rgba(36, 167, 118, 1);
+  overflow-wrap: break-word;
+  font-size: 18px;
+  color: rgba(36, 167, 118, 1);
 }
 
 .createTips {
-color: rgba(128, 142, 165, 1);
+  color: rgba(128, 142, 165, 1);
 
-float: right;
+  float: right;
 }
 
 .updateTips {
-overflow-wrap: break-word;
-color: rgba(128, 142, 165, 1);
+  overflow-wrap: break-word;
+  color: rgba(128, 142, 165, 1);
 
-float: right;
-margin-right: 20px;
+  float: right;
+  margin-right: 20px;
 }
 
 .el-divider {
-margin-top: 20px;
+  margin-top: 20px;
 }
 
 .outer20 {
-background-color: rgba(33, 181, 129, 1);
-height: 38px;
-width: 194px;
-cursor: pointer;
-float: left;
-margin-top: 20px;
+  background-color: #1a4441;
+  height: 38px;
+  width: 194px;
+  cursor: pointer;
+  float: left;
+  margin-top: 20px;
 
-.info5 {
-  width: 123px;
-  height: 14px;
-  overflow-wrap: break-word;
-  color: rgba(255, 255, 255, 1);
+  .info5 {
+    width: 123px;
+    height: 14px;
+    overflow-wrap: break-word;
+    color: rgba(255, 255, 255, 1);
 
-  text-align: center;
-  white-space: nowrap;
+    text-align: center;
+    white-space: nowrap;
 
-  // display: block;
-  margin: 20px 0 0 35px;
-  position: relative;
-  top: 12px;
-}
+    // display: block;
+    margin: 20px 0 0 35px;
+    position: relative;
+    top: 12px;
+  }
 }
 
 .basic-div {
-// width: 933px;
-height: 174px;
-border-radius: 6px;
-border: 1px solid #e3e7eb;
-// margin-left: 30px;
-// margin-top: 10px;
+  // width: 933px;
+  height: 174px;
+  border-radius: 6px;
+  border: 1px solid #e3e7eb;
+  // margin-left: 30px;
+  // margin-top: 10px;
 }
 
 .outer21 {
-background-color: rgba(38, 181, 129, 0.5);
-height: 38px;
-width: 194px;
-float: left;
-cursor: pointer;
-margin-left: 20px;
-margin-top: 20px;
+  background-color: rgba(38, 181, 129, 0.5);
+  height: 38px;
+  width: 194px;
+  float: left;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-top: 20px;
 
-.word9 {
-  width: 126px;
-  height: 14px;
-  overflow-wrap: break-word;
-  color: rgba(255, 255, 255, 1);
+  .word9 {
+    width: 126px;
+    height: 14px;
+    overflow-wrap: break-word;
+    color: rgba(255, 255, 255, 1);
 
-  text-align: center;
-  white-space: nowrap;
+    text-align: center;
+    white-space: nowrap;
 
-  // display: block;
-  margin: 20px 0 0 33px;
-  position: relative;
-  top: 12px;
-}
+    // display: block;
+    margin: 20px 0 0 33px;
+    position: relative;
+    top: 12px;
+  }
 }
 
 .changeline {

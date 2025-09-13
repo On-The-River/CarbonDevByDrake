@@ -123,6 +123,16 @@ export function getCarbonArticles(param) {
     data: param
   })
 }
+
+export function getCarbonArticlesAsUser(param){
+  return request({
+    baseURL: "http://localhost:9002",
+    url: '/system/carbonArticle/getPageListAsUser',
+    method: 'post',
+    data: param
+  })
+}
+
 //根据id修改碳文章状态
 export function changeCarbonStatusById(param) {
   return request({

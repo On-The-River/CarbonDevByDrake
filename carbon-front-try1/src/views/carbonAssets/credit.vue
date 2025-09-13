@@ -1,33 +1,28 @@
 <template>
   <div class="carbon-credit-page">
-    <!-- 资产概览 -->
-    <!--        <i class="el-icon-menu"></i>-->
-<!--    持仓总量 {{ totalHold }}(tCO2e) | 可用数量 {{ available }}(tCO2e) |-->
-<!--    锁定数量 {{ locked }}(tCO2e) | 冻结数量 {{ frozen }}(tCO2e)-->
     <el-card class="asset-overview-card" >
       <div slot="header" class="title">
         <i class="icon">📊</i>
         我的碳信用资产
       </div>
       <div class="asset-content-row">
-      <div class="asset-info">
-        <!-- 左侧：资产信息 -->
-        <span class="item">持仓总量 <strong>{{ totalHold }}(tCO2e)</strong></span>
-        <span class="divider">|</span>
-        <span class="item">可用数量 <strong>{{ available }}(tCO2e)</strong></span>
-        <span class="divider">|</span>
-        <span class="item">锁定数量 <strong>{{ locked }}(tCO2e)</strong></span>
-        <span class="divider">|</span>
-        <span class="item">冻结数量 <strong>{{ frozen }}(tCO2e)</strong></span>
-      </div>
+        <div class="asset-info">
+          <!-- 左侧：资产信息 -->
+          <span class="item">持仓总量 <strong>{{ totalHold }}(tCO2e)</strong></span>
+          <span class="divider">|</span>
+          <span class="item">可用数量 <strong>{{ available }}(tCO2e)</strong></span>
+          <span class="divider">|</span>
+          <span class="item">锁定数量 <strong>{{ locked }}(tCO2e)</strong></span>
+          <span class="divider">|</span>
+          <span class="item">冻结数量 <strong>{{ frozen }}(tCO2e)</strong></span>
+        </div>
         <!-- 右侧：操作按钮 -->
-      <div class="operation-btns">
-        <el-button type="success" class="btn-upload" plain @click="onUpload">上传</el-button>
-        <el-button type="primary" class="btn-buy" @click="onBuyClick">我想买</el-button>
-      </div>
+        <div class="operation-btns">
+          <el-button type="success" class="btn-upload" plain @click="onUpload">上传</el-button>
+          <el-button type="primary" class="btn-buy" @click="onBuyClick">我想买</el-button>
+        </div>
       </div>
     </el-card>
-
     <!-- 查询筛选 -->
     <el-card class="search-filter-card" style="margin-top: 20px">
       <el-form :inline="true" :model="searchForm" class="search-form">
@@ -35,6 +30,7 @@
           <el-select
             v-model="searchForm.certificationCriteria"
             placeholder="全部"
+            @change="getList(1)"
           >
             <el-option
               v-for="item in optionsStandard"
@@ -44,18 +40,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="领域">
-          <el-select v-model="searchForm.industry" placeholder="全部">
-            <el-option
-              v-for="item in optionsIndustry"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="交易状态">
-          <el-select v-model="searchForm.transactionStatus" placeholder="全部">
+          <el-select v-model="searchForm.transactionStatus"
+                     placeholder="全部"
+                     @change="getList(1)">
             <el-option
               v-for="item in optionsOnlines"
               :key="item.value"
@@ -65,7 +53,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="资产状态">
-          <el-select v-model="searchForm.assetsStatus" placeholder="全部">
+          <el-select v-model="searchForm.assetsStatus"
+                     placeholder="全部"
+                     @change="getList(1)">
             <el-option
               v-for="item in optionsAssetStatus"
               :key="item.value"
@@ -93,15 +83,6 @@
         <el-form-item>
           <el-button type="success" @click="getList">查询</el-button>
         </el-form-item>
-        <el-form-item label="方法学搜索">
-          <el-input
-            v-model="searchForm.methodName"
-            placeholder="输入方法学名称"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="success" @click="getList">查询</el-button>
-        </el-form-item>
       </el-form>
     </el-card>
     <!-- 表格数据区域 -->
@@ -109,50 +90,111 @@
     <!-- @selection-change="handleSelectionChange" 暂时注释掉这个-->
     <el-card class="table-card" style="margin-top: 20px">
       <el-table
+        :header-cell-style="{
+        background: '#F2F5F7',
+        border: '0px solid #DDDDDD',
+        color: '#424B35',
+        height: '64px',
+        }"
+        show-header
         :data="list"
-        border
-        style="width: 100%"
-        :header-cell-style="{ background: '#e6f7e6' }"
+        stripe
+        :row-style="{ height: '64px' }"  style="width: 100%"
         :row-key="row => row.id"
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="序号" align="center" width="60">
+        <el-table-column min-width="10" />
+        <el-table-column label="序号" align="left" min-width="40">
           <template v-slot:default="scope">
             {{ (current - 1) * pageSize + scope.$index + 1 }}
           </template>
-          <!-- 自定义的import里面的名字作为标签 -->
         </el-table-column>
-        <el-table-column prop="projectName" label="项目名称" width="236"> </el-table-column>
-        <el-table-column prop="certificationCriteriaName" label="核证标准" width="200">
+
+
+        <el-table-column
+          :show-overflow-tooltip="true"
+          prop="projectName"
+          align="left"
+          label="项目名称"
+          min-width="120"
+        />
+
+
+        <el-table-column
+          align="left"
+          prop="certificationCriteriaName"
+          label="核证标准"
+          min-width="90"
+        />
+
+
+        <el-table-column
+          align="left"
+          prop="total"
+          label="持仓量(tCO2e)"
+          min-width="90"
+        />
+
+
+        <el-table-column
+          align="left"
+          prop="valuation"
+          label="资产估值(¥)"
+          min-width="90"
+        >
+          <template v-slot:default="scope">
+            <span>{{ scope.row.valuation ? Number(scope.row.valuation).toFixed(2) : '0.00' }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="total" label="持仓量(tCO2e)" width="100">
-        </el-table-column>
-        <el-table-column prop="valuation" label="资产估值(¥)" width="100">
-        </el-table-column>
-        <el-table-column prop="projectScopeType" label="类型" width="100"> </el-table-column>
-        <el-table-column prop="assetsStatusName" label="资产状态" width="80">
-        </el-table-column>
-        <el-table-column prop="issuingDate" label="签发日期" width="160"> </el-table-column>
-        <el-table-column label="操作" align="center" width="500">
+
+
+        <el-table-column
+          align="left"
+          prop="projectScopeType"
+          label="类型"
+          min-width="60"
+        />
+        <el-table-column
+          align="left"
+          prop="assetsStatusName"
+          label="资产状态"
+          min-width="60"
+        />
+
+        <el-table-column
+          align="left"
+          prop="issuingDate"
+          label="签发日期"
+          min-width="60"
+        />
+
+
+        <el-table-column label="操作" min-width="150" align="center">
           <template v-slot="scope">
-            <div class="operation-buttons">
-            <el-button type="text" @click="viewDetail(scope.row)"
-            >查看</el-button
+            <a class="list-blue-text" @click="viewDetail(scope.row)">查看</a>
+            <a        style="margin-left: 10px"
+                      :class="getOtcButtonClass(scope.row)"
+                      @click="outerShelve(scope.row)"
             >
-            <el-button type="text" @click="outerShelve(scope.row)"
-            >场外上架</el-button
+              场外上架
+            </a>
+            <a        style="margin-left: 10px"
+                      :class="getOtcButtonClass(scope.row)"
+                      @click="insideTransaction(scope.row)"
             >
-            <el-button type="text" @click="insideTransaction(scope.row)"
-            >场内交易</el-button
+              场内交易
+            </a>
+            <a        style="margin-left: 10px"
+                      :class="getModifyButtonClass(scope.row)"
+                      @click="onEdit(scope.row)"
             >
-            <el-button type="text" @click="onEdit(scope.row)">修改</el-button>
-            <el-button
-              type="text"
-              @click="onClickDelete(scope.row)"
-              style="color: red"
-            >删除</el-button
+              修改
+            </a>
+            <a        style="margin-left: 10px"
+                      :class="getDeleteButtonClass(scope.row)"
+                      @click="onClickDelete(scope.row)"
             >
-            </div>
+              删除
+            </a>
           </template>
         </el-table-column>
       </el-table>
@@ -169,6 +211,7 @@
       >
       </el-pagination>
     </el-card>
+
 
     <!-- 上传弹窗 -->
     <!-- @submit="submited" 这个需要整改，还没有提交的一个调用方法，暂时注释-->
@@ -187,20 +230,14 @@
       :selData="outerShelveRow"
       @changeVisible="changeOuterShelveVisible"
     ></otc-listing>
-    <!-- 编辑方法学弹出页面
-    :selData="editMethodRow"-->
+    <!-- 编辑方法学弹出页面 -->
     <carbon-edit
       :dialogFormVisible="editMethodDlg"
-      :row="editMethodRow"
+      :selData="editMethodRow"
       title="碳信用项目修改"
       @changeVisible="changeCarbonEditVisible"
     ></carbon-edit>
-    <!-- @submit="editMethodSubmit" 暂时注释掉这个方法，后续调用 -->
-<!--    <edit-method-->
-<!--      :dialogFormVisible="editMethodDlg"-->
-<!--      :selData="editMethodRow"-->
-<!--      @changeVisible="changeEditMethodVisible"-->
-<!--    ></edit-method>-->
+
     <buy-assets
       :dialog-form-visible="buyAssetsDlgVisible"
       @changeBuyAssetsDialogFormVisible="changeDialogFormVisible"
@@ -278,6 +315,40 @@ export default {
     };
   },
   methods: {
+
+    getModifyButtonClass(row)
+    {
+      if(row && row.assetsStatus==="0130000001")
+      {
+        return "afterIssueEdit"
+      }
+      else{
+        return "list-yello-text"
+      }
+
+    },
+
+    getOtcButtonClass(row)
+    {
+      if(row && row.assetsStatus==="0130000001")
+      {
+        return "list-green-text"
+      }
+      else{
+        return "afterSubmitEdit"
+      }
+    },
+
+    getDeleteButtonClass(row)
+    {
+      if(row && row.assetsStatus==="0130000001")
+      {
+        return "afterSubmitOffline"
+      }
+      else{
+        return "list-red-text"
+      }
+    },
 
     loadStatisticData()
     {
@@ -377,10 +448,7 @@ export default {
       this.getList();
     },
     insideTransaction(row) {
-      this.$router.push({
-        path: "/systemSetting/exchangeManager",
-        query: { row }
-      });
+      this.$router.push("/trade/account/exchange");
     },
     getList() {
       const data = {
@@ -524,9 +592,9 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #5FB878;
+  font-size: 20px !important;
+  font-weight: bold;
+  color: #1a4441;
   margin: 0;
   background-color: #FFFFFF;
   justify-content: flex-start; /* 强制左对齐 */
@@ -548,7 +616,7 @@ export default {
 }
 .asset-info {
   font-size: 14px;
-  color: #555;
+  color: #1a4441;
   line-height: 1.4;
   display: flex;
   gap: 12px;
@@ -579,7 +647,7 @@ export default {
 }
 
 .btn-buy {
-  background-color: #4CAF50;
+  background-color: #1a4441;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -593,8 +661,9 @@ export default {
   gap: 8px;
   justify-content: center;
   align-items: center;
+  gap: 10px;               /* 统一控制间距 */
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 30px;
 }
 
 .container {
@@ -615,7 +684,7 @@ export default {
 }
 
 ::v-deep(.el-date-picker.has-sidebar.has-time) {
-  background: #0a5857d6;
+  background: #1a4441;
   color: #fff;
   border: 1px solid #22f4d6;
 }

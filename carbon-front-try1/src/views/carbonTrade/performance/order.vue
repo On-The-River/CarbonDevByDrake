@@ -70,7 +70,7 @@ export default {
           setTimeout(() => {
             openUrlInNewWindow(res.data.exchangeWebsite);
           }, 3000);
-          // this.clickClose()
+          this.clickClose();
         })
         .catch(res => {
           this.$message(res.msg);

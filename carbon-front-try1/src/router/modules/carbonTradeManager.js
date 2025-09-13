@@ -32,7 +32,19 @@ let carbonNewsManager = {
       component:()=>import ('@/views/carbonTrade/performance/detail.vue'),
       name: 'performanceDetail',
       meta: { title: '碳履约详情', icon: 'clipboard' },
-    }
+    },
+    // {
+    //   path: '/trade/orderResult',
+    //   component: () => import('@/views/carbonTrade/quotation/orderResult'),
+    //   name: 'trade',
+    //   meta: { title: '碳履约', icon: 'clipboard' }
+    // },
+    // {
+    //   path: '/trade/quoteResult',
+    //   component: () => import('@/views/carbonTrade/quotation/quoteResult.vue'),
+    //   name: 'trade',
+    //   meta: { title: '碳履约', icon: 'clipboard' }
+    // }
   ]
 
 };

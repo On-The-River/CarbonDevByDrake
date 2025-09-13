@@ -8,7 +8,8 @@ const SettingMer = {
   httpUrl: VUE_APP_API_URL,
   // 接口请求地址
   // apiBaseURL: apiBaseURL, //VUE_APP_API_URL + '/api/'
-  apiBaseURL: window.localStorage.getItem("apiBaseURL") ? window.localStorage.getItem("apiBaseURL") : apiBaseURL ,
+  apiBaseURL: "",
+    // window.localStorage.getItem("apiBaseURL") ? window.localStorage.getItem("apiBaseURL") : apiBaseURL ,
   // apiBaseURL: "http://am-api.xcarbon.cc/", //VUE_APP_API_URL + '/api/'
   // socket连接
   wsSocketUrl: VUE_APP_WS_URL

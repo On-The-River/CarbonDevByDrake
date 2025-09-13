@@ -66,7 +66,7 @@ public interface CarbonProjectService extends BaseService<CarbonProject> {
      * 添加减排项目
      * @param param 参数
      */
-    CarbonProjectQueryVo addCarbonProject(CarbonProjectAddParam param);
+    CarbonProjectQueryVo addCarbonProject(CarbonProject param);
 
     /**
      * 修改减排项目

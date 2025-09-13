@@ -1,68 +1,59 @@
 <template>
   <div class="pageContainer">
+    <div class="video-overlay-container">
+      <video autoplay loop muted class="background-video">
+        <source src="@/assets/videos/shu1.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+      <div class="video-overlay"></div>
+    </div>
+    <div class="left-text-container">
+      <p class="left-main-text">1997年 《京都议定书》签订，是全球首个具有法律约束力的温室气体减排协议，人类团结起来，解决共同的生存困境。</p>
+      <p class="left-quote-text">“单丝不成线，独木不成林。”</p>
+    </div>
     <div>
       <img class="logo" :src="loginLogo" />
     </div>
     <div class="loginContiner">
-      <div>
-        <img class="loginLeftPic" :src="loginLeftPic" />
-      </div>
+      <!-- 移除左侧图片相关div -->
       <div class="loginInputContainer" :class="[fullWidth > 768 ? 'containerSamll' : 'containerBig']">
         <div class="index_from page-account-container">
           <div class="page-account-top">
-            <!-- <div class="page-account-top-logo">
-            <img :src="loginLogo" alt="logo">
-          </div> -->
             <img :src="loginCompanyIcon" />
           </div>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on"
-            label-position="left" @keyup.enter="handleLogin">
+                   label-position="left" @keyup.enter="handleLogin">
             <div class="login-input">
               <span class="txt1">用户名</span>
               <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
               <input class="user-input" ref="account" v-model="loginForm.account" name="username" type="text"
-                placeholder="请输入用户名" autocomplete="on" />
+                     placeholder="请输入用户名" autocomplete="on" />
             </div>
 
             <div class="login-input">
               <span class="txt1">密&nbsp;&nbsp;&nbsp;码</span>
               <img class="label1" referrerpolicy="no-referrer" src="@/assets/imgs/label1.jpg" />
               <input class="pwd-input" :key="passwordType" ref="pwd" v-model="loginForm.pwd" :type="passwordType"
-                placeholder="请输入密码" name="pwd" auto-complete="on" />
+                     placeholder="请输入密码" name="pwd" auto-complete="on" />
               <span class="show-pwd" @click="showPwd">
-                <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-              </span>
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
             </div>
 
             <div class="section6">
               <el-checkbox label="记住我" @change="handleChecked" v-model="loginForm.rememberMe"></el-checkbox>
             </div>
 
-            <!-- <el-form-item prop="code" class="captcha">
-            <div class="captcha">
-              <el-input
-                ref="username"
-                v-model="loginForm.code"
-                style="width: 218px;"
-                prefix-icon="el-icon-message"
-                placeholder="验证码"
-                name="username"
-                type="text"
-                tabindex="3"
-                autocomplete="on"
-              />
-              <div class="imgs" style="margin-left:10px" @click="getCaptcha()"><img src="captchatImg"/></div>
-            </div>
-          </el-form-item> -->
-
             <div class="acea-row">
               <el-button :loading="loading" class="login" style="
-                  width: 100%;
-                  margin-bottom: 30px;
-                  backgroud: #2ec28b;
-                  height: 50px;
-                  font-size: 15px;
-                " @click.native.prevent="handleLogin">登录
+                width: 100%;
+                margin-bottom: 30px;
+                /*background: #2ec28b;*/
+                background: rgb(46, 150, 110);
+                border: 1px solid rgb(46, 150, 110);
+                height: 50px;
+                font-size: 15px;
+              " @click.native.prevent="handleLogin">登录
               </el-button>
             </div>
             <div class="acea-row" style="display: flex; justify-content: space-between">
@@ -70,7 +61,7 @@
                 <a class="acss">还没有账号？</a>
                 <el-link type="success" class="login-text" href="/reg">去注册</el-link>
               </div>
-              <el-link type="info" href="/forgetPassWord">忘记密码</el-link>
+              <el-link type="info" href="/forgetPassWord" class="acss">忘记密码</el-link>
             </div>
           </el-form>
         </div>
@@ -105,10 +96,9 @@ export default {
       }
     };
     return {
-      loginLogo: require("@/assets/imgs/login_logo.png"),
+      loginLogo: require("@/assets/videos/logol.png"),
       captchatImg: require("@/assets/imgs/no.png"),
-      // loginLeftPic: require("@/assets/imgs/login_left_pic.png"),
-      loginLeftPic: require("@/assets/imgs/login_left_pic_revise.png"),
+      loginLeftPic: require("@/assets/imgs/login_left_pic.png"),
       loginCompanyIcon: require("@/assets/imgs/icon_login_company.png"),
       swiperList: [],
       fullWidth: document.body.clientWidth,
@@ -296,17 +286,17 @@ export default {
               // getStoreStaff()
               this.loading = false
             }).catch((err) => {
-              this.loading = false
-              if (err && err.code == 40006) {//未开户
-                this.$router.push({ path: '/loginErrSwiper' })
-              } else if (err && err.code == 40005) {//账号禁用
-                this.$router.push({ path: '/loginErrSwiper' })
-              } else {
-                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              }
-              // if(this.$wechat.isPhone()) this.$dialog.error(err.message);
-              // this.getCaptcha()
-            })
+            this.loading = false
+            if (err && err.code == 40006) {//未开户
+              this.$router.push({ path: '/loginErrSwiper' })
+            } else if (err && err.code == 40005) {//账号禁用
+              this.$router.push({ path: '/loginErrSwiper' })
+            } else {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+            }
+            // if(this.$wechat.isPhone()) this.$dialog.error(err.message);
+            // this.getCaptcha()
+          })
         } else {
           return false
         }
@@ -510,18 +500,9 @@ $subsidiary-color: #808695;
     background-size: cover;
   }
 
-  //.page-account-container {
-  //  padding: 32px 0 24px 0;
-  //  position: relative;
-  //}zanshizhushi
   .page-account-container {
-    flex: 1; /* 优先用 flex:1，自动填充父容器可用空间 */
-    padding: 32px 0;
-    text-align: center;
-    width: 384px;
-    margin: 0 auto;
-    box-sizing: border-box; /* 防止 padding 撑高元素，破坏高度一致性 */
-    /* 保留原有 border-radius 等样式 */
+    padding: 32px 0 24px 0;
+    position: relative;
   }
 }
 
@@ -556,17 +537,7 @@ $subsidiary-color: #808695;
   height: 100%;
 }
 
-// .container {
-//   height: 340px !important;
-//   padding: 0 !important;
-//   /*overflow: hidden;*/
-//   border-radius: 6px;
-//   z-index: 1;
-//   display: flex;
-// }
-
 .containerSamll {
-  /*width: 56% !important;*/
   background: #fff !important;
 }
 
@@ -595,8 +566,8 @@ $subsidiary-color: #808695;
 
 .btn {
   background: linear-gradient(90deg,
-      rgba(25, 180, 241, 1) 0%,
-      rgba(14, 115, 232, 1) 100%) !important;
+    rgba(25, 180, 241, 1) 0%,
+    rgba(14, 115, 232, 1) 100%) !important;
 }
 
 ::v-deep.el-input__inner {
@@ -606,6 +577,53 @@ $subsidiary-color: #808695;
   margin-right: 5px;
   border: #00ee76;
 }
+
+// 左侧文字样式
+.left-text-container {
+  position: absolute;
+  top: 25%; /* 上移位置，与登录表单上侧对齐 */
+  left: 10%;
+  max-width: 600px; /* 增加宽度使第一句改为两行 */
+  z-index: 2;
+  padding: 20px;
+}
+
+.left-main-text {
+  color: white;
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.left-quote-text {
+  color: white;
+  font-size: 24px;
+  line-height: 1.8;
+  font-style: italic;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .left-text-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    max-width: 100%;
+    margin: 20px auto;
+    text-align: center;
+  }
+
+  .left-main-text {
+    font-size: 16px;
+  }
+
+  .left-quote-text {
+    font-size: 18px;
+  }
+}
+
 .captcha {
   display: flex;
   align-items: flex-start;
@@ -660,52 +678,54 @@ $light_gray: #eee;
   color: $dark_green;
 }
 
-// .top-bar {
-//   background: #889aa4;
-//   height: 30px;
-// }
 .top-nav {
   background: #fff;
   height: 50px;
 }
 
 .pageContainer {
-  background-color: rgba(237, 249, 252, 1);
+  position: relative;
+  z-index: 1;
+  background-color: transparent !important;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .logo {
   background: transparent;
-  width: 134;
+  width: 134px;
   height: 36px;
   float: left;
   margin-left: 40px;
   margin-top: 30px;
+  z-index: 3;
 }
 
 .loginContiner {
   width: 100%;
   display: flex;
   flex-flow: row;
-  //zijia
-  align-items: stretch; /* 关键：强制两个子元素高度一致 */
+  justify-content: flex-end;
+  margin-top: 84px;
 }
 
 .loginLeftPic {
   flex-grow: 1;
-  height: 400px;
+  height: 705px;
+  z-index: 3;
 }
 
 .loginInputContainer {
-  margin-top: 84px;
   margin-right: 90px;
-  //height: 419px !important;zijiyichu
+  height: 419px !important;
   padding: 0 !important;
-  /*overflow: hidden;*/
   border-radius: 6px;
-  z-index: 1;
+  z-index: 2;
   display: flex;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(5px);
 }
 
 .section3 {
@@ -735,7 +755,6 @@ $light_gray: #eee;
   background-image: linear-gradient(135deg,
     rgba(46, 194, 139, 1) 0,
     rgba(0, 101, 255, 1) 100%);
-  // width: 273px;
   height: 14px;
   overflow-wrap: break-word;
   color: rgba(39, 167, 119, 1);
@@ -758,6 +777,7 @@ $light_gray: #eee;
   background: #e5f9f0;
   display: flex;
   flex-direction: row;
+  background: rgba(255, 255, 255, 0.6) !important;
 }
 
 .txt1 {
@@ -795,6 +815,8 @@ $light_gray: #eee;
   background-color: transparent;
   border: 0;
   outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #000;
 }
 
 .pwd-input {
@@ -808,35 +830,10 @@ $light_gray: #eee;
   background-color: transparent;
   border: 0;
   outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #000;
 }
 
-// input::-webkit-input-placeholder {
-//     /* WebKit browsers */
-//     color: transparent;
-// }
-// input:-moz-placeholder {
-//     /* Mozilla Firefox 4 to 18 */
-//     color: transparent;
-// }
-// input::-moz-placeholder {
-//     /* Mozilla Firefox 19+ */
-//     color: transparent;
-// }
-// input:-ms-input-placeholder {
-//     /* Internet Explorer 10+ */
-//     color: transparent;
-// }
-// input:-webkit-autofill {
-//  box-shadow: transparent;
-// }
-// input:-webkit-autofill:focus {
-//  box-shadow:transparent;
-// }
-// input:-internal-autofill-previewed,
-// input:-internal-autofill-selected {
-//     -webkit-text-fill-color: #000 !important;
-//     transition: background-color 5000s ease-in-out 0s !important;
-// }
 .show-pwd {
   display: flex;
   align-self: center;
@@ -875,38 +872,87 @@ $light_gray: #eee;
 }
 
 .acss {
-  color: #5e6c84;
+  color: #26b581 !important;
   font-size: 15px;
   font-family: PingFangSC-Medium;
 }
 
 .login-text {
-  color: rgb(255, 0, 0);
+  color: #26b581 !important;
   font-size: 15px;
   font-family: PingFangSC-Medium;
 }
 
 .login {
-  background-color: #26b581;
+  background-color: rgb(46, 150, 110);
   width: 80px;
   height: 32px;
-  border-radius: 3px;
+  //border-radius: 3px;
   text-align: center;
   margin-top: auto;
   margin-bottom: auto;
-  border-radius: 2px;
+  //border-radius: 2px;
   cursor: pointer;
   color: white;
   font-size: 15px;
   font-family: PingFangSC-Regular, PingFang SC;
-  border: 1px solid #26b581;
+  //border: 1px solid #26b581;
+  border: 1px solid rgb(46, 150, 110);
 
   &:hover {
-    background: #30b08f;
+    background: rgb(46, 150, 110);
     color: white;
     color: white;
     font-size: 15px;
     font-family: PingFangSC-Regular, PingFang SC;
+    border: 1px solid rgb(46, 150, 110);
   }
+}
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.video-overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 128, 0, 0.3), rgba(0, 64, 0, 0.5));
+  pointer-events: none;
 }
 </style>

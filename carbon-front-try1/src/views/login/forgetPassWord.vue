@@ -1,5 +1,13 @@
 <template>
   <div class="login-container">
+    <!-- 添加视频背景 -->
+    <div class="video-overlay-container">
+      <video autoplay loop muted class="background-video">
+        <source src="@/assets/videos/shu1.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+      <div class="video-overlay"></div>
+    </div>
     <div>
       <img class="logo" :src="loginLogo" />
     </div>
@@ -46,7 +54,7 @@
               </div>
 
               <div class="btn_reg">
-                <el-button :class="setButtonClass()" type="success" :loading="loading" @click.prevent="handleNext">确认
+                <el-button :class="['confirm-button', setButtonClass()]" type="success" :loading="loading" @click.prevent="handleNext">确认
                 </el-button>
               </div>
               <!-- <div>
@@ -280,8 +288,113 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 $bg: #2d3a4b;
+$dark_gray: #889aa4;
 $light_gray: #68b0fe;
 
+
+// 确认按钮样式
+.confirm-button {
+  background-color: rgb(46, 150, 110) !important;
+  border-color: rgb(46, 150, 110) !important;
+  color: white !important;
+  font-size: 18px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 30px;
+  height: 50px;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: rgb(35, 120, 90) !important;
+    border-color: rgb(35, 120, 90) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  // 加载状态样式
+  &.is-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+}
+
+// 禁用状态样式（针对原来的 no-register-text 类）
+.no-register-text {
+  background-color: #76DFB7 !important;
+  border-color: #76DFB7 !important;
+  color: #ffffff !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+
+  &:hover {
+    background-color: #76DFB7 !important;
+    border-color: #76DFB7 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+// 添加视频背景样式
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.video-overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 128, 0, 0.3), rgba(0, 64, 0, 0.5));
+  pointer-events: none;
+}
 /* reset element-ui css */
 .login-container {
   display: flex;
@@ -330,14 +443,15 @@ $light_gray: #eee;
 .bg {
   height: 100%;
   width: 100%;
-  background-color: rgba(237, 249, 252, 1);
+  //background-color: rgba(237, 249, 252, 1);
 }
 
 .login-container {
   position: fixed;
   height: 100%;
   width: 100%;
-
+  // 添加半透明遮罩，使内容更易读
+  background-color: rgba(0, 0, 0, 0.3);
   .login-form {
     position: absolute;
     top: 50%;
@@ -347,7 +461,10 @@ $light_gray: #eee;
     min-height: 400px;
     padding: 35px 35px 15px 35px;
     margin: -260px auto 0;
-    background: #fff;
+    // 90%透明（10%不透明度）
+    background-color: rgba(228, 248, 213, 0.3);
+    border-radius: 6px; // 可选：添加圆角
+    //box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); // 可选：添加阴影
   }
 
   .tips {

@@ -161,7 +161,9 @@
       </el-dialog>
 
       <!-- 编辑企业信息 -->
-      <el-dialog top="20px" title="编辑企业信息"  :visible.sync ="editFormVisible" width="75%">
+      <el-dialog top="20px" title="编辑企业信息"  :visible.sync ="editFormVisible" width="75%"
+                 @close="onEditClose"
+      >
         <el-row>
           <div style="clear: both; height: 20px"></div>
           <el-col :span="2"><span style="margin-left: 10px" class="table-text">租户<span style="color: red">*</span></span></el-col>
@@ -355,6 +357,7 @@
               <el-form-item>
                 <template #label>
                   <span>行业</span>
+                  <span style="color: red">*</span>
                 </template>
                 <el-input v-model="form.industry" autocomplete="off" style="width: 100%" size="medium"></el-input>
               </el-form-item>
@@ -411,7 +414,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer" align="center">
-          <el-button @click="addFormVisible = false" class="normal-white-btn">取消</el-button>
+          <el-button @click="closeEdit" class="normal-white-btn">取消</el-button>
           <el-button type="primary" @click="addSubmit" class="light-green-btn">确定</el-button>
         </div>
       </el-dialog>
@@ -575,6 +578,17 @@ export default {
   },
   watch: {},
   methods: {
+
+    closeEdit()
+    {
+      this.addFormVisible = false;
+    },
+
+    onEditClose()
+    {
+      this.addFormVisible = false;
+      this.getList(1);
+    },
     clickItem(row) {
       console.log('查看按钮被点击，传入数据:', row);
       if (!row) {
@@ -661,7 +675,7 @@ export default {
       };
     },
     addSubmit() {
-      if(this.form.tenantName && this.form.telephone && this.form.contactsEmail && this.form.tenantStatus && this.form.type && this.form.orgName && this.form.validityTime){
+      if(this.form.tenantName && this.form.telephone && this.form.contactsEmail && this.form.tenantStatus && this.form.type && this.form.industry &&this.form.orgName && this.form.validityTime){
         // if(this.form.tenantName && this.form.type && this.form.validityTime && this.form.contactsPhone && this.form.address && this.form.contactsEmail ){
         let verifyPhone = verifyPhoneNumber(this.form.telephone);
         if(!verifyPhone){
@@ -745,8 +759,14 @@ export default {
      * 功能：提交保存
      */
     update() {
-      if(!(this.addForm.address && this.addForm.tenantName&& this.addForm.contactsEmail && this.addForm.contactsName && this.addForm.telephone && this.addForm.industry && this.addForm.tenantStatus && this.addForm.validityTime)){
+      if(!(this.addForm.industry && this.addForm.industry!==""))
+      {
+        return this.$message.warning("行业不能为空");
+      }
+
+      if(!(this.addForm.address && this.addForm.tenantName&& this.addForm.contactsEmail && this.addForm.contactsName && this.addForm.telephone && (this.addForm.industry && this.addForm.industry!=="") && this.addForm.tenantStatus && this.addForm.validityTime)){
         return this.$message.warning("必填项不能为空");
+
       }
 
       let verifyPhone = verifyPhoneNumber(this.addForm.telephone);

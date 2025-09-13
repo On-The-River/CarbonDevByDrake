@@ -1,199 +1,135 @@
 <template>
   <div class="divBox">
+    <!-- 供应量模块 -->
     <div class="card">
-      <div class="titlebar">
-        <div class="container">
-          <a class="text">供应量</a>
-          <a class="subtext">上月{{ monthSupply.statDate }}</a>
+      <div class="card-header">
+        <span class="card-title">供应量</span>
+        <span class="card-subtitle">上月{{ monthSupply.statDate }}</span>
+      </div>
+      <div class="card-content">
+        <div class="content-left">
+          <img class="flag-icon" src="@/assets/imgs/icon_capital_one.png" />
+          <span class="sum-amount">{{ monthSupply.carbonSupply }}</span>
+          <span class="unit">{{ assetsIncomeUnit }}</span>
+        </div>
+        <div class="vertical-divider"></div>
+        <div class="content-right">
+          <div class="rate-item">
+            <span class="hint">碳信用：</span>
+            <span class="rate-value">{{ monthSupply.carbonCredit }}</span>
+            <span class="rate-unit">&nbsp;{{ carbonCreditUnit }}</span>
+          </div>
+          <div class="rate-item">
+            <span class="hint">碳配额：</span>
+            <span class="rate-value">{{ monthSupply.carbonQuota }}</span>
+            <span class="rate-unit">&nbsp;{{ carbonQuotaUnit }}</span>
+          </div>
+<!--          <div class="rate-item">-->
+<!--            <span class="hint">绿&nbsp;&nbsp;&nbsp;证：</span>-->
+<!--            <span class="rate-value">{{ monthSupply.greenScore }}</span>-->
+<!--            <span class="rate-unit">&nbsp;{{ greenCertUnit }}</span>-->
+<!--          </div>-->
         </div>
       </div>
-      <div class="el-card-bg" :bordered="false" dis-hover>
-        <div class="content-container">
-          <div class="content-pannel">
-            <div class="content-container-left">
-              <img class="flag-icon" src="@/assets/imgs/icon_capital_one.png" />
-              <span class="sumAmout">{{ monthSupply.carbonSupply }}</span>
-              <span class="unit">{{ assetsIncomeUnit }}</span>
-            </div>
-            <div class="p-diliver" />
-            <div class="content-container-right">
-              <div class="content-pannel">
-                <div class="rate-bar">
-                  <div class="rate-container">
-                    <span class="hint">碳信用：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthSupply.carbonCredit }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ carbonCreditUnit }}</i>
-                    </div>
-                  </div>
-                  <div class="rate-container">
-                    <span class="hint">碳配额：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthSupply.carbonQuota }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ carbonQuotaUnit }}</i>
-                    </div>
-                  </div>
-                  <div class="rate-container">
-                    <span class="hint">绿&nbsp;&nbsp;&nbsp;证：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthSupply.greenScore }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ greenCertUnit }}</i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="card-footer">
+        <div class="footer-item">
+          <span class="hint">总供应量：</span>
+          <span class="value">{{ monthSupply.carbonSupplyTotal }}</span>
+          <span class="unit">&nbsp;{{ assetsIncomeUnit }}</span>
         </div>
-
-        <el-divider class="diliver"></el-divider>
-
-        <div class="bottom-bar">
-          <div class="bottom-content-container">
-            <div class="bottom-hint">总供应量：</div>
-            <div class="bottom-value">{{ monthSupply.carbonSupplyTotal }}</div>
-            <div class="bottom-value">&nbsp;{{ assetsIncomeUnit }}</div>
-          </div>
-          <div class="empty-div" />
-          <div class="bottom-content-container">
-            <div class="bottom-hint">碳资产估值：</div>
-            <div class="bottom-value">¥{{ monthSupply.carbonValuation }}</div>
-          </div>
+        <div class="footer-item">
+          <span class="hint">碳资产估值：</span>
+          <span class="value">¥{{ monthSupply.carbonValuation }}</span>
         </div>
-
       </div>
-
-
     </div>
 
+    <!-- 开发量模块 -->
     <div class="card">
-      <div class="titlebar">
-        <div class="container">
-          <a class="text">开发量</a>
-          <a class="subtext">上月{{ monthDevelopment.statDate }}</a>
+      <div class="card-header">
+        <span class="card-title">开发量</span>
+        <span class="card-subtitle">上月{{ monthDevelopment.statDate }}</span>
+      </div>
+      <div class="card-content">
+        <div class="content-left">
+          <img class="flag-icon" src="@/assets/imgs/icon_capital_two.png" />
+          <span class="sum-amount">{{ monthDevelopment.carbonSupply }}</span>
+          <span class="unit">{{ assetsIncomeUnit }}</span>
+        </div>
+        <div class="vertical-divider"></div>
+        <div class="content-right">
+          <div class="rate-item">
+            <span class="hint">碳信用：</span>
+            <span class="rate-value">{{ monthDevelopment.carbonCredit }}</span>
+            <span class="rate-unit">&nbsp;{{ carbonCreditUnit }}</span>
+          </div>
+          <div class="rate-item">
+            <span class="hint">碳配额：</span>
+            <span class="rate-value">{{ monthDevelopment.carbonQuota }}</span>
+            <span class="rate-unit">&nbsp;{{ carbonQuotaUnit }}</span>
+          </div>
+<!--          <div class="rate-item">-->
+<!--            <span class="hint">绿&nbsp;&nbsp;&nbsp;证：</span>-->
+<!--            <span class="rate-value">{{ monthDevelopment.greenScore }}</span>-->
+<!--            <span class="rate-unit">&nbsp;{{ greenCertUnit }}</span>-->
+<!--          </div>-->
         </div>
       </div>
-      <div class="el-card-bg" :bordered="false" dis-hover>
-        <div class="content-container">
-          <div class="content-pannel">
-            <div class="content-container-left">
-              <img class="flag-icon" src="@/assets/imgs/icon_capital_two.png" />
-              <span class="sumAmout">{{ monthDevelopment.carbonSupply }}</span>
-              <span class="unit">{{ assetsIncomeUnit }}</span>
-            </div>
-            <div class="p-diliver" />
-            <div class="content-container-right">
-              <div class="content-pannel">
-                <div class="rate-bar">
-                  <div class="rate-container">
-                    <span class="hint">碳信用：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthDevelopment.carbonCredit }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ carbonCreditUnit }}</i>
-                    </div>
-                  </div>
-                  <div class="rate-container">
-                    <span class="hint">碳配额：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthDevelopment.carbonQuota }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ carbonQuotaUnit }}</i>
-                    </div>
-                  </div>
-                  <div class="rate-container">
-                    <span class="hint">绿&nbsp;&nbsp;&nbsp;证：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthDevelopment.greenScore }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ greenCertUnit }}</i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="card-footer">
+        <div class="footer-item">
+          <span class="hint">总供应量：</span>
+          <span class="value">{{ monthDevelopment.carbonSupplyTotal }}</span>
+          <span class="unit">&nbsp;{{ assetsIncomeUnit }}</span>
         </div>
-
-        <el-divider class="diliver"></el-divider>
-
-        <div class="bottom-bar">
-          <div class="bottom-content-container">
-            <span class="bottom-hint">总供应量：</span>
-            <span class="bottom-value">{{ monthDevelopment.carbonSupplyTotal }}</span>
-            <span class="bottom-value">&nbsp;{{ assetsIncomeUnit }}</span>
-          </div>
-          <div class="empty-div" />
-          <div class="bottom-content-container">
-            <span class="bottom-hint">碳资产估值：</span>
-            <span class="bottom-value">¥{{ monthDevelopment.carbonValuation }}</span>
-          </div>
+        <div class="footer-item">
+          <span class="hint">碳资产估值：</span>
+          <span class="value">¥{{ monthDevelopment.carbonValuation }}</span>
         </div>
-
       </div>
-
-
     </div>
 
+    <!-- 销售量模块 -->
     <div class="card">
-      <div class="titlebar">
-        <div class="container">
-          <a class="text">销售量</a>
-          <a class="subtext">上月{{ monthSales.statDate }}</a>
+      <div class="card-header">
+        <span class="card-title">销售量</span>
+        <span class="card-subtitle">上月{{ monthSales.statDate }}</span>
+      </div>
+      <div class="card-content">
+        <div class="content-left">
+          <img class="flag-icon" src="@/assets/imgs/icon_capital_three.png" />
+          <span class="sum-amount">{{ monthSales.carbonSupply }}</span>
+          <span class="unit">{{ assetsIncomeUnit }}</span>
+        </div>
+        <div class="vertical-divider"></div>
+        <div class="content-right">
+          <div class="rate-item">
+            <span class="hint">碳信用：</span>
+            <span class="rate-value">{{ monthSales.carbonCredit }}</span>
+            <span class="rate-unit">&nbsp;{{ carbonCreditUnit }}</span>
+          </div>
+          <div class="rate-item">
+            <span class="hint">碳配额：</span>
+            <span class="rate-value">{{ monthSales.carbonQuota }}</span>
+            <span class="rate-unit">&nbsp;{{ carbonQuotaUnit }}</span>
+          </div>
+<!--          <div class="rate-item">-->
+<!--            <span class="hint">绿&nbsp;&nbsp;&nbsp;证：</span>-->
+<!--            <span class="rate-value">{{ monthSales.greenScore }}</span>-->
+<!--            <span class="rate-unit">&nbsp;{{ greenCertUnit }}</span>-->
+<!--          </div>-->
         </div>
       </div>
-      <div class="el-card-bg" :bordered="false" dis-hover>
-        <div class="content-container">
-          <div class="content-pannel">
-            <div class="content-container-left">
-              <img class="flag-icon" src="@/assets/imgs/icon_capital_three.png" />
-              <span class="sumAmout">{{ monthSales.carbonSupply }}</span>
-              <span class="unit">{{ assetsIncomeUnit }}</span>
-            </div>
-            <div class="p-diliver" />
-            <div class="content-container-right">
-              <div class="content-pannel">
-                <div class="rate-bar">
-                  <div class="rate-container">
-                    <span class="hint">碳信用：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthSales.carbonCredit }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ carbonCreditUnit }}</i>
-                    </div>
-                  </div>
-                  <div class="rate-container">
-                    <span class="hint">碳配额：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthSales.carbonQuota }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ carbonQuotaUnit }}</i>
-                    </div>
-                  </div>
-                  <div class="rate-container">
-                    <span class="hint">绿&nbsp;&nbsp;&nbsp;证：</span>
-                    <div class="rate">
-                      <i :class="sumincome">{{ monthSales.greenScore }}</i>
-                      <i :class="sumAmoutUnit">&nbsp;{{ greenCertUnit }}</i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="card-footer">
+        <div class="footer-item">
+          <span class="hint">总供应量：</span>
+          <span class="value">{{ monthSales.carbonSupplyTotal }}</span>
+          <span class="unit">&nbsp;{{ assetsIncomeUnit }}</span>
         </div>
-        <el-divider class="diliver"></el-divider>
-
-        <div class="bottom-bar">
-          <div class="bottom-content-container">
-            <span class="bottom-hint">总供应量：</span>
-            <span class="bottom-value">{{ monthSales.carbonSupplyTotal }}</span>
-            <span class="bottom-value">&nbsp;{{ assetsIncomeUnit }}</span>
-          </div>
-          <div class="empty-div" />
-          <div class="bottom-content-container">
-            <span class="bottom-hint">碳资产估值：</span>
-            <span class="bottom-value">¥{{ monthSales.carbonValuation }}</span>
-          </div>
+        <div class="footer-item">
+          <span class="hint">碳资产估值：</span>
+          <span class="value">¥{{ monthSales.carbonValuation }}</span>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>
@@ -234,191 +170,138 @@ export default {
   display: grid;
   grid: auto / auto auto auto;
   grid-gap: 20px;
+  // 添加响应式断点
+  @media (max-width: 1200px) {
+    flex-direction: column;   // 屏幕较小时垂直排列
+    gap: 15px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 10px 0px 10px;
+    gap: 10px;
+  }
 }
 
 .card {
   display: flex;
   flex-direction: column;
+  background-color: #fff;
+  border-radius: 10px; // 整体模块圆角
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); // 增加阴影增强立体感
+  overflow: hidden; // 防止内容超出模块
+  //width: 420px; // 统一每个模块宽度，可根据需求调整
+  //height: 200px;
+  flex: 1;                    // 改为弹性布局
+  min-width: 300px;           // 设置最小宽度，防止过小
 }
 
-.el-card-bg {
-  background: white;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 0px;
-  // background-image: url("../../assets/imgs/bg_card.png");
-  // background-size:cover;
-}
-
-.el-divider--horizontal {
-  margin: 15px 0 10px 0;
-}
-
-.titlebar {
+.card-header {
+  background: linear-gradient(to right, #42c08d, #27a777); // 头部渐变背景，可根据设计调整
+  color: #FFFFFF;
+  padding: 12px 16px;
   display: flex;
-  flex-direction: row;
-  margin-bottom: 10px;
-
-  .container {
-    display: flex;
-    flex-direction: row;
-    // flex-grow: 1;
-  }
-
-  .text {
-    height: 18px;
-
-    font-weight: 500;
-    color: #080b0d;
-
-    cursor: default;
-  }
-
-  .subtext {
-    margin-top: 4px;
-    margin-left: 0px;
-    height: 14px;
-
-    font-weight: 500;
-    color: #5e6c84;
-
-    cursor: default;
-  }
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
-.content-container-right {
-  // display: flex;
-  flex-direction: row;
-  vertical-align: middle;
-  // flex-flow: 2;
-  margin-right: auto;
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
 }
 
-.content-container-left {
-  // display: flex;
-  flex-direction: row;
-  margin-left: auto;
-  // flex-flow: 1;
+.card-subtitle {
+  font-size: 12px;
+  opacity: 0.9;
 }
 
-.content-container {
+.card-content {
+  padding: 16px;
   display: flex;
-  flex-direction: row;
-  // float: left;
-
-  .content-pannel {
-    
-    display: flex;
-    flex-direction: row;
-    vertical-align: middle;
-
-    .flag-icon {
-      vertical-align: middle;
-    }
-
-    .sumAmout {
-      vertical-align: middle;
-      margin-left: 6px;
-
-      font-weight: 500;
-      color: #24a776;
-    }
-
-    .unit {
-      margin-left: 2px;
-      // margin-right: 24px;
-      margin-top: 15px;
-      vertical-align: bottom;
-
-      font-weight: 400;
-      color: #24a776;
-    }
-
-    .rate-bar {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .rate-container {
-      display: flex;
-      flex-direction: row;
-      margin-top: 0px;
-
-      // margin-right: 22px;
-      .hint {
-        font-weight: 400;
-        color: #5e6c84;
-      }
-
-      .rate {
-        display: flex;
-        flex-direction: row;
-        margin-left: 6px;
-        min-width: 28px;
-        height: 16px;
-
-        font-weight: 500;
-      }
-
-      .sumincome {
-        font-weight: 500;
-        color: #424c5c;
-      }
-
-      .sumAmoutUnit {
-        font-weight: 500;
-        color: #424c5c;
-      }
-    }
-  }
+  align-items: center;
 }
 
-.diliver {
-  width: 100%;
-  height: 1px;
-  border: 1px solid rgba(238, 240, 243, 0.95);
+.content-left {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
 }
 
-.p-diliver {
-  margin-left: 10px;
-  margin-right: 10px;
+.flag-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.sum-amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #27a777;
+  margin-right: 4px;
+}
+
+.unit {
+  font-size: 14px;
+  color: #5e6c84;
+}
+
+.vertical-divider {
   width: 1px;
-  height: 70px;
-  border: 1px #eef0f3;
-  border-style: dotted solid double dashed;
+  height: 40px;
+  background-color: #eef0f3;
+  margin: 0 16px;
 }
 
-.bottom-bar {
-  // width: 100%;
+.content-right {
   display: flex;
-  flex-direction: row;
-
-  .bottom-content-container {
-    display: flex;
-    flex-direction: row;
-    // flex-grow: 1;
-  }
-
-  .bottom-hint {
-    // height: 14px;
-    font-weight: 400;
-    color: #424c5c;
-  }
-
-  .bottom-value {
-    // margin-left: 0px;
-    // height: 17px;
-
-    font-weight: 500;
-    color: #27a777;
-
-    //
-  }
+  flex-direction: column;
 }
 
-.empty-div {
-  flex-grow: 1;
+.rate-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hint {
+  font-size: 14px;
+  color: #5e6c84;
+  margin-right: 8px;
+}
+
+.rate-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #424c5c;
+}
+
+.rate-unit {
+  font-size: 14px;
+  color: #424c5c;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #f7f8fa;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+}
+
+.footer-item .hint {
+  margin-right: 4px;
+}
+
+.footer-item .value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #27a777;
 }
 </style>

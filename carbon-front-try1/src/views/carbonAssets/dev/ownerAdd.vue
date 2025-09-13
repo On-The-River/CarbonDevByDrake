@@ -162,7 +162,7 @@
               <div style="clear: both; height: 40px"></div>
               <el-col :span="8">
                 <div style="margin-right: 15px" class="selectbox-root">
-                  <span class="selectbox-hint" style="min-width: 110px; color: ">项目投产证明文件</span>
+                  <span class="selectbox-hint" style="min-width: 110px ">项目投产证明文件</span>
                   <div class="selectbox-deliver" />
                   <span class="selectbox-hint" style="color: #24a776; cursor: pointer"
                     @click="openUrl(fileNames.file8Url)">{{ fileNames.file8 }}</span>
@@ -768,7 +768,7 @@ export default {
 }
 
 .outer21 {
-  background-color: rgba(38, 181, 129, 1);
+  background-color: #1a4441;
   height: 38px;
   width: 194px;
   float: left;

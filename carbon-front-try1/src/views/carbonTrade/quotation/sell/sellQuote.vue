@@ -86,6 +86,7 @@
             @keyup.enter.native="onClickSearch"
             clearable
             @clear="onClickSearch"
+            placeholder="查询租户(公司)名称"
           />
         </div>
         <button class="light-green-btn" @click="onClickSearch">搜索</button>
@@ -117,6 +118,15 @@
               label="资产类型"
               min-width="15%"
             />
+            <el-table-column
+              align="center"
+              label="状态"
+              min-width="15%"
+            >
+              <template slot-scope="scope">
+                <span :class="getStatusStyleClass(scope.row)">{{scope.row.statusName}}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               align="left"
               prop="projectTypeName"
@@ -154,7 +164,7 @@
               label="出售截止日期"
               min-width="10%"
             />
-            <el-table-column label="操作" align="center" min-width="15%">
+            <el-table-column label="操作" align="center" min-width="15%" >
               <template slot-scope="scope">
                 <a
                   style="margin-left: 10px"
@@ -211,7 +221,7 @@
       @successSubmit="closeDetail"
     />
     <!-- 确定dialog -->
-    <order-result-vue
+    <quote-result-vue
       :title="tipTitle"
       :content="tipConetent"
       :bottomTxt="tipBottomTxt"
@@ -235,7 +245,7 @@ import { isProjectTypeDisable } from "@/libs/public";
 import { setListNo } from "@/libs/public";
 import { endsWith } from "../../../../utils/utils";
 import sellOrder from "./sellOrder.vue";
-import orderResultVue from "../orderResult.vue";
+import quoteResultVue from "../quoteResult.vue";
 import SellDetail from "./sellDetail.vue";
 import {getAllDiction} from '@/config/dictHelper';
 
@@ -244,7 +254,7 @@ export default {
   components: {
     selectDropDownBox,
     sellOrder,
-    orderResultVue,
+    quoteResultVue,
     SellDetail
   },
   data() {
@@ -315,6 +325,22 @@ export default {
 
 
   methods: {
+    getStatusStyleClass(row)
+    {
+      if(row.status==="0160000001")
+      {
+        return "status-offer";
+      }
+      else if(row.status==="0160000002")
+      {
+        return "status-trading";
+      }
+      else if(row.status==="0160000004")
+      {
+        return "status-traded";
+      }
+      return "plain";
+    },
     changeAssetType() {
       this.isProjectTypeDisable = isProjectTypeDisable(
         this.seletedAssetStatus[0]
@@ -643,47 +669,18 @@ export default {
   border-color: transparent;
 }
 
-// .acea-row {
-//    .el-avatar--small {
-//     width: 22px;
-//     height: 22px;
-//   }
-// }
+.status-trading{
+  font-weight: bold;
+  color: #c48d00;
+}
 
-// .checkTime {
-//   >>> .el-radio__input {
-//     display: none;
-//   }
-// }
+.status-traded{
+  font-weight: bold;
+  color: #989898;
+}
 
-// .ivu-pl-8 {
-//   margin-left: 8px;
-// }
-
-// .dashboard-console-visit {
-//   >>> .el-card__header {
-//     padding: 14px 20px !important;
-//   }
-// }
-
-// ul {
-//   li {
-//     list-style-type: none;
-//     margin-top: 12px;
-//   }
-// }
-
-// .ivu-mb {
-//   margin-bottom: 10px;
-// }
-
-// .newsImg {
-//   width: 30px;
-//   height: 30px;
-//   border-radius: 4px;
-// }
-
-// .cursor-mi {
-//   cursor: default;
-// }
+.status-offer{
+  font-weight: bold;
+  color: green;
+}
 </style>

@@ -6,16 +6,18 @@
     <select id="getCarbonArticlePageList" resultType="com.carbon.system.vo.CarbonArticleQueryVo">
         select
         id, title,image_url,url, description,author,browse_num,status,updated_time,category_id
-        from carbon_article ca where 1=1 and ca.title!=''
+        from carbon_article ca
+        where 1=1
+                and ca.title!=''
             <if test="param.categoryId != null and param.categoryId !='' ">
                 and ca.category_id = #{param.categoryId}
             </if>
-            <if test="param.status != null and param.categoryId !='' ">
+            <if test="param.status != null and param.status !='' ">
                 and ca.status = #{param.status}
             </if>
-            <if test="param.searchKeywords != null and param.categoryId !='' ">
+            <if test="param.searchKeywords != null and param.searchKeywords !='' ">
                 <if test="param.searchKeywords !='null'">
-                    and ca.title like concat('%',concat(#{param.searchKeywords},'%'))
+                    and ca.title like concat('%',#{param.searchKeywords},'%')
                 </if>
             </if>
 

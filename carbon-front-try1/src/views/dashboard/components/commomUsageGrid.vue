@@ -143,7 +143,7 @@ export default {
 
 ::v-deep.el-card__body {
   padding: 0px;
-  background-image: url("../../../assets/imgs/bg_commom_usage.png");
+  background-image: url("../../../assets/videos/bei3.png");
   background-repeat: repeat;
   background-size: cover;
   border: 0px;
@@ -155,7 +155,7 @@ export default {
   // width: 295px;
   display: flex;
   flex-direction: column;
-  background-image: url("../../../assets/imgs/bg_commom_usage.png");
+  background-image: url("../../../assets/videos/feng10.png");
   // background-repeat: repeat;
   background-size: cover;
   // width: 295px;
@@ -180,7 +180,7 @@ export default {
   margin-top: 8px;
 
   font-weight: 500;
-  color: #424C5C;
+  color: #0c8351;
 }
 
 .hint-text {
@@ -188,7 +188,7 @@ export default {
   margin-left: 4px;
 
   font-weight: 400;
-  color: #5E6C84;
+  color: #030305;
 }
 
 .nav-title {

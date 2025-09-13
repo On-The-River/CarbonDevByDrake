@@ -478,8 +478,8 @@ export default {
   top: -5px;
 }
 
->>>.el-cascader .el-input .el-input__inner,
->>>.el-cascader .el-input.is-focus .el-input__inner {
+::v-deep.el-cascader .el-input .el-input__inner,
+::v-deep .el-cascader .el-input.is-focus .el-input__inner {
   border-color: transparent;
 }
 
@@ -581,20 +581,20 @@ export default {
   border: none;
   background: transparent !important;
 
-  >>>.el-input__inner {
+  ::v-deep .el-input__inner {
     border: 2px solid #dcdfe6 !important;
     height: 40px;
   }
 }
 
->>>.el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before,
+::v-deep .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before,
 .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap>.el-form-item__label:before {
   content: "";
   color: transparent !important;
   margin-right: 0px;
 }
 
->>>.el-form-item__error {
+::v-deep .el-form-item__error {
   color: #ff4949;
 
   padding-top: 4px;
@@ -604,7 +604,7 @@ export default {
 }
 
 .spec-dialog {
-  >>>.el-dialog__body {
+  ::v-deep .el-dialog__body {
     padding: 3px 30px;
     overflow-y: auto;
     height: calc(100vh - 140px);

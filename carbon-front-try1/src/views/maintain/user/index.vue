@@ -485,7 +485,8 @@
         </div>
       </div>
     </el-dialog>
-    <!--  -->
+    <!-- 左下角波纹装饰 -->
+    <img class="bg-wave" src="@/assets/carbon/wave.svg" />
   </div>
 </template>
 
@@ -729,6 +730,7 @@ export default {
       }
     },
     sendCodeSet(num) {
+
       if (!this.phoForm.newPhone) {
         return this.$message("请输入新手机号");
       }
@@ -913,7 +915,7 @@ export default {
       let datas = {
         email: this.emailForm.email,
         id: this.baseInfo.id,
-        password: (this.emailForm.emailFormPassword),
+        password: md5(this.emailForm.emailFormPassword),
       };
       putAccountSend(datas).then((res) => {
         if (res.code == 200) {
@@ -1010,7 +1012,7 @@ export default {
         carbonExchangeId: Array.isArray(this.addUserFrom.carbonExchangeId) ? this.addUserFrom.carbonExchangeId[0]
           : this.addUserFrom.carbonExchangeId, //	碳交易所ID
         remarks: this.addUserFrom.remarks, //	备注
-        tenantId: parseInt(info.accountId), //	所属租户
+        tenantId: parseInt(info.tenantId), //	所属租户
         accountCredentials: this.tranFileUrl,
       };
       putAddExchangeAccount(datas).then((res) => {
@@ -1028,10 +1030,12 @@ export default {
   padding-left: 30px;
   padding-right: 30px;
   background: #ffffff;
+  //background: linear-gradient(135deg, #e9fff1 0%, #f2f5f7 100%);
   box-shadow: 0px 2px 8px 0px #eaf0f3;
   border-radius: 8px;
   margin: 28px;
   overflow: auto;
+  position: relative; //自加
 }
 .header {
   display: flex;
@@ -1371,5 +1375,24 @@ export default {
     font-weight: 400;
     color: #5e6c84;
   }
+}
+//自加
+.bg-leaf-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 180px;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 1;
+}
+.bg-wave {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
 }
 </style>

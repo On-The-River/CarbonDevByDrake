@@ -79,6 +79,7 @@ export default {
       this.show = false;
     },
     clickOk() {
+      this.$router.push("/trade/performance");
       this.show = false;
     }
   }
